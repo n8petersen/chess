@@ -40,5 +40,6 @@ public class ChessBoard {
      */
     public void resetBoard() {
         throw new RuntimeException("Not implemented");
+//      clears the board, and puts all pieces in their starter positions.
     }
 }

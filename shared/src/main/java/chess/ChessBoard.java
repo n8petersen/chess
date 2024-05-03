@@ -75,6 +75,6 @@ public class ChessBoard {
 
     @Override
     public String toString() {
-        return "Board{" + Arrays.deepToString(pieces) + "}";
+        return "Board(" + Arrays.deepToString(pieces) + ")";
     }
 }

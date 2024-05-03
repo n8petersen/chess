@@ -23,7 +23,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        pieces[position.getRow() - 1][position.getColumn() - 1] = piece;
+        this.pieces[position.getRow() - 1][position.getColumn() - 1] = piece;
     }
 
     /**
@@ -34,7 +34,7 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        return pieces[position.getRow() - 1][position.getColumn() - 1];
+        return this.pieces[position.getRow() - 1][position.getColumn() - 1];
     }
 
     /**
@@ -45,14 +45,14 @@ public class ChessBoard {
         // clears the board. i = rows, j = columns
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                pieces[i][j] = null;
+                this.pieces[i][j] = null;
             }
         }
 
         // add pawns. i = cols
         for (int j = 0; j < 8; j++) {
-            pieces[1][j] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
-            pieces[6][j] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+            this.pieces[1][j] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+            this.pieces[6][j] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
         }
 
         ChessPiece.PieceType[] specialPieces = {
@@ -68,13 +68,13 @@ public class ChessBoard {
 
         // add white special pieces
         for (int j = 0; j < 8; j++) {
-            pieces[0][j] = new ChessPiece(ChessGame.TeamColor.WHITE, specialPieces[j]);
-            pieces[7][j] = new ChessPiece(ChessGame.TeamColor.BLACK, specialPieces[j]);
+            this.pieces[0][j] = new ChessPiece(ChessGame.TeamColor.WHITE, specialPieces[j]);
+            this.pieces[7][j] = new ChessPiece(ChessGame.TeamColor.BLACK, specialPieces[j]);
         }
     }
 
     @Override
     public String toString() {
-        return "Board(" + Arrays.deepToString(pieces) + ")";
+        return "Board(" + Arrays.deepToString(this.pieces) + ")";
     }
 }

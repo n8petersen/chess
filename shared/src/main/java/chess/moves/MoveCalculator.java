@@ -18,15 +18,15 @@ public class MoveCalculator {
         switch (currentType) {
             case KING:      possibleMoves = new KingMoves().getMoves();
                             break;
-            case QUEEN:
+            case QUEEN:     possibleMoves = new QueenMoves().getMoves();
                             break;
-            case BISHOP:
+            case BISHOP:    possibleMoves = new BishopMoves().getMoves();
                             break;
-            case KNIGHT:
+            case KNIGHT:    possibleMoves = new KnightMoves().getMoves();
                             break;
-            case ROOK:
+            case ROOK:      possibleMoves = new RookMoves().getMoves();
                             break;
-            case PAWN:
+            case PAWN:      possibleMoves = new PawnMoves().getMoves();
                             break;
         }
 

@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -51,5 +54,27 @@ public class ChessBoard {
             pieces[1][j] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
             pieces[6][j] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
         }
+
+        ChessPiece.PieceType[] specialPieces = {
+                ChessPiece.PieceType.ROOK,
+                ChessPiece.PieceType.KNIGHT,
+                ChessPiece.PieceType.BISHOP,
+                ChessPiece.PieceType.QUEEN,
+                ChessPiece.PieceType.KING,
+                ChessPiece.PieceType.BISHOP,
+                ChessPiece.PieceType.KNIGHT,
+                ChessPiece.PieceType.ROOK
+        };
+
+        // add white special pieces
+        for (int j = 0; j < 8; j++) {
+            pieces[0][j] = new ChessPiece(ChessGame.TeamColor.WHITE, specialPieces[j]);
+            pieces[7][j] = new ChessPiece(ChessGame.TeamColor.BLACK, specialPieces[j]);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Board{" + Arrays.deepToString(pieces) + "}";
     }
 }

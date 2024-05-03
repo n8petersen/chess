@@ -58,4 +58,9 @@ public class ChessPiece {
 //        Don't need to take into account turn, check, or checkmate.
 //        Does need to take into account other pieces on the board.
     }
+
+    @Override
+    public String toString() {
+        return (this.color.toString().charAt(0) + this.type.toString());
+    }
 }

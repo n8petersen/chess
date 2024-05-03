@@ -1,5 +1,7 @@
 package chess;
 
+import chess.moves.*;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -53,10 +55,9 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return new ArrayList<>();
-//        TODO: Actually calculate and return the possible moves.
 //        Don't need to take into account turn, check, or checkmate.
 //        Does need to take into account other pieces on the board.
+        return new MoveCalculator().pieceMoves(board, myPosition);
     }
 
     @Override

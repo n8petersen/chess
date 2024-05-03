@@ -10,8 +10,8 @@ import java.util.List;
 
 public class KingMoves {
 
-    public Collection<ChessMove> getMoves() {
-        List<ChessMove> moveList = new ArrayList<ChessMove>();
+    public ArrayList<ChessMove> getMoves() {
+        ArrayList<ChessMove> moveList = new ArrayList<ChessMove>();
 
         return moveList;
     }

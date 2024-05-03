@@ -13,9 +13,10 @@ public class MoveCalculator {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece currentPiece = board.getPiece(myPosition);
         ChessPiece.PieceType currentType = currentPiece.getPieceType();
+        ArrayList<ChessMove> possibleMoves = new ArrayList<ChessMove>();
 
         switch (currentType) {
-            case KING:
+            case KING:      possibleMoves = new KingMoves().getMoves();
                             break;
             case QUEEN:
                             break;
@@ -29,6 +30,6 @@ public class MoveCalculator {
                             break;
         }
 
-        return new ArrayList<>();
+        return possibleMoves;
     }
 }

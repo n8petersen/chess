@@ -12,9 +12,12 @@ public class MoveCalculator {
 
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece currentPiece = board.getPiece(myPosition);
-        ChessPiece.PieceType currentType = currentPiece.getPieceType();
 
-        return switch (currentType) {
+        if (currentPiece == null) {
+            return new ArrayList<>();
+        }
+
+        return switch (currentPiece.getPieceType()) {
             case KING -> new KingMoves().getMoves(board, myPosition);
             case QUEEN -> new QueenMoves().getMoves();
             case BISHOP -> new BishopMoves().getMoves();

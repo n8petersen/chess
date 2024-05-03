@@ -66,7 +66,7 @@ public class ChessBoard {
                 ChessPiece.PieceType.ROOK
         };
 
-        // add white special pieces
+        // add special pieces
         for (int j = 0; j < 8; j++) {
             this.pieces[0][j] = new ChessPiece(ChessGame.TeamColor.WHITE, specialPieces[j]);
             this.pieces[7][j] = new ChessPiece(ChessGame.TeamColor.BLACK, specialPieces[j]);

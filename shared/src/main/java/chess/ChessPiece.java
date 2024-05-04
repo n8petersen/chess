@@ -64,4 +64,16 @@ public class ChessPiece {
     public String toString() {
         return (this.color.toString().charAt(0) + this.type.toString());
     }
+
+    @Override
+    public boolean equals (Object obj) {
+        // TODO
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        // TODO
+        return 0;
+    }
 }

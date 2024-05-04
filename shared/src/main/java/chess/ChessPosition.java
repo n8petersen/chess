@@ -36,4 +36,16 @@ public class ChessPosition {
     public String toString() {
         return "[" + row + "," + col + "]";
     }
+
+    @Override
+    public boolean equals (Object obj) {
+        // TODO
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        // TODO
+        return 0;
+    }
 }

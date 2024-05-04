@@ -47,4 +47,16 @@ public class ChessMove {
     public String toString() {
         return startPosition + " -> " + endPosition;
     }
+
+    @Override
+    public boolean equals (Object obj) {
+        // TODO
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        // TODO
+        return 0;
+    }
 }

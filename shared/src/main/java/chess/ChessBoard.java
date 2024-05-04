@@ -77,4 +77,16 @@ public class ChessBoard {
     public String toString() {
         return "Board(" + Arrays.deepToString(this.pieces) + ")";
     }
+
+    @Override
+    public boolean equals (Object obj) {
+        // TODO
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        // TODO
+        return 0;
+    }
 }

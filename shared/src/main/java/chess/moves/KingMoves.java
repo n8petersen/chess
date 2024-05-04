@@ -8,6 +8,8 @@ public class KingMoves {
 
     public ArrayList<ChessMove> getMoves(ChessBoard board, ChessPosition myPosition) {
         ArrayList<ChessMove> moveList = new ArrayList<ChessMove>();
+
+        // add all the possible moves
         moveList.addAll(addMoves(board, myPosition, 1,-1));
         moveList.addAll(addMoves(board, myPosition, 0,-1));
         moveList.addAll(addMoves(board, myPosition, -1,-1));
@@ -25,9 +27,12 @@ public class KingMoves {
         int newRow = position.getRow() + moveRow;
         int newCol = position.getColumn() + moveCol;
 
+        // check if out of edge of board
         if (newRow < 9 && newRow > 0 && newCol < 9 && newCol > 0) {
+            // check if piece is on new spot
             ChessPosition newPosition = new ChessPosition(newRow, newCol);
             ChessPiece checkPiece = board.getPiece(newPosition);
+            // check if spot is empty, or other team's piece
             if (checkPiece == null || checkPiece.getTeamColor() != color) {
                 addedMoves.add(new ChessMove(position, newPosition, null));
             }

@@ -19,11 +19,11 @@ public class MoveCalculator {
 
         return switch (currentPiece.getPieceType()) {
             case KING -> new KingMoves().getMoves(board, myPosition);
-            case QUEEN -> new QueenMoves().getMoves();
-            case BISHOP -> new BishopMoves().getMoves();
-            case KNIGHT -> new KnightMoves().getMoves();
-            case ROOK -> new RookMoves().getMoves();
-            case PAWN -> new PawnMoves().getMoves();
+            case QUEEN -> new QueenMoves().getMoves(board, myPosition);
+            case BISHOP -> new BishopMoves().getMoves(board, myPosition);
+            case KNIGHT -> new KnightMoves().getMoves(board, myPosition);
+            case ROOK -> new RookMoves().getMoves(board, myPosition);
+            case PAWN -> new PawnMoves().getMoves(board, myPosition);
         };
     }
 }

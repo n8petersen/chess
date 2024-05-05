@@ -11,13 +11,10 @@ public class KnightMoves {
 
         moveList.addAll(addMoves(board, myPosition, 2,-1));
         moveList.addAll(addMoves(board, myPosition, 2,1));
-
         moveList.addAll(addMoves(board, myPosition, 1,2));
         moveList.addAll(addMoves(board, myPosition, -1,2));
-
         moveList.addAll(addMoves(board, myPosition, -2,-1));
         moveList.addAll(addMoves(board, myPosition, -2,1));
-
         moveList.addAll(addMoves(board, myPosition, 1,-2));
         moveList.addAll(addMoves(board, myPosition, -1,-2));
 

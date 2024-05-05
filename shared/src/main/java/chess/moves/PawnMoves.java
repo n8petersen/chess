@@ -47,14 +47,33 @@ public class PawnMoves {
             if (attack && checkPiece != null) {
                 // if piece is opposite color, add the move
                 if (checkPiece.getTeamColor() != color) {
-                    addedMoves.add(new ChessMove(position, newPosition, null));
+                    addedMoves.addAll(pawnCheckPromotion(position, newPosition));
                 }
             }
             // if not attack mode, and spot is empty, add the move
             if (!attack && checkPiece == null) {
-                addedMoves.add(new ChessMove(position, newPosition, null));
+                addedMoves.addAll(pawnCheckPromotion(position, newPosition));
             }
         }
+        return addedMoves;
+    }
+
+    private ArrayList<ChessMove> pawnCheckPromotion(ChessPosition oldPosition, ChessPosition newPosition) {
+        ArrayList<ChessMove> addedMoves = new ArrayList<ChessMove>();
+
+        // at first I had this split into black and white,
+        // but I realized that pawns can't move backwards to their own first row,
+        // so I combined it into one if statement.
+        if (newPosition.getRow() == 1 || newPosition.getRow() == 8) {
+            addedMoves.add(new ChessMove(oldPosition, newPosition, ChessPiece.PieceType.KNIGHT));
+            addedMoves.add(new ChessMove(oldPosition, newPosition, ChessPiece.PieceType.BISHOP));
+            addedMoves.add(new ChessMove(oldPosition, newPosition, ChessPiece.PieceType.ROOK));
+            addedMoves.add(new ChessMove(oldPosition, newPosition, ChessPiece.PieceType.QUEEN));
+        }
+        else {
+            addedMoves.add(new ChessMove(oldPosition, newPosition, null));
+        }
+
         return addedMoves;
     }
 }

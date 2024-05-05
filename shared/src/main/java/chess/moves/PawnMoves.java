@@ -41,6 +41,8 @@ public class PawnMoves {
             ChessPosition newPosition = new ChessPosition(newRow, newCol);
             ChessPiece checkPiece = board.getPiece(newPosition);
 
+            //  TODO: add promotions. When adding the move, the "NULL" object should be the PieceType promotionPiece.
+            //  TODO: Basically, if the end position is resulting in a promotion, we need to add a new move for each of the advanced piece types.
             // if attack mode and the spot is taken
             if (attack && checkPiece != null) {
                 // if piece is opposite color, add the move

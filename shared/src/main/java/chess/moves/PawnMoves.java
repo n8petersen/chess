@@ -4,12 +4,10 @@ import chess.*;
 
 import java.util.ArrayList;
 
-import static java.lang.Math.abs;
-
 public class PawnMoves {
 
     public ArrayList<ChessMove> getMoves(ChessBoard board, ChessPosition myPosition) {
-        ArrayList<ChessMove> moveList = new ArrayList<ChessMove>();
+        ArrayList<ChessMove> moveList = new ArrayList<>();
 
         // TODO: add promotions
         ChessGame.TeamColor color = board.getPiece(myPosition).getTeamColor();
@@ -31,7 +29,7 @@ public class PawnMoves {
     }
 
     private ArrayList<ChessMove> addMoves(ChessBoard board, ChessPosition position, int moveRow, int moveCol, boolean attack) {
-        ArrayList<ChessMove> addedMoves = new ArrayList<ChessMove>();
+        ArrayList<ChessMove> addedMoves = new ArrayList<>();
         ChessGame.TeamColor color = board.getPiece(position).getTeamColor();
         int newRow = position.getRow() + moveRow;
         int newCol = position.getColumn() + moveCol;
@@ -59,7 +57,7 @@ public class PawnMoves {
     }
 
     private ArrayList<ChessMove> pawnCheckPromotion(ChessPosition oldPosition, ChessPosition newPosition) {
-        ArrayList<ChessMove> addedMoves = new ArrayList<ChessMove>();
+        ArrayList<ChessMove> addedMoves = new ArrayList<>();
 
         // at first I had this split into black and white,
         // but I realized that pawns can't move backwards to their own first row,

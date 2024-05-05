@@ -1,6 +1,5 @@
 package chess;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -11,7 +10,7 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessBoard {
-    private ChessPiece[][] pieces = new ChessPiece[8][8];
+    private final ChessPiece[][] pieces = new ChessPiece[8][8];
 
     public ChessBoard() {
         

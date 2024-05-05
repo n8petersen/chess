@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class KnightMoves {
 
     public ArrayList<ChessMove> getMoves(ChessBoard board, ChessPosition myPosition) {
-        ArrayList<ChessMove> moveList = new ArrayList<ChessMove>();
+        ArrayList<ChessMove> moveList = new ArrayList<>();
 
         moveList.addAll(addMoves(board, myPosition, 2,-1));
         moveList.addAll(addMoves(board, myPosition, 2,1));
@@ -23,7 +23,7 @@ public class KnightMoves {
     }
 
     private ArrayList<ChessMove> addMoves(ChessBoard board, ChessPosition position, int moveRow, int moveCol) {
-        ArrayList<ChessMove> addedMoves = new ArrayList<ChessMove>();
+        ArrayList<ChessMove> addedMoves = new ArrayList<>();
         ChessGame.TeamColor color = board.getPiece(position).getTeamColor();
         int newRow = position.getRow() + moveRow;
         int newCol = position.getColumn() + moveCol;

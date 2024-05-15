@@ -9,6 +9,18 @@ public class BishopMoves {
     public ArrayList<ChessMove> getMoves(ChessBoard board, ChessPosition myPosition) {
         ArrayList<ChessMove> moveList = new ArrayList<>();
 
+        //      Bishop Movement:
+        //      -----------------
+        //      | |x| | | | | |x|
+        //      | | |x| | | |x| |
+        //      | | | |x| |x| | |
+        //      | | | | |B| | | |
+        //      | | | |x| |x| | |
+        //      | | |x| | | |x| |
+        //      | |x| | | | | |x|
+        //      |x| | | | | | | |
+        //      -----------------
+
         moveList.addAll(addMoves(board, myPosition, 1,-1));
         moveList.addAll(addMoves(board, myPosition, 1,1));
         moveList.addAll(addMoves(board, myPosition, -1,-1));

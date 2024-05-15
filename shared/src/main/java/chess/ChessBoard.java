@@ -42,20 +42,14 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        // clears the board. i = rows, j = columns
+        // set all pieces to null
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                this.pieces[i][j] = null;
+                pieces[i][j] = null;
             }
         }
 
-        // add pawns. i = cols
-        for (int j = 0; j < 8; j++) {
-            this.pieces[1][j] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
-            this.pieces[6][j] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
-        }
-
-        ChessPiece.PieceType[] specialPieces = {
+        ChessPiece.PieceType[] specials = {
                 ChessPiece.PieceType.ROOK,
                 ChessPiece.PieceType.KNIGHT,
                 ChessPiece.PieceType.BISHOP,
@@ -66,16 +60,25 @@ public class ChessBoard {
                 ChessPiece.PieceType.ROOK
         };
 
-        // add special pieces
-        for (int j = 0; j < 8; j++) {
-            this.pieces[0][j] = new ChessPiece(ChessGame.TeamColor.WHITE, specialPieces[j]);
-            this.pieces[7][j] = new ChessPiece(ChessGame.TeamColor.BLACK, specialPieces[j]);
+        // add pieces
+        for (int i = 0; i < 2; i ++) {
+            for (int j = 0; j < 8; j++) {
+                // add pawns
+                pieces[1][j] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+                pieces[6][j] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+
+                // add specials
+                pieces[0][j] = new ChessPiece(ChessGame.TeamColor.WHITE, specials[j]);
+                pieces[7][j] = new ChessPiece(ChessGame.TeamColor.BLACK, specials[j]);
+            }
         }
     }
 
     @Override
     public String toString() {
-        return "Board(" + Arrays.deepToString(this.pieces) + ")";
+        return "ChessBoard{" +
+                "pieces=" + Arrays.toString(pieces) +
+                '}';
     }
 
     @Override

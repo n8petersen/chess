@@ -13,10 +13,6 @@ public class MoveCalculator {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece currentPiece = board.getPiece(myPosition);
 
-        if (currentPiece == null) {
-            return new ArrayList<>();
-        }
-
         return switch (currentPiece.getPieceType()) {
             case KING -> new KingMoves().getMoves(board, myPosition);
             case QUEEN -> new QueenMoves().getMoves(board, myPosition);
@@ -24,6 +20,7 @@ public class MoveCalculator {
             case KNIGHT -> new KnightMoves().getMoves(board, myPosition);
             case ROOK -> new RookMoves().getMoves(board, myPosition);
             case PAWN -> new PawnMoves().getMoves(board, myPosition);
+            case null, default -> new ArrayList<>();
         };
     }
 }

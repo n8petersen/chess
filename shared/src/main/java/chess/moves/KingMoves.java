@@ -9,6 +9,18 @@ public class KingMoves {
     public ArrayList<ChessMove> getMoves(ChessBoard board, ChessPosition myPosition) {
         ArrayList<ChessMove> moveList = new ArrayList<>();
 
+        //      King Movement:
+        //      -----------------
+        //      | | | | | | | | |
+        //      | | | | | | | | |
+        //      | | | |x|x|x| | |
+        //      | | | |x|K|x| | |
+        //      | | | |x|x|x| | |
+        //      | | | | | | | | |
+        //      | | | | | | | | |
+        //      | | | | | | | | |
+        //      -----------------
+
         // add all the possible moves
         moveList.addAll(addMoves(board, myPosition, 1,-1));
         moveList.addAll(addMoves(board, myPosition, 0,-1));

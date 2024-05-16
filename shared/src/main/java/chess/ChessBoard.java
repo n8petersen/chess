@@ -1,6 +1,5 @@
 package chess;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -103,7 +102,7 @@ public class ChessBoard {
      */
     public Collection<ChessPosition> findPieces(ChessGame.TeamColor color, ChessPiece.PieceType pieceType) {
         // iterate through pieces, and if piece is the same color and type, return it
-        Collection<ChessPosition> foundPieces = new ArrayList<ChessPosition>();
+        Collection<ChessPosition> foundPieces = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (pieces[i][j] != null && pieces[i][j].getPieceType() == pieceType && pieces[i][j].getTeamColor() == color) {
@@ -132,7 +131,7 @@ public class ChessBoard {
      */
     private Collection<ChessPiece> getAttackingPieces(ChessPosition targetPosition) {
         ChessGame.TeamColor targetColor = this.getPiece(targetPosition).getTeamColor();
-        Collection<ChessPiece> attackingPieces = new ArrayList<ChessPiece>();
+        Collection<ChessPiece> attackingPieces = new ArrayList<>();
         // iterate through all pieces in board
         // if piece is not null and is opposite color,
         // iterate through attackingPiece's moves,

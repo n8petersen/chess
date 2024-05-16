@@ -64,9 +64,14 @@ public class ChessGame {
             // get all the possible moves for the current piece
             Collection<ChessMove> checkMoves = piece.pieceMoves(board, startPosition);
 
-            // TODO: we need to add a way to make sure the moves are actually valid and legal.
-            //  Perhaps a helper function is necessary. For now we will just add them all.
-            moveList.addAll(checkMoves);
+            // iterate through all moves
+            // check that current move is valid
+            // if valid, add to the array
+            for (ChessMove currMove : checkMoves) {
+                if (checkMove(currMove)) {
+                    moveList.add(currMove);
+                }
+            }
         }
 
         return moveList;

@@ -88,10 +88,34 @@ public class ChessGame {
         //  1. given piece in move is not null
         //  2. given piece is the current team's color
         //  3. the provided rule is in the returned list from valid rules
-        //  4. the move doesn't put team's king in check)
+        //  4. the move doesn't put team's king in check
+        ChessPosition startPosition = move.getStartPosition();
+        ChessPosition endPosition = move.getEndPosition();
+        ChessPiece movePiece = board.getPiece(startPosition);
+
+        if (movePiece != null && movePiece.getTeamColor() == turnColor) {
+            Collection<ChessMove> possibleMoves = movePiece.pieceMoves(board, startPosition);
+            if (possibleMoves.contains(move)) {
+                // TODO we need to implement the last check, no 4, to make sure that after the move, the king isn't in check.
+                //  we can break this out into a helper function 'checkMove(move)'
+
+                // check for promotion, and change piece if promoting
+                if (move.getPromotionPiece() != null) {
+                    movePiece.setPieceType(move.getPromotionPiece());
+                }
+                board.removePiece(startPosition);
+                board.addPiece(endPosition, movePiece);
+
+                // flip the turn color - if white, set to black, else set to white.
+                turnColor = (turnColor == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE);
+
+                //return so we don't throw InvalidMoveException
+                return;
+            }
+        }
 
         // after we make the move, swap the team color. But only if the move was valid and actually made.
-        throw new RuntimeException("Not implemented");
+        throw new InvalidMoveException("Invalid move: " + move);
     }
 
     /**

@@ -118,4 +118,20 @@ public class ChessGame {
     public ChessBoard getBoard() {
         throw new RuntimeException("Not implemented");
     }
+
+    // TODO: Add extra moves:
+    //  Castling:
+    //    This is a special move where the King and a Rook move simultaneously.
+    //    The castling move can only be taken when 4 conditions are met:
+    //     1. Neither the King nor Rook have moved since the game started
+    //     2. There are no pieces between the King and the Rook
+    //     3. The King is not in Check
+    //     4. Both your Rook and King will be safe after making the move (cannot be captured by any enemy pieces).
+    //    To Castle, the King moves 2 spaces towards the Rook, and the Rook "jumps" the king moving to the position next to and on the other side of the King.
+    //    This is represented in a ChessMove as the king moving 2 spaces to the side.
+    //  En Passant
+    //   This is a special move taken by a Pawn in response to your opponent double moving a Pawn.
+    //   If your opponent double moves a pawn so it ends next to yours (skipping the position where your pawn could have captured their pawn),
+    //   then on your immediately following turn your pawn may capture their pawn as if their pawn had only moved 1 square.
+    //   This is as if your pawn is capturing their pawn mid motion, or In Passing.
 }

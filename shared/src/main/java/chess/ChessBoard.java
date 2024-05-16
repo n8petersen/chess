@@ -1,6 +1,9 @@
 package chess;
 
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -72,6 +75,19 @@ public class ChessBoard {
                 pieces[7][j] = new ChessPiece(ChessGame.TeamColor.BLACK, specials[j]);
             }
         }
+    }
+
+    public Collection<ChessPosition> findPieces(ChessGame.TeamColor color, ChessPiece.PieceType pieceType) {
+        // iterate through pieces, and if piece is the same color and type, return it
+        Collection<ChessPosition> foundPieces = new ArrayList<ChessPosition>();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (pieces[i][j] != null && pieces[i][j].getPieceType() == pieceType && pieces[i][j].getTeamColor() == color) {
+                    foundPieces.add(new ChessPosition(i + 1, j + 1));
+                }
+            }
+        }
+        return foundPieces;
     }
 
     @Override

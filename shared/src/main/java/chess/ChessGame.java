@@ -56,7 +56,7 @@ public class ChessGame {
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         // Takes as input a position on the chessboard and returns all moves the piece there can legally make.
         // If there is no piece at that location, this method returns null.
-        ArrayList<ChessMove> moveList = new ArrayList<ChessMove>();
+        ArrayList<ChessMove> moveList = new ArrayList<>();
         ChessPiece piece = board.getPiece(startPosition);
 
         // only add moves if the piece is null
@@ -90,7 +90,6 @@ public class ChessGame {
         //  3. the provided rule is in the returned list from valid rules
         //  4. the move doesn't put team's king in check
         ChessPosition startPosition = move.getStartPosition();
-        ChessPosition endPosition = move.getEndPosition();
         ChessPiece piece = board.getPiece(startPosition);
 
         if (piece != null && piece.getTeamColor() == turnColor) {
@@ -139,7 +138,6 @@ public class ChessGame {
      */
     private boolean checkMove(ChessMove move) {
         ChessPosition startPosition = move.getStartPosition();
-        ChessPosition endPosition = move.getEndPosition();
         ChessPiece movePiece = board.getPiece(startPosition);
         TeamColor teamColor = movePiece.getTeamColor();
 

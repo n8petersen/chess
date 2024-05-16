@@ -91,20 +91,13 @@ public class ChessGame {
         //  4. the move doesn't put team's king in check
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
-        ChessPiece movePiece = board.getPiece(startPosition);
+        ChessPiece piece = board.getPiece(startPosition);
 
-        if (movePiece != null && movePiece.getTeamColor() == turnColor) {
-            Collection<ChessMove> possibleMoves = movePiece.pieceMoves(board, startPosition);
-            if (possibleMoves.contains(move)) {
-                // TODO we need to implement the last check, no 4, to make sure that after the move, the king isn't in check.
-                //  we can break this out into a helper function 'checkMove(move)'
-
-                // check for promotion, and change piece if promoting
-                if (move.getPromotionPiece() != null) {
-                    movePiece.setPieceType(move.getPromotionPiece());
-                }
-                board.removePiece(startPosition);
-                board.addPiece(endPosition, movePiece);
+        if (piece != null && piece.getTeamColor() == turnColor) {
+            Collection<ChessMove> possibleMoves = piece.pieceMoves(board, startPosition);
+            if (possibleMoves.contains(move) && checkMove(move)) {
+                // actually move the piece on the board
+                movePiece(board, move);
 
                 // flip the turn color - if white, set to black, else set to white.
                 turnColor = (turnColor == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE);
@@ -117,6 +110,26 @@ public class ChessGame {
         // after we make the move, swap the team color. But only if the move was valid and actually made.
         throw new InvalidMoveException("Invalid move: " + move);
     }
+
+    /**
+     * Actually moves the piece on a board
+     *
+     * @param board the board on which to move the piece
+     * @param move the move to make
+     */
+    private void movePiece(ChessBoard board, ChessMove move) {
+        ChessPosition startPosition = move.getStartPosition();
+        ChessPosition endPosition = move.getEndPosition();
+        ChessPiece piece = board.getPiece(startPosition);
+
+        // check for promotion, and change piece if promoting
+        if (move.getPromotionPiece() != null) {
+            piece.setPieceType(move.getPromotionPiece());
+        }
+        board.removePiece(startPosition);
+        board.addPiece(endPosition, piece);
+    }
+
 
     /**
      * Determines if the given team is in check

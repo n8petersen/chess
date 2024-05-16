@@ -211,6 +211,13 @@ public class ChessGame {
             return false;
         }
 
+        // make a copy of the board
+
+        // try all moves on board
+        // if any move removes check, add move to the list
+        // if list is empty, we are in checkmate
+        // if list is NOT empty, we are not in checkmate.
+
 
 
         throw new RuntimeException("Not implemented");
@@ -234,6 +241,12 @@ public class ChessGame {
         if (isInCheck(teamColor)) {
             return false;
         }
+
+        // for each piece on current player color
+        // check if the piece has any valid moves
+        // if it does, add it to the list
+        // if list is empty, we are in stalemate
+        // if list is not empty, we are not in stalemate and can make a move
 
         throw new RuntimeException("Not implemented");
     }

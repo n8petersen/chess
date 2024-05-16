@@ -130,6 +130,30 @@ public class ChessGame {
         board.addPiece(endPosition, piece);
     }
 
+    /**
+     * Determines if the given move is valid.
+     * Move is valid if after the move, the king is not in check.
+     *
+     * @param move the move to test
+     * @return True if the team's king is NOT in check after the move
+     */
+    private boolean checkMove(ChessMove move) {
+        ChessPosition startPosition = move.getStartPosition();
+        ChessPosition endPosition = move.getEndPosition();
+        ChessPiece movePiece = board.getPiece(startPosition);
+        TeamColor teamColor = movePiece.getTeamColor();
+
+        // copy the board
+        ChessBoard boardCopy = new ChessBoard(board);
+
+        // make the move on the copied board
+        movePiece(boardCopy, move);
+
+        // check if king is in check
+        boolean inCheck = isInCheck(teamColor);
+
+        return !inCheck;
+    }
 
     /**
      * Determines if the given team is in check

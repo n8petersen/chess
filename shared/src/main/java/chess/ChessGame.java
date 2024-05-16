@@ -166,7 +166,15 @@ public class ChessGame {
         // given color, we need to find that player's king
         // once we find the king, we need to find if that piece is being attacked
 
-        // only return the first king found for team
+        // get locations of all kingPieces for a team
+        Collection<ChessPosition> kingPieces = board.findPieces(teamColor, ChessPiece.PieceType.KING);
+
+        // if there are no kings (only happens in test cases), can't be in check
+        if (kingPieces.isEmpty()) {
+            return false;
+        }
+
+        // only get the first king found for team
         ChessPosition kingPiece = board.findPieces(teamColor, ChessPiece.PieceType.KING).iterator().next();
 
         return board.isUnderAttack(kingPiece);

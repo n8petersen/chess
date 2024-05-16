@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -136,6 +137,27 @@ public class ChessGame {
         return board;
     }
 
+    @Override
+    public String toString() {
+        return "ChessGame{" +
+                "turnColor=" + turnColor +
+                ", board=" + board +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessGame chessGame = (ChessGame) o;
+        return turnColor == chessGame.turnColor && Objects.equals(board, chessGame.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(turnColor, board);
+    }
+
     // TODO: Add extra moves:
     //  Castling:
     //    This is a special move where the King and a Rook move simultaneously.
@@ -152,3 +174,4 @@ public class ChessGame {
     //   then on your immediately following turn your pawn may capture their pawn as if their pawn had only moved 1 square.
     //   This is as if your pawn is capturing their pawn mid motion, or In Passing.
 }
+

@@ -90,6 +90,36 @@ public class ChessBoard {
         return foundPieces;
     }
 
+    public boolean isUnderAttack(ChessPosition position) {
+        Collection<ChessPiece> attackingPieces = this.getAttackingPieces(position);
+        return !attackingPieces.isEmpty();
+    }
+
+    private Collection<ChessPiece> getAttackingPieces(ChessPosition targetPosition) {
+        ChessGame.TeamColor targetColor = this.getPiece(targetPosition).getTeamColor();
+        Collection<ChessPiece> attackingPieces = new ArrayList<ChessPiece>();
+        // iterate through all pieces in board
+        // if piece is not null and is opposite color,
+        // iterate through attackingPiece's moves,
+        // if endPosition of move is same as target position
+        // add to attackers
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (pieces[i][j] != null && pieces[i][j].getTeamColor() != targetColor) {
+                    for (ChessMove move : pieces[i][j].pieceMoves(this, new ChessPosition(i+1,j+1))) {
+                        if (move.getEndPosition().equals(targetPosition)) {
+                            attackingPieces.add(pieces[i][j]);
+                            break;
+                            // we can break here because this function is only used to check status, which only requires 1 attacker.
+                        }
+                    }
+                }
+            }
+        }
+        return attackingPieces;
+    }
+
     @Override
     public String toString() {
         return "ChessBoard{" +

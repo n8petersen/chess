@@ -48,6 +48,8 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+        // Takes as input a position on the chessboard and returns all moves the piece there can legally make.
+        // If there is no piece at that location, this method returns null.
         throw new RuntimeException("Not implemented");
     }
 
@@ -58,6 +60,10 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        // Receives a given move and executes it, provided it is a legal move.
+        // If the move is illegal, it throws an InvalidMoveException.
+        // A move is illegal if the chess piece cannot move there, if the move leaves the team’s king in danger,
+        // or if it’s not the corresponding team's turn.
         throw new RuntimeException("Not implemented");
     }
 
@@ -68,6 +74,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
+        // Returns true if the specified team’s King could be captured by an opposing piece.
         throw new RuntimeException("Not implemented");
     }
 
@@ -78,6 +85,7 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
+        // Returns true if the given team has no way to protect their king from being captured.
         throw new RuntimeException("Not implemented");
     }
 
@@ -89,6 +97,7 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
+        //Returns true if the given team has no legal moves and it is currently that team’s turn.
         throw new RuntimeException("Not implemented");
     }
 

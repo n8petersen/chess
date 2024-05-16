@@ -105,10 +105,10 @@ public class ChessGame {
         // given color, we need to find that player's king
         // once we find the king, we need to find if that piece is being attacked
 
-        // TODO: Prereqs:
-        //  Check if attacked
+        // only return the first king found for team
+        ChessPosition kingPiece = board.findPieces(teamColor, ChessPiece.PieceType.KING).iterator().next();
 
-        throw new RuntimeException("Not implemented");
+        return board.isUnderAttack(kingPiece);
     }
 
     /**

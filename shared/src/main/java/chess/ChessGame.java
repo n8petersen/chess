@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -53,7 +54,20 @@ public class ChessGame {
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         // Takes as input a position on the chessboard and returns all moves the piece there can legally make.
         // If there is no piece at that location, this method returns null.
-        throw new RuntimeException("Not implemented");
+        ArrayList<ChessMove> moveList = new ArrayList<ChessMove>();
+        ChessPiece piece = board.getPiece(startPosition);
+
+        // only add moves if the piece is null
+        if (piece != null) {
+            // get all the possible moves for the current piece
+            Collection<ChessMove> checkMoves = piece.pieceMoves(board, startPosition);
+
+            // TODO: we need to add a way to make sure the moves are actually valid and legal.
+            //  Perhaps a helper function is necessary. For now we will just add them all.
+            moveList.addAll(checkMoves);
+        }
+
+        return moveList;
     }
 
     /**

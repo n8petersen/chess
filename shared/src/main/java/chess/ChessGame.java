@@ -120,7 +120,8 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
         // Returns true if the given team has no way to protect their king from being captured.
         // same as check, except there are no valid moves
-        // move is valid because the move would not place the king on a square that is being attacked.
+        //   (move is valid when the move would not place the king on a square that is being attacked)
+
         //  to check this, we need to make a copy of the board
         //  on the copy of the board make the move and see check if king is attacked
         //  if we find any move that is valid, we can return false.

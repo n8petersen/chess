@@ -144,11 +144,14 @@ public class ChessGame {
         // copy the board
         ChessBoard boardCopy = new ChessBoard(board);
 
-        // make the move on the copied board
-        movePiece(boardCopy, move);
+        // make the move on the board
+        movePiece(board, move);
 
         // check if king is in check
         boolean inCheck = isInCheck(teamColor);
+
+        // restore the board
+        board = boardCopy;
 
         return !inCheck;
     }

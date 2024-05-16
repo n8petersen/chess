@@ -132,6 +132,12 @@ public class ChessGame {
         //  Copy board
         //  Make moves
 
+        if (!isInCheck(teamColor)) {
+            return false;
+        }
+
+
+
         throw new RuntimeException("Not implemented");
     }
 
@@ -149,6 +155,10 @@ public class ChessGame {
         // then, check if there are any valid moves.
         // if any moves are valid, we can return false
         // else, after checking all possible moves and none return false, then we return true.
+
+        if (isInCheck(teamColor)) {
+            return false;
+        }
 
         throw new RuntimeException("Not implemented");
     }

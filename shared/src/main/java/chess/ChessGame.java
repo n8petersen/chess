@@ -19,6 +19,7 @@ public class ChessGame {
         // Create a new board, and set the current color to White since White starts the game.
         this.turnColor = TeamColor.WHITE;
         this.board = new ChessBoard();
+        this.board.resetBoard();
     }
 
     /**

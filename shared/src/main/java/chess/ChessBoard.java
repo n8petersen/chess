@@ -85,6 +85,12 @@ public class ChessBoard {
         }
     }
 
+    /**
+     * Finds all piece of color and type on the chessboard
+     *
+     * @param color     team color to look for
+     * @param pieceType piece type to look for
+     */
     public Collection<ChessPosition> findPieces(ChessGame.TeamColor color, ChessPiece.PieceType pieceType) {
         // iterate through pieces, and if piece is the same color and type, return it
         Collection<ChessPosition> foundPieces = new ArrayList<ChessPosition>();
@@ -98,11 +104,22 @@ public class ChessBoard {
         return foundPieces;
     }
 
+    /**
+     * Checks if a position is under attack by enemy color
+     *
+     * @param position position to check if under attack
+     */
     public boolean isUnderAttack(ChessPosition position) {
         Collection<ChessPiece> attackingPieces = this.getAttackingPieces(position);
         return !attackingPieces.isEmpty();
     }
 
+    /**
+     * Gets possible attackers of a position.
+     * Since this is only used for checking status, such as check or checkmate, we break out after finding first attacker.
+     *
+     * @param targetPosition position to check for attackers
+     */
     private Collection<ChessPiece> getAttackingPieces(ChessPosition targetPosition) {
         ChessGame.TeamColor targetColor = this.getPiece(targetPosition).getTeamColor();
         Collection<ChessPiece> attackingPieces = new ArrayList<ChessPiece>();

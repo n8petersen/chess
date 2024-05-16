@@ -83,6 +83,14 @@ public class ChessGame {
         // If the move is illegal, it throws an InvalidMoveException.
         // A move is illegal if the chess piece cannot move there, if the move leaves the team’s king in danger,
         // or if it’s not the corresponding team's turn.
+
+        // valid moves:
+        //  1. given piece in move is not null
+        //  2. given piece is the current team's color
+        //  3. the provided rule is in the returned list from valid rules
+        //  4. the move doesn't put team's king in check)
+
+        // after we make the move, swap the team color. But only if the move was valid and actually made.
         throw new RuntimeException("Not implemented");
     }
 

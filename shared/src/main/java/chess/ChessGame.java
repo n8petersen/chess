@@ -11,9 +11,12 @@ import java.util.Collection;
 public class ChessGame {
 
     private TeamColor turnColor;
+    private ChessBoard board;
 
     public ChessGame() {
-
+        // Create a new board, and set the current color to White since White starts the game.
+        this.turnColor = TeamColor.WHITE;
+        this.board = new ChessBoard();
     }
 
     /**

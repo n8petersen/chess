@@ -16,7 +16,17 @@ public class ChessBoard {
     private final ChessPiece[][] pieces = new ChessPiece[8][8];
 
     public ChessBoard() {
-        
+    }
+
+    /**
+     * Constructor to make a copy of the board
+     *
+     * @param originalBoard    the board to copy
+     */
+    public ChessBoard(ChessBoard originalBoard) {
+        for (int i = 0; i < originalBoard.pieces.length; i++) {
+            this.pieces[i] = Arrays.copyOf(originalBoard.pieces[i], originalBoard.pieces.length);
+        }
     }
 
     /**

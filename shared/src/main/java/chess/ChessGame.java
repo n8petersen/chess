@@ -94,6 +94,12 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         // Returns true if the specified team’s King could be captured by an opposing piece.
+        // given color, we need to find that player's king
+        // once we find the king, we need to find if that piece is being attacked
+
+        // TODO: Prereqs:
+        //  Check if attacked
+
         throw new RuntimeException("Not implemented");
     }
 
@@ -105,6 +111,18 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
         // Returns true if the given team has no way to protect their king from being captured.
+        // same as check, except there are no valid moves
+        // move is valid because the move would not place the king on a square that is being attacked.
+        //  to check this, we need to make a copy of the board
+        //  on the copy of the board make the move and see check if king is attacked
+        //  if we find any move that is valid, we can return false.
+        //  else, after checking all possible king moves and none return false, then we return true.
+
+        // TODO: Prereqs:
+        //  Check if attacked
+        //  Copy board
+        //  Make moves
+
         throw new RuntimeException("Not implemented");
     }
 
@@ -117,6 +135,12 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         //Returns true if the given team has no legal moves and it is currently that team’s turn.
+
+        // Only stalemate if king is not in check, so first check that and return false if in check
+        // then, check if there are any valid moves.
+        // if any moves are valid, we can return false
+        // else, after checking all possible moves and none return false, then we return true.
+
         throw new RuntimeException("Not implemented");
     }
 

@@ -9,21 +9,40 @@ public class PawnMoves {
     public ArrayList<ChessMove> getMoves(ChessBoard board, ChessPosition myPosition) {
         ArrayList<ChessMove> moveList = new ArrayList<>();
 
-        // TODO: add promotions
-        ChessGame.TeamColor color = board.getPiece(myPosition).getTeamColor();
-        int dir = (color == ChessGame.TeamColor.WHITE ? 1 : -1);
+        //      Pawn Movement:
+        //      -----------------
+        //      | | |*| | | | | |
+        //      | | |P| | | |^| |
+        //      | | | | | | |P| |
+        //      | | | | | | | | |
+        //      |^| | |x| |x| | |
+        //      |^| | | |P| | | |
+        //      |P| | | | | | | |
+        //      | | | | | | | | |
+        //      -----------------
 
-        // add fwd moves
-        moveList.addAll(addMoves(board, myPosition, dir, 0, false));
-        // add attacking moves
-        moveList.addAll(addMoves(board, myPosition, dir, 1, true));
-        moveList.addAll(addMoves(board, myPosition, dir, -1, true));
-        // add starter row moves
+        // Movement rules:
+        // 1. If in starter position, it can move 2 forward, or 1 forward, if not blocked by ANY color piece
+        // 2. If not in starter position, it can move forward 1, if not blocked by ANY color piece
+        // 3. In any position, it can attack on the diagonals, if there is an opposite color piece there
+        // 4. In any move, if the end position is on the last row, it can be promoted to: Queen, Bishop, Rook, Knight (add 4 moves)
+
+        // change move direction based on color
+        int dir = (board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE ? 1 : -1);
+
+        // add starter row moves, but only if piece in front of pawn is empty
         ChessPosition checkPosition = new ChessPosition(myPosition.getRow() + dir, myPosition.getColumn());
         ChessPiece checkPiece = board.getPiece(checkPosition);
         if ((myPosition.getRow() == 2 || myPosition.getRow() == 7) && checkPiece == null) {
             moveList.addAll(addMoves(board, myPosition, 2 * dir, 0, false));
         }
+
+        // add fwd moves
+        moveList.addAll(addMoves(board, myPosition, dir, 0, false));
+
+        // add attacking moves
+        moveList.addAll(addMoves(board, myPosition, dir, 1, true));
+        moveList.addAll(addMoves(board, myPosition, dir, -1, true));
 
         return moveList;
     }
@@ -39,8 +58,6 @@ public class PawnMoves {
             ChessPosition newPosition = new ChessPosition(newRow, newCol);
             ChessPiece checkPiece = board.getPiece(newPosition);
 
-            //  TODO: add promotions. When adding the move, the "NULL" object should be the PieceType promotionPiece.
-            //  TODO: Basically, if the end position is resulting in a promotion, we need to add a new move for each of the advanced piece types.
             // if attack mode and the spot is taken
             if (attack && checkPiece != null) {
                 // if piece is opposite color, add the move
@@ -59,15 +76,14 @@ public class PawnMoves {
     private ArrayList<ChessMove> pawnCheckPromotion(ChessPosition oldPosition, ChessPosition newPosition) {
         ArrayList<ChessMove> addedMoves = new ArrayList<>();
 
-        // at first I had this split into black and white,
-        // but I realized that pawns can't move backwards to their own first row,
-        // so I combined it into one if statement.
+        // if the newPosition is on the last row, add 4 moves, one of each promotion piece type
         if (newPosition.getRow() == 1 || newPosition.getRow() == 8) {
             addedMoves.add(new ChessMove(oldPosition, newPosition, ChessPiece.PieceType.KNIGHT));
             addedMoves.add(new ChessMove(oldPosition, newPosition, ChessPiece.PieceType.BISHOP));
             addedMoves.add(new ChessMove(oldPosition, newPosition, ChessPiece.PieceType.ROOK));
             addedMoves.add(new ChessMove(oldPosition, newPosition, ChessPiece.PieceType.QUEEN));
         }
+        // otherwise, just add one move with promotion as null
         else {
             addedMoves.add(new ChessMove(oldPosition, newPosition, null));
         }

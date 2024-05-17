@@ -9,6 +9,18 @@ public class KnightMoves {
     public ArrayList<ChessMove> getMoves(ChessBoard board, ChessPosition myPosition) {
         ArrayList<ChessMove> moveList = new ArrayList<>();
 
+        //      Knight Movement:
+        //      -----------------
+        //      | | | | | | | | |
+        //      | | | |x| |x| | |
+        //      | | |x| | | |x| |
+        //      | | | | |N| | | |
+        //      | | |x| | | |x| |
+        //      | | | |x| |x| | |
+        //      | | | | | | | | |
+        //      | | | | | | | | |
+        //      -----------------
+
         moveList.addAll(addMoves(board, myPosition, 2,-1));
         moveList.addAll(addMoves(board, myPosition, 2,1));
         moveList.addAll(addMoves(board, myPosition, 1,2));

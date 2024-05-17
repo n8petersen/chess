@@ -14,7 +14,7 @@ import java.util.Objects;
 public class ChessPiece {
 
     private final ChessGame.TeamColor color;
-    private final PieceType type;
+    private PieceType type;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.color = pieceColor;
@@ -37,14 +37,22 @@ public class ChessPiece {
      * @return Which team this chess piece belongs to
      */
     public ChessGame.TeamColor getTeamColor() {
-        return this.color;
+        return color;
     }
 
     /**
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType() {
-        return this.type;
+        return type;
+    }
+
+    /**
+     * Used in promotion situations to change the piece type
+     * @param type which type of piece to make the piece
+     */
+    public void setPieceType(PieceType type) {
+        this.type = type;
     }
 
     /**
@@ -62,7 +70,10 @@ public class ChessPiece {
 
     @Override
     public String toString() {
-        return (this.color.toString().charAt(0) + this.type.toString());
+        return "ChessPiece{" +
+                "color=" + color +
+                ", type=" + type +
+                '}';
     }
 
     @Override

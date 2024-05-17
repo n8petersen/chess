@@ -58,6 +58,23 @@ public class ChessBoard {
     }
 
     /**
+     * Gets all piece positions on board for a team
+     * @param currColor The team for which we are getting pieces
+     * @return the list of positions for the given team
+     */
+    public Collection<ChessPosition> getTeamPieces(ChessGame.TeamColor currColor) {
+        Collection<ChessPosition> teamPositions = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (pieces[i][j] != null && pieces[i][j].getTeamColor() == currColor) {
+                    teamPositions.add(new ChessPosition(i+1, j+1));
+                }
+            }
+        }
+        return teamPositions;
+    }
+
+    /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */

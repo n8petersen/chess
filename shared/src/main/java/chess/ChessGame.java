@@ -197,30 +197,36 @@ public class ChessGame {
         // same as check, except there are no valid moves
         //   (move is valid when the move would not place the king on a square that is being attacked)
 
-        //  to check this, we need to make a copy of the board
-        //  on the copy of the board make the move and see check if king is attacked
-        //  if we find any move that is valid, we can return false.
-        //  else, after checking all possible king moves and none return false, then we return true.
-
-        // TODO: Prereqs:
-        //  Check if attacked
-        //  Copy board
-        //  Make moves
-
         if (!isInCheck(teamColor)) {
             return false;
         }
 
-        // make a copy of the board
+        // get all piece positions of target color
+        Collection<ChessPosition> teamPieces = board.getTeamPieces(teamColor);
 
-        // try all moves on board
-        // if any move removes check, add move to the list
-        // if list is empty, we are in checkmate
-        // if list is NOT empty, we are not in checkmate.
+        // for each position of target color
+        for (ChessPosition testPosition : teamPieces) {
+            // get piece at the current location
+            ChessPiece testPiece = board.getPiece(testPosition);
+            // for each move of current piece
+            for (ChessMove testMove : testPiece.pieceMoves(board, testPosition)) {
+                // make a backup of the board to restore after test
+                ChessBoard boardBackup = new ChessBoard(board);
+                // make the move
+                movePiece(board, testMove);
+                // check if move saved the checkmate
+                if (!isInCheck(teamColor)) {
+                    // if it did, restore the board and return false
+                     board = boardBackup;
+                     return false;
+                }
+                // restore board before trying next move
+                board = boardBackup;
+            }
+        }
 
-
-
-        throw new RuntimeException("Not implemented");
+        // no moves saved checkmate, so we are in checkmate
+        return true;
     }
 
     /**

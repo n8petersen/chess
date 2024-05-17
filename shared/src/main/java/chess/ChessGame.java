@@ -231,24 +231,26 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        //Returns true if the given team has no legal moves and it is currently that team’s turn.
+        //Returns true if the given team has no legal moves, and it is currently that team’s turn.
 
-        // Only stalemate if king is not in check, so first check that and return false if in check
-        // then, check if there are any valid moves.
-        // if any moves are valid, we can return false
-        // else, after checking all possible moves and none return false, then we return true.
-
-        if (isInCheck(teamColor)) {
+        // if given team is in check, we can't be in stalemate.
+        // can also only be stalemate if it is current that color's turn
+        if (isInCheck(teamColor) || turnColor != teamColor) {
             return false;
         }
 
-        // for each piece on current player color
-        // check if the piece has any valid moves
-        // if it does, add it to the list
-        // if list is empty, we are in stalemate
-        // if list is not empty, we are not in stalemate and can make a move
+        // get all piece positions of target color
+        Collection<ChessPosition> teamPieces = board.getTeamPieces(teamColor);
 
-        throw new RuntimeException("Not implemented");
+        for (ChessPosition testPosition : teamPieces) {
+            Collection<ChessMove> testMoves = validMoves(testPosition);
+            if (!testMoves.isEmpty()) {
+                // if there are any valid moves, return false
+                return false;
+            }
+        }
+        // no valid moves saved stalemate, so we are in stalemate
+        return true;
     }
 
     /**

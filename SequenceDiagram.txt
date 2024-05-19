@@ -1,0 +1,71 @@
+actor Client
+participant Server
+participant Handler
+participant Service
+participant DataAccess
+database db
+
+entryspacing 0.9
+group #navy Registration #white
+Client -> Server: [POST] /user\n{"username":" ", "password":" ", "email":" "}
+Server -> Handler: {"username":" ", "password":" ", "email":" "}
+Handler -> Service: register(RegisterRequest)
+Service -> DataAccess: getUser(username)
+DataAccess -> db: SELECT username from user
+DataAccess --> Service: null
+Service -> DataAccess: createUser(username, password, email)
+DataAccess -> db: INSERT username, password, email INTO user
+Service -> DataAccess: createAuth(username)
+DataAccess -> db: INSERT username, authToken INTO auth
+DataAccess --> Service: authToken
+Service --> Handler: RegisterResult
+Handler --> Server: {"username" : " ", "authToken" : " "}
+Server --> Client: 200\n{"username" : " ", "authToken" : " "}
+end
+
+group #orange Login #white
+Client -> Server: [POST] /session\n{username, password}
+Server -> Handler: {"username":" ", "password":" "}
+Handler -> Service: login(LoginRequest)
+Service -> DataAccess: getUser(username)
+DataAccess -> db: SELECT username from user
+DataAccess --> Service: username
+DataAccess -> db: SELECT hashed_password from user
+Service -> DataAccess: createAuth(username)
+DataAccess -> db: INSERT username, authToken INTO auth
+DataAccess --> Service: authToken
+Service --> Handler: LoginResult
+Handler --> Server: {"username" : " ", "authToken" : " "}
+Server --> Client: 200\n{"username" : " ", "authToken" : " "}
+
+end
+
+group #green Logout #white
+Client -> Server: [DELETE] /session\nauthToken
+
+Server -> Handler: HEADER authorization: <authToken>
+Handler -> Service: logout(LogoutRequest)
+Service -> DataAccess: getAuth(authToken)
+
+DataAccess -> db: SELECT username, authToken from auth 
+DataAccess --> Service: authToken
+Service --> Handler: LoginResult
+Handler --> Server: {"username" : " ", "authToken" : " "}
+Server --> Client: 200\n{"username" : " ", "authToken" : " "}
+end
+
+group #red List Games #white
+Client -> Server: [GET] /game\nauthToken
+end
+
+group #purple Create Game #white
+Client -> Server: [POST] /game\nauthToken\n{gameName}
+end
+
+group #yellow Join Game #black
+Client -> Server: [PUT] /game\nauthToken\n{playerColor, gameID}
+end
+
+group #gray Clear application #white
+Client -> Server: [DELETE] /db
+end

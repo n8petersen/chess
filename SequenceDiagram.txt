@@ -11,7 +11,7 @@ Client -> Server: [POST] /user\n{"username":" ", "password":" ", "email":" "}
 Server -> Handler: {"username":" ", "password":" ", "email":" "}
 Handler -> Service: register(RegisterRequest)
 Service -> DataAccess: getUser(username)
-DataAccess -> db: SELECT username from user
+DataAccess -> db: SELECT username FROM user
 DataAccess --> Service: null
 Service -> DataAccess: createUser(username, password, email)
 DataAccess -> db: INSERT username, password, email INTO user
@@ -28,9 +28,9 @@ Client -> Server: [POST] /session\n{username, password}
 Server -> Handler: {"username":" ", "password":" "}
 Handler -> Service: login(LoginRequest)
 Service -> DataAccess: getUser(username)
-DataAccess -> db: SELECT username from user
-DataAccess --> Service: username
-DataAccess -> db: SELECT hashed_password from user
+DataAccess -> db: SELECT username, password FROM user
+DataAccess --> Service: username password
+
 Service -> DataAccess: createAuth(username)
 DataAccess -> db: INSERT username, authToken INTO auth
 DataAccess --> Service: authToken
@@ -42,30 +42,57 @@ end
 
 group #green Logout #white
 Client -> Server: [DELETE] /session\nauthToken
-
 Server -> Handler: HEADER authorization: <authToken>
 Handler -> Service: logout(LogoutRequest)
 Service -> DataAccess: getAuth(authToken)
+DataAccess -> db: SELECT authToken, username FROM auth
+DataAccess --> Service: username, authToken
+Service -> DataAccess: deleteAuth(authToken)
+DataAccess -> db: DELETE authToken, username FROM auth
+DataAccess --> Service: DeleteResult
+Service --> Handler: LogoutResult
+Handler --> Server: {}
+Server --> Client: 200\n{}
 
-DataAccess -> db: SELECT username, authToken from auth 
-DataAccess --> Service: authToken
-Service --> Handler: LoginResult
-Handler --> Server: {"username" : " ", "authToken" : " "}
-Server --> Client: 200\n{"username" : " ", "authToken" : " "}
+
 end
 
 group #red List Games #white
 Client -> Server: [GET] /game\nauthToken
+Server -> Handler: HEADER authorization: <authToken>
+Handler -> Service: listGames(ListGameRequest)
+Service -> DataAccess: getAuth(authToken)
+DataAccess -> db: SELECT authToken, username FROM auth
+DataAccess --> Service: username, authToken
+Service -> DataAccess: listGames()
+DataAccess-> db: SELECT games FROM games
+DataAccess --> Service: GameList
+Service --> Handler: ListGameResult
+Handler --> Server: { "games": []}
+Server --> Client: 200\n{ "games": []}
 end
 
 group #purple Create Game #white
 Client -> Server: [POST] /game\nauthToken\n{gameName}
+Server -> Handler: HEADER authorization: <authToken>\nBODY { "gameName":" " }
+Handler -> Service: createGame(CreateGameRequest)
+Service -> DataAccess: getAuth(authToken)
+DataAccess -> db: SELECT authToken, username FROM auth
+DataAccess --> Service: username, authToken
+Service -> DataAccess: createGame(gameName)
+DataAccess -> db: INSERT gameName INTO game
+DataAccess --> Service: gameID
+Service --> Handler: CreateGameResult
+Handler --> Server: { "gameID": }
+Server --> Client: 200\n{ "gameID":  }
 end
 
 group #yellow Join Game #black
 Client -> Server: [PUT] /game\nauthToken\n{playerColor, gameID}
+Server -> Handler: HEADER authorization: <authToken>\nBODY { "playerColor":" ", "gameID": }
 end
 
 group #gray Clear application #white
 Client -> Server: [DELETE] /db
 end
+

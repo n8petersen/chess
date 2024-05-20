@@ -102,7 +102,13 @@ end
 
 group #gray Clear application #white
 Client -> Server: [DELETE] /db
-
-
+Server -> Handler: NO HEADER\nNO BODY
+Handler -> Service: clearDatabase(ClearDatabaseRequest)
+Service -> DataAccess: clear()
+DataAccess -> db: DELETE everything, everywhere\n(without any kind of auth?? lol)
+DataAccess --> Service: nothing, its all gone
+Service --> Handler: ClearDatabaseResult
+Handler -> Server: {}
+Server -> Client: 200\n{}
 end
 

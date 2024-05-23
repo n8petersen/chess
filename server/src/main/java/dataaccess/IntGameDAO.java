@@ -8,11 +8,11 @@ public interface IntGameDAO {
 
     /**
      * Create a new game instance
-     * @param game GameData of the game to create
+     * @param gameName Name of Game to create
      * @return ID of game created
      * @throws DataAccessException for DB access violations
      */
-    int createGame(GameData game) throws DataAccessException;
+    int createGame(String gameName) throws DataAccessException;
 
     /**
      * Find a game given a game ID

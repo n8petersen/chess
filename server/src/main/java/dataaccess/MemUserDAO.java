@@ -1,25 +1,31 @@
 package dataaccess;
 
+import model.AuthData;
 import model.UserData;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MemUserDAO {
+
+    private final Map<String, UserData> users = new HashMap<>();
 
     public MemUserDAO() {
     }
 
-    public int createUser(UserData user) throws DataAccessException {
-        return 0;
+    public void createUser(UserData user) throws DataAccessException {
+        users.put(user.username(), user);
     }
 
     public UserData readUser(String username) throws DataAccessException {
-        return null;
+        return users.get(username);
     }
 
-    public void deleteUser(int userID) throws DataAccessException {
-
+    public void deleteUser(String username) throws DataAccessException {
+        users.remove(username);
     }
 
     public void clear() throws DataAccessException {
-
+        users.clear();
     }
 }

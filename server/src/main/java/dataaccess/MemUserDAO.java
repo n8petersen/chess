@@ -6,7 +6,7 @@ import model.UserData;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MemUserDAO {
+public class MemUserDAO implements IntUserDAO {
 
     private final Map<String, UserData> users = new HashMap<>();
 

@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MemGameDAO {
+public class MemGameDAO implements IntGameDAO {
 
     int newGameID = 100;
     private final Map<Integer, GameData> games = new HashMap<>();

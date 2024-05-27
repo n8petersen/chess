@@ -7,8 +7,6 @@ import model.*;
 import java.util.Map;
 import spark.*;
 
-import javax.xml.crypto.Data;
-
 public class Server {
 
     private final AuthService authService;

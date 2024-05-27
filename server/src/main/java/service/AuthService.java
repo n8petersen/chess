@@ -37,7 +37,7 @@ public class AuthService {
         }
     }
 
-    public void clearAuths() throws DataAccessException{
+    public void clearAuths() {
         try {
             authDataAccess.clear();
         } catch (DataAccessException e) {

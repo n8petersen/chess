@@ -20,7 +20,7 @@ public class MoveCalculator {
             case KNIGHT -> new KnightMoves().getMoves(board, myPosition);
             case ROOK -> new RookMoves().getMoves(board, myPosition);
             case PAWN -> new PawnMoves().getMoves(board, myPosition);
-            case null, default -> new ArrayList<>();
+            case null -> new ArrayList<>();
         };
     }
 }

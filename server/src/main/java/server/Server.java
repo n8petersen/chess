@@ -40,10 +40,10 @@ public class Server {
         return Spark.port();
     }
 
-    private Object Error(Exception e, Request req, Response res) {
+    private Object Error(Exception e, Request req, Response res, int statusCode) {
         String body = serializer.toJson(Map.of("message", "Error: " + e.getMessage(), "success", false));
         res.type("application/json");
-        res.status(500);
+        res.status(statusCode);
         return body;
     }
 

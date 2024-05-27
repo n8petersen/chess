@@ -53,11 +53,20 @@ public class Server {
     }
 
     private Object register(Request req, Response res) {
-        System.out.println("Register user");
-        System.out.println(req.body());
-        UserData newUser = serializer.fromJson(req.body(), UserData.class);
-
-        return new Object();
+        res.type("application/json");
+        try {
+            System.out.println("Register user");
+            System.out.println(req.body());
+            UserData newUser = serializer.fromJson(req.body(), UserData.class);
+            userService.createUser(newUser);
+            AuthData newAuthData = authService.createAuth(newUser);
+            res.status(200);
+            return serializer.toJson(newAuthData);
+        } catch (DataAccessException e) {
+            return Error(e, req, res, 500);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Object login(Request req, Response res) {

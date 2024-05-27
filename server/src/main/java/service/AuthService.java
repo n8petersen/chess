@@ -7,9 +7,11 @@ import model.UserData;
 
 public class AuthService {
 
-    private IntAuthDAO authDataAccess;
+    private final IntAuthDAO authDataAccess;
 
-    private AuthService() {}
+    public AuthService(IntAuthDAO authDataAccess) {
+        this.authDataAccess = authDataAccess;
+    }
 
     public AuthData createAuth(UserData user) {
         try {
@@ -35,7 +37,7 @@ public class AuthService {
         }
     }
 
-    public void clearAuths() {
+    public void clearAuths() throws DataAccessException{
         try {
             authDataAccess.clear();
         } catch (DataAccessException e) {

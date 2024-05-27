@@ -6,9 +6,11 @@ import model.UserData;
 
 public class UserService {
 
-    private IntUserDAO userDataAccess;
+    private final IntUserDAO userDataAccess;
 
-    private UserService() {}
+    public UserService(IntUserDAO userDataAccess) {
+        this.userDataAccess = userDataAccess;
+    }
 
     public void createUser(UserData user) {
         try {

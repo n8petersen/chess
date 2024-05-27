@@ -3,14 +3,15 @@ package service;
 import dataaccess.DataAccessException;
 import dataaccess.IntGameDAO;
 import model.GameData;
-
 import java.util.Collection;
 
 public class GameService {
 
-    private IntGameDAO gameDataAccess;
+    private final IntGameDAO gameDataAccess;
 
-    private GameService() {}
+    public GameService(IntGameDAO gameDataAccess) {
+        this.gameDataAccess = gameDataAccess;
+    }
 
     public int createGame(String gameName) {
         try {

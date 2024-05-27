@@ -71,31 +71,31 @@ public class Server {
 
     private Object login(Request req, Response res) {
         System.out.println("Login user");
-        System.out.println(req);
+        System.out.println(req.body());
         return new Object();
     }
 
     private Object logout(Request req, Response res) {
         System.out.println("Logout user");
-        System.out.println(req);
+        System.out.println(req.body());
         return new Object();
     }
 
     private Object listGames(Request req, Response res) {
         System.out.println("List Games");
-        System.out.println(req);
+        System.out.println(req.body());
         return new Object();
     }
 
     private Object createGame(Request req, Response res) {
         System.out.println("Create game");
-        System.out.println(req);
+        System.out.println(req.body());
         return new Object();
     }
 
     private Object joinGame(Request req, Response res) {
         System.out.println("Join Game");
-        System.out.println(req);
+        System.out.println(req.body());
         return new Object();
     }
 

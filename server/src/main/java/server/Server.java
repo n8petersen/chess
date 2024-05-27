@@ -100,22 +100,21 @@ public class Server {
     }
 
     private Object clear(Request req, Response res) {
-//        res.type("application/json");
-//        try {
-//            authService.clearAuths();
-//            gameService.clearGames();
-//            userService.clearUsers();
-//            res.status(200);
-//            return "";
-//        } catch (DataAccessException e) {
-//            return Error(e, req, res);
-//        }
-//        catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-
         System.out.println("Clear App");
-        System.out.println(req);
-        return new Object();
+        System.out.println(req.body());
+        res.type("application/json");
+        try {
+            authService.clearAuths();
+            gameService.clearGames();
+            userService.clearUsers();
+            res.status(200);
+            res.body("");
+            return serializer.toJson(new Object());
+        } catch (DataAccessException e) {
+            return Error(e, req, res, 500);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

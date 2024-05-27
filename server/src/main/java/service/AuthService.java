@@ -13,35 +13,19 @@ public class AuthService {
         this.authDataAccess = authDataAccess;
     }
 
-    public AuthData createAuth(UserData user) {
-        try {
-            return authDataAccess.createAuth(user.username());
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+    public AuthData createAuth(UserData user)  throws DataAccessException{
+        return authDataAccess.createAuth(user.username());
     }
 
-    public AuthData getAuth(String authToken) {
-        try {
-            return authDataAccess.readAuth(authToken);
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+    public AuthData getAuth(String authToken)  throws DataAccessException{
+        return authDataAccess.readAuth(authToken);
     }
 
-    public void deleteAuth(String authToken) {
-        try {
-            authDataAccess.deleteAuth(authToken);
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+    public void deleteAuth(String authToken)  throws DataAccessException{
+        authDataAccess.deleteAuth(authToken);
     }
 
-    public void clearAuths() {
-        try {
-            authDataAccess.clear();
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+    public void clearAuths() throws DataAccessException {
+        authDataAccess.clear();
     }
 }

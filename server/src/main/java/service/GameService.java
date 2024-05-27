@@ -13,51 +13,27 @@ public class GameService {
         this.gameDataAccess = gameDataAccess;
     }
 
-    public int createGame(String gameName) {
-        try {
-            return gameDataAccess.createGame(gameName);
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+    public int createGame(String gameName) throws DataAccessException {
+        return gameDataAccess.createGame(gameName);
     }
 
-    public GameData getGame(int gameId) {
-        try {
-            return gameDataAccess.readGame(gameId);
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+    public GameData getGame(int gameId) throws DataAccessException {
+        return gameDataAccess.readGame(gameId);
     }
 
-    public Collection<GameData> listGames() {
-        try {
-            return gameDataAccess.readAllGames();
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+    public Collection<GameData> listGames() throws DataAccessException {
+        return gameDataAccess.readAllGames();
     }
 
-    public void updateGame(GameData game) {
-        try {
-            gameDataAccess.updateGame(game);
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+    public void updateGame(GameData game) throws DataAccessException {
+        gameDataAccess.updateGame(game);
     }
 
-    public void deleteDame(int gameId) {
-        try {
-            gameDataAccess.deleteGame(gameId);
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+    public void deleteDame(int gameId) throws DataAccessException {
+        gameDataAccess.deleteGame(gameId);
     }
 
-    public void clearGames() {
-        try {
-            gameDataAccess.clear();
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+    public void clearGames() throws DataAccessException {
+        gameDataAccess.clear();
     }
 }

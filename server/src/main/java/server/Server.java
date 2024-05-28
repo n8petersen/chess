@@ -33,7 +33,7 @@ public class Server {
         Spark.post("/user", (req, res) -> new RegisterHandler().register(req, res, userService));
         Spark.post("/session", (req, res) -> new LoginHandler().login(req, res, userService));
         Spark.delete("/session", (req, res) -> new LogoutHandler().logout(req, res, userService));
-        Spark.get("/game", this::listGames);
+        Spark.get("/game", (req, res) -> new ListGamesHandler().listGames(req, res, gameService));
         Spark.post("/game", this::createGame);
         Spark.put("/game", this::joinGame);
         Spark.delete("/db", this::clear);
@@ -52,25 +52,6 @@ public class Server {
     // Need to add unit tests to Service classes https://github.com/softwareconstruction240/softwareconstruction/blob/main/chess/3-web-api/web-api.md#service-unit-tests
     //  "Each public method on your Service classes has two test cases, one positive test and one negative test. Every test case includes an Assert statement of some type"
 
-
-    private Object listGames(Request req, Response res) {
-        res.type("application/json");
-        try {
-            String authToken = req.headers("Authorization");
-            Collection<GameData> games = gameService.listGames(authToken);
-
-            Gson gson = new GsonBuilder().serializeNulls().create();
-            JsonArray jsonArray = gson.toJsonTree(games).getAsJsonArray();
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.add("games", jsonArray);
-            res.status(200);
-            return serializer.toJson(jsonObject);
-        } catch (UnauthorizedException e) {
-            return errorHandler.handleError(e, res, 401);
-        } catch (Exception e) {
-            return errorHandler.handleError(e, res, 500);
-        }
-    }
 
     private Object createGame(Request req, Response res) {
         res.type("application/json");

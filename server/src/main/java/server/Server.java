@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import dataaccess.*;
 import service.*;
 import model.*;
+import org.json.*;
 
+import java.util.Collection;
 import java.util.Map;
 
 import spark.*;
@@ -20,7 +22,7 @@ public class Server {
         MemGameDAO gameDao = new MemGameDAO();
         MemUserDAO userDao = new MemUserDAO();
 
-        this.gameService = new GameService(gameDao);
+        this.gameService = new GameService(gameDao, authDao);
         this.userService = new UserService(userDao, authDao);
     }
 
@@ -96,21 +98,58 @@ public class Server {
     }
 
     private Object listGames(Request req, Response res) {
-        System.out.println("List Games");
-        System.out.println(req.body());
-        return new Object();
+        res.type("application/json");
+        try {
+            String authToken = req.headers("Authorization");
+            Collection<GameData> games = gameService.listGames(authToken);
+            res.status(200);
+            if (games.isEmpty()) {
+                return serializer.toJson(new Object());
+            } else {
+                return serializer.toJson(games);
+            }
+        } catch (UnauthorizedException e) {
+            return Error(e, req, res, 401);
+        } catch (Exception e) {
+            return Error(e, req, res, 500);
+        }
     }
 
     private Object createGame(Request req, Response res) {
-        System.out.println("Create game");
-        System.out.println(req.body());
-        return new Object();
+        res.type("application/json");
+        try {
+            String authToken = req.headers("Authorization");
+            GameData newGameData = serializer.fromJson(req.body(), GameData.class);
+            int newGameId = gameService.createNewGame(newGameData, authToken).gameID();
+            res.status(200);
+            return serializer.toJson(Map.of("gameID", newGameId));
+        } catch (BadRequestException e) {
+            return Error(e, req, res, 400);
+        } catch (UnauthorizedException e) {
+            return Error(e, req, res, 401);
+        } catch (Exception e) {
+            return Error(e, req, res, 500);
+        }
     }
 
     private Object joinGame(Request req, Response res) {
-        System.out.println("Join Game");
-        System.out.println(req.body());
-        return new Object();
+        res.type("application/json");
+        try {
+            String authToken = req.headers("Authorization");
+            String reqBodyJsonString = req.body();
+            reqBodyJson = new JsonObject(reqBodyJsonString);
+
+
+            return serializer.toJson(new Object());
+        } catch (BadRequestException e) {
+            return Error(e, req, res, 400);
+        } catch (UserTakenException e) {
+            return Error(e, req, res, 403);
+        } catch (UnauthorizedException e) {
+            return Error(e, req, res, 401);
+        } catch (Exception e) {
+            return Error(e, req, res, 500);
+        }
     }
 
     private Object clear(Request req, Response res) {

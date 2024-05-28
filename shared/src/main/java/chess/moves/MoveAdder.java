@@ -6,7 +6,17 @@ import java.util.ArrayList;
 
 public class MoveAdder {
 
-    public ArrayList<ChessMove> addMoves(ChessBoard board, ChessPosition position, int moveRow, int moveCol) {
+    public ArrayList<ChessMove> findMoves(ChessBoard board, ChessPosition position, int[][] moves) {
+        ArrayList<ChessMove> moveList = new ArrayList<>();
+
+        for (int[] move : moves) {
+            moveList.addAll(addMoves(board, position, move[0], move[1]));
+        }
+
+        return moveList;
+    }
+
+    private ArrayList<ChessMove> addMoves(ChessBoard board, ChessPosition position, int moveRow, int moveCol) {
         ArrayList<ChessMove> addedMoves = new ArrayList<>();
         ChessPiece.PieceType pieceType = board.getPiece(position).getPieceType();
         if (pieceType == ChessPiece.PieceType.BISHOP || pieceType == ChessPiece.PieceType.QUEEN || pieceType == ChessPiece.PieceType.ROOK) {

@@ -34,9 +34,9 @@ public class MemGameDAO implements IntGameDAO {
         games.put(game.gameID(), game);
     }
 
-    public void deleteGame(int gameId) {
-        games.remove(gameId);
-    }
+//    public void deleteGame(int gameId) {
+//        games.remove(gameId);
+//    }
 
     public void clear() throws DataAccessException {
         games.clear();

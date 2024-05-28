@@ -33,7 +33,7 @@ public class Server {
         Spark.get("/game", (req, res) -> new ListGamesHandler().listGames(req, res, gameService));
         Spark.post("/game", (req, res) -> new CreateGameHandler().createGame(req, res, gameService));
         Spark.put("/game", (req, res) -> new JoinGameHandler().joinGame(req, res, gameService));
-        Spark.delete("/db", this::clear);
+        Spark.delete("/db", (req, res) -> new ClearHandler().clear(req, res, userService, gameService));
 
         Spark.awaitInitialization();
         return Spark.port();
@@ -44,22 +44,7 @@ public class Server {
         Spark.awaitStop();
     }
 
-    // Need to move these handlers into their own classes
-
     // Need to add unit tests to Service classes https://github.com/softwareconstruction240/softwareconstruction/blob/main/chess/3-web-api/web-api.md#service-unit-tests
     //  "Each public method on your Service classes has two test cases, one positive test and one negative test. Every test case includes an Assert statement of some type"
 
-
-    private Object clear(Request req, Response res) {
-        res.type("application/json");
-        try {
-            userService.clearUsersAuths();
-            gameService.clearGames();
-            res.status(200);
-            res.body("");
-            return serializer.toJson(new Object());
-        } catch (Exception e) {
-            return errorHandler.handleError(e, res, 500);
-        }
-    }
 }

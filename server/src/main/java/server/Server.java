@@ -136,10 +136,18 @@ public class Server {
         res.type("application/json");
         try {
             String authToken = req.headers("Authorization");
-            String reqBodyJsonString = req.body();
-            reqBodyJson = new JsonObject(reqBodyJsonString);
 
-
+            JsonElement bodyJsonElement = JsonParser.parseString(req.body());
+            JsonObject jsonObject = bodyJsonElement.getAsJsonObject();
+            String playerColor;
+            int gameId;
+            try {
+                playerColor = jsonObject.get("playerColor").getAsString();
+                gameId = jsonObject.get("gameID").getAsInt();
+            } catch (Exception e) {
+                return Error(e, req, res, 400);
+            }
+            gameService.joinGame(authToken, gameId, playerColor);
             return serializer.toJson(new Object());
         } catch (BadRequestException e) {
             return Error(e, req, res, 400);

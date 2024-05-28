@@ -48,21 +48,17 @@ public class GameService {
         GameData game = getGame(gameId);
         if (auth == null) {
             throw new UnauthorizedException("unauthorized");
-        } else if (game != null ) {
-            if (Objects.equals(chosenColor, "WHITE") && game.whiteUsername() == null) {
-                updateGame(new GameData(gameId, auth.username(), null, game.gameName(), game.game()));
-            } else if (Objects.equals(chosenColor, "BLACK") && game.blackUsername() == null) {
-                updateGame(new GameData(gameId, null, auth.username(), game.gameName(), game.game()));
+        } else if (game != null) {
+            if (Objects.equals(chosenColor, "WHITE") && (game.whiteUsername() == null || game.whiteUsername().isEmpty())) {
+                updateGame(new GameData(gameId, auth.username(), game.blackUsername(), game.gameName(), game.game()));
+            } else if (Objects.equals(chosenColor, "BLACK") && (game.blackUsername() == null || game.blackUsername().isEmpty())) {
+                updateGame(new GameData(gameId, game.whiteUsername(), auth.username(), game.gameName(), game.game()));
             } else {
                 throw new UserTakenException("already taken");
+            }
+        } else {
+            throw new BadRequestException("bad request");
         }
-        // At this point if we haven't been able to add a player or throw another exception, we need to throw a general bad request.
-        throw new BadRequestException("bad request");
-        }
-
-        // TODO: Check game for players of current color to see if chosenColor is available in game.
-        //   throw a UserTakenException if it is not available. Else, change that color's username to auth.username().
-
     }
 
     /* Helper Functions */

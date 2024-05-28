@@ -1,9 +1,7 @@
-package server;
+package server.handlers;
 
 import com.google.gson.Gson;
 import dataaccess.UnauthorizedException;
-import model.AuthData;
-import model.UserData;
 import service.UserService;
 import spark.Request;
 import spark.Response;

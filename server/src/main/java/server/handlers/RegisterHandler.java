@@ -1,4 +1,4 @@
-package server;
+package server.handlers;
 
 import dataaccess.*;
 import model.*;

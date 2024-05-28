@@ -2,11 +2,8 @@ package server;
 
 import com.google.gson.*;
 import dataaccess.*;
+import server.handlers.*;
 import service.*;
-import model.*;
-
-import java.util.Collection;
-import java.util.Map;
 
 import spark.*;
 
@@ -34,7 +31,7 @@ public class Server {
         Spark.post("/session", (req, res) -> new LoginHandler().login(req, res, userService));
         Spark.delete("/session", (req, res) -> new LogoutHandler().logout(req, res, userService));
         Spark.get("/game", (req, res) -> new ListGamesHandler().listGames(req, res, gameService));
-        Spark.post("/game", this::createGame);
+        Spark.post("/game", (req, res) -> new CreateGameHandler().createGame(req, res, gameService));
         Spark.put("/game", this::joinGame);
         Spark.delete("/db", this::clear);
 
@@ -52,23 +49,6 @@ public class Server {
     // Need to add unit tests to Service classes https://github.com/softwareconstruction240/softwareconstruction/blob/main/chess/3-web-api/web-api.md#service-unit-tests
     //  "Each public method on your Service classes has two test cases, one positive test and one negative test. Every test case includes an Assert statement of some type"
 
-
-    private Object createGame(Request req, Response res) {
-        res.type("application/json");
-        try {
-            String authToken = req.headers("Authorization");
-            GameData newGameData = serializer.fromJson(req.body(), GameData.class);
-            int newGameId = gameService.createNewGame(newGameData, authToken).gameID();
-            res.status(200);
-            return serializer.toJson(Map.of("gameID", newGameId));
-        } catch (BadRequestException e) {
-            return errorHandler.handleError(e, res, 400);
-        } catch (UnauthorizedException e) {
-            return errorHandler.handleError(e, res, 401);
-        } catch (Exception e) {
-            return errorHandler.handleError(e, res, 500);
-        }
-    }
 
     private Object joinGame(Request req, Response res) {
         res.type("application/json");

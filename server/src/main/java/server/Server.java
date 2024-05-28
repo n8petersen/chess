@@ -31,7 +31,7 @@ public class Server {
         Spark.staticFiles.location("web");
 
         Spark.post("/user", (req, res) -> new RegisterHandler().register(req, res, userService));
-        Spark.post("/session", this::login);
+        Spark.post("/session", (req, res) -> new LoginHandler().login(req, res, userService));
         Spark.delete("/session", this::logout);
         Spark.get("/game", this::listGames);
         Spark.post("/game", this::createGame);
@@ -52,20 +52,6 @@ public class Server {
     // Need to add unit tests to Service classes https://github.com/softwareconstruction240/softwareconstruction/blob/main/chess/3-web-api/web-api.md#service-unit-tests
     //  "Each public method on your Service classes has two test cases, one positive test and one negative test. Every test case includes an Assert statement of some type"
 
-
-    private Object login(Request req, Response res) {
-        res.type("application/json");
-        try {
-            UserData user = serializer.fromJson(req.body(), UserData.class);
-            AuthData auth = userService.loginUser(user);
-            res.status(200);
-            return serializer.toJson(auth);
-        } catch (UnauthorizedException e) {
-            return errorHandler.handleError(e, res, 401);
-        } catch (Exception e) {
-            return errorHandler.handleError(e, res, 500);
-        }
-    }
 
     private Object logout(Request req, Response res) {
         res.type("application/json");

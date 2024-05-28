@@ -32,7 +32,7 @@ public class Server {
         Spark.delete("/session", (req, res) -> new LogoutHandler().logout(req, res, userService));
         Spark.get("/game", (req, res) -> new ListGamesHandler().listGames(req, res, gameService));
         Spark.post("/game", (req, res) -> new CreateGameHandler().createGame(req, res, gameService));
-        Spark.put("/game", this::joinGame);
+        Spark.put("/game", (req, res) -> new JoinGameHandler().joinGame(req, res, gameService));
         Spark.delete("/db", this::clear);
 
         Spark.awaitInitialization();
@@ -49,34 +49,6 @@ public class Server {
     // Need to add unit tests to Service classes https://github.com/softwareconstruction240/softwareconstruction/blob/main/chess/3-web-api/web-api.md#service-unit-tests
     //  "Each public method on your Service classes has two test cases, one positive test and one negative test. Every test case includes an Assert statement of some type"
 
-
-    private Object joinGame(Request req, Response res) {
-        res.type("application/json");
-        try {
-            String authToken = req.headers("Authorization");
-
-            JsonElement bodyJsonElement = JsonParser.parseString(req.body());
-            JsonObject jsonObject = bodyJsonElement.getAsJsonObject();
-            String playerColor;
-            int gameId;
-            try {
-                playerColor = jsonObject.get("playerColor").getAsString();
-                gameId = jsonObject.get("gameID").getAsInt();
-            } catch (Exception e) {
-                return errorHandler.handleError(e, res, 400);
-            }
-            gameService.joinGame(authToken, gameId, playerColor);
-            return serializer.toJson(new Object());
-        } catch (BadRequestException e) {
-            return errorHandler.handleError(e, res, 400);
-        } catch (UserTakenException e) {
-            return errorHandler.handleError(e, res, 403);
-        } catch (UnauthorizedException e) {
-            return errorHandler.handleError(e, res, 401);
-        } catch (Exception e) {
-            return errorHandler.handleError(e, res, 500);
-        }
-    }
 
     private Object clear(Request req, Response res) {
         res.type("application/json");

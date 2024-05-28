@@ -41,7 +41,7 @@ public class Server {
         return Spark.port();
     }
 
-    private Object Error(Exception e, Request req, Response res, int statusCode) {
+    private Object Error(Exception e, Response res, int statusCode) {
         String body = serializer.toJson(Map.of("message", "Error: " + e.getMessage(), "success", false));
         res.type("application/json");
         res.status(statusCode);
@@ -60,11 +60,11 @@ public class Server {
             res.status(200);
             return serializer.toJson(newAuth);
         } catch (BadRequestException e) {
-            return Error(e, req, res, 400);
+            return Error(e, res, 400);
         } catch (UserTakenException e) {
-            return Error(e, req, res, 403);
+            return Error(e, res, 403);
         } catch (Exception e) {
-            return Error(e, req, res, 500);
+            return Error(e, res, 500);
         }
     }
 
@@ -76,9 +76,9 @@ public class Server {
             res.status(200);
             return serializer.toJson(auth);
         } catch (UnauthorizedException e) {
-            return Error(e, req, res, 401);
+            return Error(e, res, 401);
         } catch (Exception e) {
-            return Error(e, req, res, 500);
+            return Error(e, res, 500);
         }
     }
 
@@ -90,9 +90,9 @@ public class Server {
             res.status(200);
             return serializer.toJson(new Object());
         } catch (UnauthorizedException e) {
-            return Error(e, req, res, 401);
+            return Error(e, res, 401);
         } catch (Exception e) {
-            return Error(e, req, res, 500);
+            return Error(e, res, 500);
         }
     }
 
@@ -109,9 +109,9 @@ public class Server {
             res.status(200);
             return serializer.toJson(jsonObject);
         } catch (UnauthorizedException e) {
-            return Error(e, req, res, 401);
+            return Error(e, res, 401);
         } catch (Exception e) {
-            return Error(e, req, res, 500);
+            return Error(e, res, 500);
         }
     }
 
@@ -124,11 +124,11 @@ public class Server {
             res.status(200);
             return serializer.toJson(Map.of("gameID", newGameId));
         } catch (BadRequestException e) {
-            return Error(e, req, res, 400);
+            return Error(e, res, 400);
         } catch (UnauthorizedException e) {
-            return Error(e, req, res, 401);
+            return Error(e, res, 401);
         } catch (Exception e) {
-            return Error(e, req, res, 500);
+            return Error(e, res, 500);
         }
     }
 
@@ -145,18 +145,18 @@ public class Server {
                 playerColor = jsonObject.get("playerColor").getAsString();
                 gameId = jsonObject.get("gameID").getAsInt();
             } catch (Exception e) {
-                return Error(e, req, res, 400);
+                return Error(e, res, 400);
             }
             gameService.joinGame(authToken, gameId, playerColor);
             return serializer.toJson(new Object());
         } catch (BadRequestException e) {
-            return Error(e, req, res, 400);
+            return Error(e, res, 400);
         } catch (UserTakenException e) {
-            return Error(e, req, res, 403);
+            return Error(e, res, 403);
         } catch (UnauthorizedException e) {
-            return Error(e, req, res, 401);
+            return Error(e, res, 401);
         } catch (Exception e) {
-            return Error(e, req, res, 500);
+            return Error(e, res, 500);
         }
     }
 
@@ -169,7 +169,7 @@ public class Server {
             res.body("");
             return serializer.toJson(new Object());
         } catch (Exception e) {
-            return Error(e, req, res, 500);
+            return Error(e, res, 500);
         }
     }
 }

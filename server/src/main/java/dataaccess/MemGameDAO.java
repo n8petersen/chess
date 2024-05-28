@@ -15,26 +15,26 @@ public class MemGameDAO implements IntGameDAO {
     public MemGameDAO() {
     }
 
-    public GameData createGame(String gameName) throws DataAccessException {
+    public GameData createGame(String gameName) {
         newGameID++;
         GameData newGameData = new GameData(newGameID, null, null, gameName, new ChessGame());
         games.put(newGameID, newGameData);
         return newGameData;
     }
 
-    public GameData readGame(int gameId) throws DataAccessException {
+    public GameData readGame(int gameId) {
         return games.get(gameId);
     }
 
-    public Collection<GameData> readAllGames() throws DataAccessException {
+    public Collection<GameData> readAllGames() {
         return games.values();
     }
 
-    public void updateGame(GameData game) throws DataAccessException {
+    public void updateGame(GameData game) {
         games.put(game.gameID(), game);
     }
 
-    public void deleteGame(int gameId) throws DataAccessException {
+    public void deleteGame(int gameId) {
         games.remove(gameId);
     }
 

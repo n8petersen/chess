@@ -1,17 +1,16 @@
 package server.handlers;
 
 import com.google.gson.Gson;
+import spark.Response;
 import service.GameService;
 import service.UserService;
-import spark.Request;
-import spark.Response;
 
 public class ClearHandler {
 
     private final Gson serializer = new Gson();
     private final ErrorHandler errorHandler = new ErrorHandler();
 
-    public Object clear(Request req, Response res, UserService userService, GameService gameService) {
+    public Object clear(Response res, UserService userService, GameService gameService) {
         res.type("application/json");
         try {
             userService.clearUsersAuths();

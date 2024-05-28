@@ -1,10 +1,13 @@
 package server.handlers;
 
-import dataaccess.*;
-import model.*;
-import service.*;
-import spark.*;
 import com.google.gson.Gson;
+import dataaccess.BadRequestException;
+import dataaccess.UserTakenException;
+import model.AuthData;
+import model.UserData;
+import service.UserService;
+import spark.Request;
+import spark.Response;
 
 public class RegisterHandler {
 

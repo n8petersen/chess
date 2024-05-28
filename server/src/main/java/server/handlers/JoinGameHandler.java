@@ -5,14 +5,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dataaccess.BadRequestException;
-import dataaccess.UnauthorizedException;
 import dataaccess.UserTakenException;
-import model.GameData;
+import dataaccess.UnauthorizedException;
 import service.GameService;
-import spark.Request;
 import spark.Response;
-
-import java.util.Map;
+import spark.Request;
 
 public class JoinGameHandler {
 

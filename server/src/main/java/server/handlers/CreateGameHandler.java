@@ -5,8 +5,8 @@ import dataaccess.BadRequestException;
 import dataaccess.UnauthorizedException;
 import model.GameData;
 import service.GameService;
-import spark.Request;
 import spark.Response;
+import spark.Request;
 
 import java.util.Map;
 

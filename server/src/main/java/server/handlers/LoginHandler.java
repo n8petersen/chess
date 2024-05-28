@@ -1,10 +1,12 @@
 package server.handlers;
 
-import dataaccess.*;
-import model.*;
-import service.*;
-import spark.*;
 import com.google.gson.Gson;
+import dataaccess.UnauthorizedException;
+import model.UserData;
+import model.AuthData;
+import service.UserService;
+import spark.Request;
+import spark.Response;
 
 public class LoginHandler {
 

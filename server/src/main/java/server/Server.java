@@ -1,9 +1,17 @@
 package server;
 
-import com.google.gson.*;
-import dataaccess.*;
-import server.handlers.*;
-import service.*;
+import dataaccess.MemAuthDAO;
+import dataaccess.MemGameDAO;
+import dataaccess.MemUserDAO;
+import server.handlers.RegisterHandler;
+import server.handlers.LoginHandler;
+import server.handlers.LogoutHandler;
+import server.handlers.ListGamesHandler;
+import server.handlers.CreateGameHandler;
+import server.handlers.JoinGameHandler;
+import server.handlers.ClearHandler;
+import service.GameService;
+import service.UserService;
 
 import spark.*;
 
@@ -11,8 +19,6 @@ public class Server {
 
     private final GameService gameService;
     private final UserService userService;
-    private final Gson serializer = new Gson();
-    private final ErrorHandler errorHandler = new ErrorHandler();
 
     public Server() {
         MemAuthDAO authDao = new MemAuthDAO();
@@ -33,7 +39,7 @@ public class Server {
         Spark.get("/game", (req, res) -> new ListGamesHandler().listGames(req, res, gameService));
         Spark.post("/game", (req, res) -> new CreateGameHandler().createGame(req, res, gameService));
         Spark.put("/game", (req, res) -> new JoinGameHandler().joinGame(req, res, gameService));
-        Spark.delete("/db", (req, res) -> new ClearHandler().clear(req, res, userService, gameService));
+        Spark.delete("/db", (req, res) -> new ClearHandler().clear(res, userService, gameService));
 
         Spark.awaitInitialization();
         return Spark.port();

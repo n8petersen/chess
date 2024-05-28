@@ -22,14 +22,6 @@ public interface IntUserDAO {
     UserData readUser(String username) throws DataAccessException;
 
     /**
-     * Delete a user given its ID
-     *
-     * @param username username of user to delete
-     * @throws DataAccessException for DB access violations
-     */
-    void deleteUser(String username) throws DataAccessException;
-
-    /**
      * Delete all users
      *
      * @throws DataAccessException for DB access violations

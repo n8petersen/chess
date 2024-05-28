@@ -298,7 +298,7 @@ public class ChessGame {
         return Objects.hash(turnColor, board);
     }
 
-    // TODO: Add extra moves:
+    // Extra Credit: Add extra moves:
     //  Castling:
     //    This is a special move where the King and a Rook move simultaneously.
     //    The castling move can only be taken when 4 conditions are met:

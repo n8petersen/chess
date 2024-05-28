@@ -40,5 +40,6 @@ public class MemGameDAO implements IntGameDAO {
 
     public void clear() throws DataAccessException {
         games.clear();
+        newGameID = 100;
     }
 }

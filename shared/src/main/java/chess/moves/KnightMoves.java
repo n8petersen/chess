@@ -9,26 +9,20 @@ public class KnightMoves {
     public ArrayList<ChessMove> getMoves(ChessBoard board, ChessPosition myPosition) {
         ArrayList<ChessMove> moveList = new ArrayList<>();
 
-        //      Knight Movement:
-        //      -----------------
-        //      | | | | | | | | |
-        //      | | | |x| |x| | |
-        //      | | |x| | | |x| |
-        //      | | | | |N| | | |
-        //      | | |x| | | |x| |
-        //      | | | |x| |x| | |
-        //      | | | | | | | | |
-        //      | | | | | | | | |
-        //      -----------------
+        int[][] moves = {
+                {2,-1}
+                ,{2,1}
+                ,{1,2}
+                ,{-1,2}
+                ,{-2,-1}
+                ,{-2,1}
+                ,{1,-2}
+                ,{-1,-2}
+        };
 
-        moveList.addAll(new MoveAdder().addSpecialMoves(board, myPosition, 2,-1));
-        moveList.addAll(new MoveAdder().addSpecialMoves(board, myPosition, 2,1));
-        moveList.addAll(new MoveAdder().addSpecialMoves(board, myPosition, 1,2));
-        moveList.addAll(new MoveAdder().addSpecialMoves(board, myPosition, -1,2));
-        moveList.addAll(new MoveAdder().addSpecialMoves(board, myPosition, -2,-1));
-        moveList.addAll(new MoveAdder().addSpecialMoves(board, myPosition, -2,1));
-        moveList.addAll(new MoveAdder().addSpecialMoves(board, myPosition, 1,-2));
-        moveList.addAll(new MoveAdder().addSpecialMoves(board, myPosition, -1,-2));
+        for (int[] move : moves) {
+            moveList.addAll(new MoveAdder().addMoves(board, myPosition, move[0], move[1]));
+        }
 
         return moveList;
     }

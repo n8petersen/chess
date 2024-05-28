@@ -6,7 +6,18 @@ import java.util.ArrayList;
 
 public class MoveAdder {
 
-    public ArrayList<ChessMove> addStraightMoves(ChessBoard board, ChessPosition position, int moveRow, int moveCol) {
+    public ArrayList<ChessMove> addMoves(ChessBoard board, ChessPosition position, int moveRow, int moveCol) {
+        ArrayList<ChessMove> addedMoves = new ArrayList<>();
+        ChessPiece.PieceType pieceType = board.getPiece(position).getPieceType();
+        if (pieceType == ChessPiece.PieceType.BISHOP || pieceType == ChessPiece.PieceType.QUEEN || pieceType == ChessPiece.PieceType.ROOK) {
+            addedMoves.addAll(addStraightMoves(board, position, moveRow, moveCol));
+        } else {
+            addedMoves.addAll(addSpecialMoves(board, position, moveRow, moveCol));
+        }
+        return addedMoves;
+    }
+
+    private ArrayList<ChessMove> addStraightMoves(ChessBoard board, ChessPosition position, int moveRow, int moveCol) {
         ArrayList<ChessMove> addedMoves = new ArrayList<>();
         ChessGame.TeamColor color = board.getPiece(position).getTeamColor();
         int newRow = position.getRow() + moveRow;
@@ -25,11 +36,10 @@ public class MoveAdder {
                 break;
             }
         }
-
         return addedMoves;
     }
 
-    public ArrayList<ChessMove> addSpecialMoves(ChessBoard board, ChessPosition position, int moveRow, int moveCol) {
+    private ArrayList<ChessMove> addSpecialMoves(ChessBoard board, ChessPosition position, int moveRow, int moveCol) {
         ArrayList<ChessMove> addedMoves = new ArrayList<>();
         ChessGame.TeamColor color = board.getPiece(position).getTeamColor();
         int newRow = position.getRow() + moveRow;

@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import dataaccess.*;
 import service.*;
 import model.*;
+
 import java.util.Map;
+
 import spark.*;
 
 public class Server {
@@ -53,7 +55,7 @@ public class Server {
     private Object register(Request req, Response res) {
         res.type("application/json");
         try {
-            AuthData newAuth =userService.createUser(serializer.fromJson(req.body(), UserData.class));
+            AuthData newAuth = userService.createUser(serializer.fromJson(req.body(), UserData.class));
             res.status(200);
             return serializer.toJson(newAuth);
         } catch (BadRequestException e) {
@@ -91,7 +93,6 @@ public class Server {
         } catch (Exception e) {
             return Error(e, req, res, 500);
         }
-
     }
 
     private Object listGames(Request req, Response res) {

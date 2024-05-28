@@ -14,10 +14,10 @@ public class MemAuthDAO implements IntAuthDAO {
     }
 
     public AuthData createAuth(String username) throws DataAccessException {
-         String newAuthToken = UUID.randomUUID().toString();
-         AuthData newAuth = new AuthData(newAuthToken, username);
-         auths.put(newAuthToken, newAuth);
-         return newAuth;
+        String newAuthToken = UUID.randomUUID().toString();
+        AuthData newAuth = new AuthData(newAuthToken, username);
+        auths.put(newAuthToken, newAuth);
+        return newAuth;
     }
 
     public AuthData readAuth(String authToken) throws DataAccessException {

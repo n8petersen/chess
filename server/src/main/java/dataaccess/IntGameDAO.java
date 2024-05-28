@@ -8,6 +8,7 @@ public interface IntGameDAO {
 
     /**
      * Create a new game instance
+     *
      * @param gameName Name of Game to create
      * @return ID of game created
      * @throws DataAccessException for DB access violations
@@ -16,6 +17,7 @@ public interface IntGameDAO {
 
     /**
      * Find a game given a game ID
+     *
      * @param gameId ID of game to retrieve
      * @return GameData of the game we retrieved
      * @throws DataAccessException for DB access violations
@@ -24,6 +26,7 @@ public interface IntGameDAO {
 
     /**
      * Find all available games
+     *
      * @return Collection of games
      * @throws DataAccessException for DB access violations
      */
@@ -31,6 +34,7 @@ public interface IntGameDAO {
 
     /**
      * Update a current game
+     *
      * @param game - GameData to update with
      * @throws DataAccessException for DB access violations
      */
@@ -38,6 +42,7 @@ public interface IntGameDAO {
 
     /**
      * Delete an existing game
+     *
      * @param gameId - ID of game to delete
      * @throws DataAccessException for DB access violations
      */
@@ -45,6 +50,7 @@ public interface IntGameDAO {
 
     /**
      * Delete all games
+     *
      * @throws DataAccessException for DB access violations
      */
     void clear() throws DataAccessException;

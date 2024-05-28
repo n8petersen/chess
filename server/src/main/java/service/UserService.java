@@ -21,8 +21,7 @@ public class UserService {
         UserData checkUser = getUser(user.username());
         if (checkUser != null) {
             throw new UserTakenException("already taken");
-        }
-        else if (user.password() == null || user.password().isEmpty()) {
+        } else if (user.password() == null || user.password().isEmpty()) {
             throw new BadRequestException("bad request");
         } else {
             userDataAccess.createUser(user);
@@ -63,15 +62,15 @@ public class UserService {
     }
 
     /* Auth helper functions */
-    private AuthData createAuth(UserData user)  throws DataAccessException{
+    private AuthData createAuth(UserData user) throws DataAccessException {
         return authDataAccess.createAuth(user.username());
     }
 
-    private AuthData getAuth(String authToken)  throws DataAccessException{
+    private AuthData getAuth(String authToken) throws DataAccessException {
         return authDataAccess.readAuth(authToken);
     }
 
-    private void deleteAuth(String authToken)  throws DataAccessException{
+    private void deleteAuth(String authToken) throws DataAccessException {
         authDataAccess.deleteAuth(authToken);
     }
 

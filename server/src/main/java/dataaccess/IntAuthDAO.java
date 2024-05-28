@@ -6,6 +6,7 @@ public interface IntAuthDAO {
 
     /**
      * Create a new authToken for a given user
+     *
      * @param username - Username of the user for which to create AuthData
      * @return AuthData which was newly created for the user
      * @throws DataAccessException for DB access violations
@@ -14,6 +15,7 @@ public interface IntAuthDAO {
 
     /**
      * Read the AuthData for an existing authToken
+     *
      * @param authToken - authToken for the AuthData we want to retrieve
      * @return AuthData
      * @throws DataAccessException for DB access violations
@@ -22,6 +24,7 @@ public interface IntAuthDAO {
 
     /**
      * Delete the AuthData for an existing authToken
+     *
      * @param authToken - authToken for the AuthData we want to delete
      * @throws DataAccessException for DB access violations
      */
@@ -29,6 +32,7 @@ public interface IntAuthDAO {
 
     /**
      * Clears all AuthData instances
+     *
      * @throws DataAccessException for DB access violations
      */
     void clear() throws DataAccessException;

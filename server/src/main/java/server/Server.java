@@ -12,8 +12,7 @@ import server.handlers.JoinGameHandler;
 import server.handlers.ClearHandler;
 import service.GameService;
 import service.UserService;
-
-import spark.*;
+import spark.Spark;
 
 public class Server {
 

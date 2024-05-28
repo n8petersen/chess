@@ -9,7 +9,6 @@ import spark.*;
 
 public class Server {
 
-    private final AuthService authService;
     private final GameService gameService;
     private final UserService userService;
     private final Gson serializer = new Gson();
@@ -19,9 +18,8 @@ public class Server {
         MemGameDAO gameDao = new MemGameDAO();
         MemUserDAO userDao = new MemUserDAO();
 
-        this.authService = new AuthService(authDao);
         this.gameService = new GameService(gameDao);
-        this.userService = new UserService(userDao);
+        this.userService = new UserService(userDao, authDao);
     }
 
     public int run(int desiredPort) {
@@ -55,30 +53,45 @@ public class Server {
     private Object register(Request req, Response res) {
         res.type("application/json");
         try {
-            System.out.println("Register user");
-            System.out.println(req.body());
-            UserData newUser = serializer.fromJson(req.body(), UserData.class);
-            userService.createUser(newUser);
-            AuthData newAuthData = authService.createAuth(newUser);
+            AuthData newAuth =userService.createUser(serializer.fromJson(req.body(), UserData.class));
             res.status(200);
-            return serializer.toJson(newAuthData);
-        } catch (DataAccessException e) {
-            return Error(e, req, res, 500);
+            return serializer.toJson(newAuth);
+        } catch (BadRequestException e) {
+            return Error(e, req, res, 400);
+        } catch (UserTakenException e) {
+            return Error(e, req, res, 403);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return Error(e, req, res, 500);
         }
     }
 
     private Object login(Request req, Response res) {
-        System.out.println("Login user");
-        System.out.println(req.body());
-        return new Object();
+        res.type("application/json");
+        try {
+            UserData user = serializer.fromJson(req.body(), UserData.class);
+            AuthData auth = userService.loginUser(user);
+            res.status(200);
+            return serializer.toJson(auth);
+        } catch (UnauthorizedException e) {
+            return Error(e, req, res, 401);
+        } catch (Exception e) {
+            return Error(e, req, res, 500);
+        }
     }
 
     private Object logout(Request req, Response res) {
-        System.out.println("Logout user");
-        System.out.println(req.body());
-        return new Object();
+        res.type("application/json");
+        try {
+            String authToken = req.headers("Authorization");
+            userService.logoutUser(authToken);
+            res.status(200);
+            return serializer.toJson(new Object());
+        } catch (UnauthorizedException e) {
+            return Error(e, req, res, 401);
+        } catch (Exception e) {
+            return Error(e, req, res, 500);
+        }
+
     }
 
     private Object listGames(Request req, Response res) {
@@ -100,21 +113,15 @@ public class Server {
     }
 
     private Object clear(Request req, Response res) {
-        System.out.println("Clear App");
-        System.out.println(req.body());
         res.type("application/json");
         try {
-            authService.clearAuths();
+            userService.clearUsersAuths();
             gameService.clearGames();
-            userService.clearUsers();
             res.status(200);
             res.body("");
             return serializer.toJson(new Object());
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             return Error(e, req, res, 500);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 }

@@ -1,10 +1,9 @@
 package server;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
 import dataaccess.*;
 import service.*;
 import model.*;
-import org.json.*;
 
 import java.util.Collection;
 import java.util.Map;
@@ -102,12 +101,13 @@ public class Server {
         try {
             String authToken = req.headers("Authorization");
             Collection<GameData> games = gameService.listGames(authToken);
+
+            Gson gson = new GsonBuilder().serializeNulls().create();
+            JsonArray jsonArray = gson.toJsonTree(games).getAsJsonArray();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.add("games", jsonArray);
             res.status(200);
-            if (games.isEmpty()) {
-                return serializer.toJson(new Object());
-            } else {
-                return serializer.toJson(games);
-            }
+            return serializer.toJson(jsonObject);
         } catch (UnauthorizedException e) {
             return Error(e, req, res, 401);
         } catch (Exception e) {

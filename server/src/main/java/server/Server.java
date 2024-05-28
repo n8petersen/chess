@@ -41,7 +41,7 @@ public class Server {
         return Spark.port();
     }
 
-    private Object Error(Exception e, Response res, int statusCode) {
+    private Object handleError(Exception e, Response res, int statusCode) {
         String body = serializer.toJson(Map.of("message", "Error: " + e.getMessage(), "success", false));
         res.type("application/json");
         res.status(statusCode);
@@ -53,6 +53,10 @@ public class Server {
         Spark.awaitStop();
     }
 
+    // Need to move these handlers into their own classes
+
+    // Need to add unit tests https://github.com/softwareconstruction240/softwareconstruction/blob/main/chess/3-web-api/web-api.md#service-unit-tests
+
     private Object register(Request req, Response res) {
         res.type("application/json");
         try {
@@ -60,11 +64,11 @@ public class Server {
             res.status(200);
             return serializer.toJson(newAuth);
         } catch (BadRequestException e) {
-            return Error(e, res, 400);
+            return handleError(e, res, 400);
         } catch (UserTakenException e) {
-            return Error(e, res, 403);
+            return handleError(e, res, 403);
         } catch (Exception e) {
-            return Error(e, res, 500);
+            return handleError(e, res, 500);
         }
     }
 
@@ -76,9 +80,9 @@ public class Server {
             res.status(200);
             return serializer.toJson(auth);
         } catch (UnauthorizedException e) {
-            return Error(e, res, 401);
+            return handleError(e, res, 401);
         } catch (Exception e) {
-            return Error(e, res, 500);
+            return handleError(e, res, 500);
         }
     }
 
@@ -90,9 +94,9 @@ public class Server {
             res.status(200);
             return serializer.toJson(new Object());
         } catch (UnauthorizedException e) {
-            return Error(e, res, 401);
+            return handleError(e, res, 401);
         } catch (Exception e) {
-            return Error(e, res, 500);
+            return handleError(e, res, 500);
         }
     }
 
@@ -109,9 +113,9 @@ public class Server {
             res.status(200);
             return serializer.toJson(jsonObject);
         } catch (UnauthorizedException e) {
-            return Error(e, res, 401);
+            return handleError(e, res, 401);
         } catch (Exception e) {
-            return Error(e, res, 500);
+            return handleError(e, res, 500);
         }
     }
 
@@ -124,11 +128,11 @@ public class Server {
             res.status(200);
             return serializer.toJson(Map.of("gameID", newGameId));
         } catch (BadRequestException e) {
-            return Error(e, res, 400);
+            return handleError(e, res, 400);
         } catch (UnauthorizedException e) {
-            return Error(e, res, 401);
+            return handleError(e, res, 401);
         } catch (Exception e) {
-            return Error(e, res, 500);
+            return handleError(e, res, 500);
         }
     }
 
@@ -145,18 +149,18 @@ public class Server {
                 playerColor = jsonObject.get("playerColor").getAsString();
                 gameId = jsonObject.get("gameID").getAsInt();
             } catch (Exception e) {
-                return Error(e, res, 400);
+                return handleError(e, res, 400);
             }
             gameService.joinGame(authToken, gameId, playerColor);
             return serializer.toJson(new Object());
         } catch (BadRequestException e) {
-            return Error(e, res, 400);
+            return handleError(e, res, 400);
         } catch (UserTakenException e) {
-            return Error(e, res, 403);
+            return handleError(e, res, 403);
         } catch (UnauthorizedException e) {
-            return Error(e, res, 401);
+            return handleError(e, res, 401);
         } catch (Exception e) {
-            return Error(e, res, 500);
+            return handleError(e, res, 500);
         }
     }
 
@@ -169,7 +173,7 @@ public class Server {
             res.body("");
             return serializer.toJson(new Object());
         } catch (Exception e) {
-            return Error(e, res, 500);
+            return handleError(e, res, 500);
         }
     }
 }

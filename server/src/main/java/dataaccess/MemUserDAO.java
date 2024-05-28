@@ -12,16 +12,12 @@ public class MemUserDAO implements IntUserDAO {
     public MemUserDAO() {
     }
 
-    public void createUser(UserData user) throws DataAccessException {
+    public void createUser(UserData user) {
         users.put(user.username(), user);
     }
 
-    public UserData readUser(String username) throws DataAccessException {
+    public UserData readUser(String username) {
         return users.get(username);
-    }
-
-    public void deleteUser(String username) throws DataAccessException {
-        users.remove(username);
     }
 
     public void clear() throws DataAccessException {

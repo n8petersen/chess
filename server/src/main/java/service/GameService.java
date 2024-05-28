@@ -75,9 +75,4 @@ public class GameService {
     private void updateGame(GameData game) throws DataAccessException {
         gameDataAccess.updateGame(game);
     }
-
-//    private void deleteDame(int gameId) throws DataAccessException {
-//        gameDataAccess.deleteGame(gameId);
-//    }
-
 }

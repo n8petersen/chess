@@ -40,13 +40,13 @@ public interface IntGameDAO {
      */
     void updateGame(GameData game) throws DataAccessException;
 
-    /**
-     * Delete an existing game
-     *
-     * @param gameId - ID of game to delete
-     * @throws DataAccessException for DB access violations
-     */
-    void deleteGame(int gameId) throws DataAccessException;
+//    /**
+//     * Delete an existing game
+//     *
+//     * @param gameId - ID of game to delete
+//     * @throws DataAccessException for DB access violations
+//     */
+//    void deleteGame(int gameId) throws DataAccessException;
 
     /**
      * Delete all games

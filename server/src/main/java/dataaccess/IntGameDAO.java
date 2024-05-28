@@ -13,7 +13,7 @@ public interface IntGameDAO {
      * @return ID of game created
      * @throws DataAccessException for DB access violations
      */
-    int createGame(String gameName) throws DataAccessException;
+    GameData createGame(String gameName) throws DataAccessException;
 
     /**
      * Find a game given a game ID

@@ -15,11 +15,11 @@ public class MemGameDAO implements IntGameDAO {
     public MemGameDAO() {
     }
 
-    public int createGame(String gameName) throws DataAccessException {
+    public GameData createGame(String gameName) throws DataAccessException {
         newGameID++;
         GameData newGameData = new GameData(newGameID, null, null, gameName, new ChessGame());
         games.put(newGameID, newGameData);
-        return newGameID;
+        return newGameData;
     }
 
     public GameData readGame(int gameId) throws DataAccessException {

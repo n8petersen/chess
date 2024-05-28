@@ -50,6 +50,8 @@ public class Server {
     }
 
     // Need to add unit tests to Service classes https://github.com/softwareconstruction240/softwareconstruction/blob/main/chess/3-web-api/web-api.md#service-unit-tests
-    //  "Each public method on your Service classes has two test cases, one positive test and one negative test. Every test case includes an Assert statement of some type"
+    //  "Each public method on your Service classes has two test cases,
+    //  one positive test and one negative test.
+    //  Every test case includes an Assert statement of some type"
 
 }

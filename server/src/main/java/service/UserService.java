@@ -1,30 +1,82 @@
 package service;
 
-import dataaccess.DataAccessException;
-import dataaccess.IntUserDAO;
-import model.UserData;
+import dataaccess.*;
+import model.*;
+
+import javax.xml.crypto.Data;
+import java.util.Objects;
 
 public class UserService {
 
     private final IntUserDAO userDataAccess;
+    private final IntAuthDAO authDataAccess;
 
-    public UserService(IntUserDAO userDataAccess) {
+    public UserService(IntUserDAO userDataAccess, IntAuthDAO authDataAccess) {
         this.userDataAccess = userDataAccess;
+        this.authDataAccess = authDataAccess;
     }
 
-    public void createUser(UserData user) throws DataAccessException {
-        userDataAccess.createUser(user);
+    /* public functions */
+    public AuthData createUser(UserData user) throws DataAccessException, UserTakenException, BadRequestException {
+        UserData checkUser = getUser(user.username());
+        if (checkUser != null) {
+            throw new UserTakenException("already taken");
+        }
+        else if (user.password() == null || user.password().isEmpty()) {
+            throw new BadRequestException("bad request");
+        } else {
+            userDataAccess.createUser(user);
+            return createAuth(user);
+        }
     }
 
-    public UserData getUser(String username) throws DataAccessException {
+    public AuthData loginUser(UserData user) throws DataAccessException, UnauthorizedException {
+        UserData checkUser = getUser(user.username());
+        if (checkUser != null && Objects.equals(checkUser.password(), user.password())) {
+            return authDataAccess.createAuth(user.username());
+        } else {
+            throw new UnauthorizedException("unauthorized");
+        }
+    }
+
+    public void logoutUser(String authToken) throws DataAccessException, UnauthorizedException {
+        AuthData userAuth = getAuth(authToken);
+        if (userAuth == null) {
+            throw new UnauthorizedException("unauthorized");
+        } else {
+            deleteAuth(authToken);
+        }
+    }
+
+    public void clearUsersAuths() throws DataAccessException {
+        clearAuths();
+        clearUsers();
+    }
+
+    /* User helper functions */
+    private UserData getUser(String username) throws DataAccessException {
         return userDataAccess.readUser(username);
     }
 
-    public void deleteUser(String username) throws DataAccessException {
-        userDataAccess.deleteUser(username);
-    }
-
-    public void clearUsers() throws DataAccessException {
+    private void clearUsers() throws DataAccessException {
         userDataAccess.clear();
     }
+
+    /* Auth helper functions */
+    private AuthData createAuth(UserData user)  throws DataAccessException{
+        return authDataAccess.createAuth(user.username());
+    }
+
+    private AuthData getAuth(String authToken)  throws DataAccessException{
+        return authDataAccess.readAuth(authToken);
+    }
+
+    private void deleteAuth(String authToken)  throws DataAccessException{
+        authDataAccess.deleteAuth(authToken);
+    }
+
+    private void clearAuths() throws DataAccessException {
+        authDataAccess.clear();
+    }
+
 }

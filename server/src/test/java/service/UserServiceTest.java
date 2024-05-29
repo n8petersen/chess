@@ -1,28 +1,116 @@
 package service;
 
+import dataaccess.*;
+import model.AuthData;
+import model.GameData;
+import model.UserData;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceTest {
 
-    @Test
-    @DisplayName("Create User")
-    void createUser() {
+    private IntGameDAO gameDao;
+    private IntAuthDAO authDAO;
+    private IntUserDAO userDAO;
+    private GameService gameService;
+    private UserService userService;
+
+    @BeforeEach
+    void setup() {
+        gameDao = new MemGameDAO();
+        authDAO = new MemAuthDAO();
+        userDAO = new MemUserDAO();
+        userService = new UserService(userDAO, authDAO);
+        gameService = new GameService(gameDao, authDAO);
     }
 
     @Test
-    @DisplayName("Login User")
-    void loginUser() {
-    }
-
-    @Test@DisplayName("Logout User")
-    void logoutUser() {
+    void createUser() throws UserTakenException, BadRequestException, DataAccessException {
+        UserData userData = new UserData("user", "password", "email");
+        userService.createUser(userData);
+        UserData checkUser = userDAO.readUser("user");
+        assertEquals(userData, checkUser);
     }
 
     @Test
-    @DisplayName("Clear User Auths")
-    void clearUsersAuths() {
+    void createTwoUsers() throws UserTakenException, BadRequestException, DataAccessException {
+        UserData userData1 = new UserData("user1", "password", "email");
+        UserData userData2 = new UserData("user2", "password", "email");
+        userService.createUser(userData1);
+        userService.createUser(userData2);
+        UserData checkUser1 = userDAO.readUser("user1");
+        UserData checkUser2 = userDAO.readUser("user2");
+        assertNotEquals(checkUser1, checkUser2);
+    }
+
+    @Test
+    void createUserAlreadyTaken() {
+        assertThrows(UserTakenException.class,
+                () -> {
+                    UserData userData1 = new UserData("user", "password", "email");
+                    UserData userData2 = new UserData("user", "password", "email");
+                    userService.createUser(userData1);
+                    userService.createUser(userData2);
+                }
+        );
+
+    }
+
+    @Test
+    void loginUser() throws DataAccessException, UnauthorizedException {
+        UserData userData1 = new UserData("user1", "password", "email");
+        userDAO.createUser(userData1);
+        UserData checkUser = new UserData("user1", "password", null);
+        AuthData authData = userService.loginUser(checkUser);
+        assertNotNull(authData);
+    }
+
+    @Test
+    void loginUserDoesntExist() {
+        assertThrows(UnauthorizedException.class,
+                () -> {
+                    UserData checkUser = new UserData("user1", "password", null);
+                    AuthData authData = userService.loginUser(checkUser);
+                    assertNotNull(authData);
+                }
+        );
+    }
+
+    @Test
+    void logoutUser() throws DataAccessException, UnauthorizedException {
+        AuthData newAuth = authDAO.createAuth("testUser");
+        userService.logoutUser(newAuth.authToken());
+    }
+
+    @Test
+    void logoutUserBadToken() {
+        assertThrows(UnauthorizedException.class,
+                () -> {
+                    AuthData newAuth = authDAO.createAuth("testUser");
+                    userService.logoutUser("garbage");
+                }
+        );
+    }
+
+    @Test
+    void clearUsersAuths() throws DataAccessException, UnauthorizedException {
+        gameDao.createGame("gameTest");
+        AuthData newAuth = authDAO.createAuth("auth1");
+        userDAO.createUser(new UserData("user1", "password1", "email1"));
+
+        userService.clearUsersAuths();
+
+        Collection<GameData> gameList = gameDao.readAllGames();
+        UserData checkUser = userDAO.readUser("user1");
+        AuthData checkAuth = authDAO.readAuth(newAuth.authToken());
+
+        assertNotEquals(0, gameList.size());
+        assertNull(checkUser);
+        assertNull(checkAuth);
     }
 }

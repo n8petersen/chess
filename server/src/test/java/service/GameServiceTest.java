@@ -94,10 +94,13 @@ class GameServiceTest {
         gameDao.createGame("gameTest2");
         AuthData newAuth = authDAO.createAuth("auth1");
         userDAO.createUser(new UserData("user1", "password1", "email1"));
+
         gameService.clearGames();
+
         Collection<GameData> gameList = gameService.listGames(authData.authToken());
         UserData checkUser = userDAO.readUser("user1");
         AuthData checkAuth = authDAO.readAuth(newAuth.authToken());
+
         assertEquals(0, gameList.size());
         assertNotNull(checkUser);
         assertNotNull(checkAuth);

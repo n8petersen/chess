@@ -5,7 +5,6 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
@@ -89,14 +88,14 @@ class UserServiceTest {
     void logoutUserBadToken() {
         assertThrows(UnauthorizedException.class,
                 () -> {
-                    AuthData newAuth = authDAO.createAuth("testUser");
+                    authDAO.createAuth("testUser");
                     userService.logoutUser("garbage");
                 }
         );
     }
 
     @Test
-    void clearUsersAuths() throws DataAccessException, UnauthorizedException {
+    void clearUsersAuths() throws DataAccessException {
         gameDao.createGame("gameTest");
         AuthData newAuth = authDAO.createAuth("auth1");
         userDAO.createUser(new UserData("user1", "password1", "email1"));

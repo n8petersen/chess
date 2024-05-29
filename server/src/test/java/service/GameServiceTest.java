@@ -51,7 +51,7 @@ class GameServiceTest {
     }
 
     @Test
-    void ListGamesOneGame() throws UnauthorizedException, DataAccessException {
+    void listGamesOneGame() throws UnauthorizedException, DataAccessException {
         gameDao.createGame("gameTest");
         Collection<GameData> gameList = gameService.listGames(authData.authToken());
         assertNotEquals(0, gameList.size());
@@ -59,7 +59,7 @@ class GameServiceTest {
     }
 
     @Test
-    void ListGamesBadAuthToken() {
+    void listGamesBadAuthToken() {
         assertThrows(UnauthorizedException.class,
                 () -> {
                     gameDao.createGame("gameTest");

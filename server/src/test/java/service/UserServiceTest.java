@@ -17,7 +17,6 @@ class UserServiceTest {
     private IntGameDAO gameDao;
     private IntAuthDAO authDAO;
     private IntUserDAO userDAO;
-    private GameService gameService;
     private UserService userService;
 
     @BeforeEach
@@ -26,7 +25,6 @@ class UserServiceTest {
         authDAO = new MemAuthDAO();
         userDAO = new MemUserDAO();
         userService = new UserService(userDAO, authDAO);
-        gameService = new GameService(gameDao, authDAO);
     }
 
     @Test

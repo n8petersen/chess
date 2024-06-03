@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class SqlGameDAO implements IntGameDAO {
+
     public SqlGameDAO() {
         configureDb();
     }

@@ -1,8 +1,6 @@
 package server;
 
-import dataaccess.MemAuthDAO;
-import dataaccess.MemGameDAO;
-import dataaccess.MemUserDAO;
+import dataaccess.*;
 import server.handlers.RegisterHandler;
 import server.handlers.LoginHandler;
 import server.handlers.LogoutHandler;
@@ -20,9 +18,15 @@ public class Server {
     private final UserService userService;
 
     public Server() {
-        MemAuthDAO authDao = new MemAuthDAO();
-        MemGameDAO gameDao = new MemGameDAO();
-        MemUserDAO userDao = new MemUserDAO();
+//        // Memory DAO's
+//        IntAuthDAO authDao = new MemAuthDAO();
+//        IntGameDAO gameDao = new MemGameDAO();
+//        IntUserDAO userDao = new MemUserDAO();
+
+        // SQL DAO's
+        IntAuthDAO authDao = new SqlAuthDAO();
+        IntGameDAO gameDao = new SqlGameDAO();
+        IntUserDAO userDao = new SqlUserDAO();
 
         this.gameService = new GameService(gameDao, authDao);
         this.userService = new UserService(userDao, authDao);

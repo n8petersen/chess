@@ -1,6 +1,5 @@
 package dataaccess;
 
-import com.google.gson.Gson;
 import model.UserData;
 
 import java.sql.SQLException;
@@ -23,7 +22,7 @@ public class SqlUserDAO implements IntUserDAO {
         }
     }
 
-    public UserData readUser(String username) throws DataAccessException {
+    public UserData readUser(String username) {
         return null;
     }
 

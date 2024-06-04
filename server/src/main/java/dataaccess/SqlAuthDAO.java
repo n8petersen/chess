@@ -37,8 +37,12 @@ public class SqlAuthDAO implements IntAuthDAO {
     }
 
     public void deleteAuth(String authToken) throws DataAccessException {
-        new SQLExecutor().updateQuery("DELETE FROM auth WHERE authtoken=?;",
-                authToken);
+        if (authToken == null) {
+            throw new DataAccessException("Unable to modify database: null authToken");
+        } else {
+            new SQLExecutor().updateQuery("DELETE FROM auth WHERE authtoken=?;",
+                    authToken);
+        }
     }
 
     public void clear() throws DataAccessException {

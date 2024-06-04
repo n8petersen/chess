@@ -4,6 +4,8 @@ import model.AuthData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.xml.crypto.Data;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class SqlAuthDAOTest {
@@ -16,27 +18,53 @@ class SqlAuthDAOTest {
     }
 
     @Test
-    void createNewAuth() {
+    void createNewAuth() throws DataAccessException {
+        AuthData testAuth = new AuthData(AuthData.createToken(), "user");
+        AuthData insertAuth = authDao.createAuth("user");
+        assertNotEquals(testAuth.authToken(), insertAuth.authToken());
+        assertNotNull(insertAuth.authToken());
+        assertNotNull(insertAuth);
     }
 
     @Test
     void createAuthNullUsername() {
+        assertThrows(DataAccessException.class,
+                () -> authDao.createAuth(null)
+        );
     }
 
     @Test
-    void readAuth() {
+    void readAuth() throws DataAccessException {
+        AuthData insertAuth = authDao.createAuth("user");
+        AuthData readAuth = authDao.readAuth(insertAuth.authToken());
+        assertEquals(readAuth, insertAuth);
     }
 
     @Test
-    void readAuthNullToken() {
+    void readAuthNullToken() throws DataAccessException {
+        AuthData insertAuth = authDao.createAuth("user");
+        AuthData readAuth = authDao.readAuth(null);
+        assertNotEquals(readAuth, insertAuth);
+        assertNull(readAuth);
     }
 
     @Test
-    void deleteAuth() {
+    void deleteAuth() throws DataAccessException {
+        AuthData insertAuth = authDao.createAuth("user");
+        authDao.deleteAuth(insertAuth.authToken());
+        AuthData readAuth = authDao.readAuth(null);
+        assertNull(readAuth);
+        assertNotEquals(readAuth, insertAuth);
     }
 
     @Test
-    void deleteAuthNullToken() {
+    void deleteAuthNullToken() throws DataAccessException {
+        assertThrows(DataAccessException.class,
+                () -> {
+                    authDao.createAuth("user");
+                    authDao.deleteAuth(null);
+                }
+        );
     }
 
     @Test

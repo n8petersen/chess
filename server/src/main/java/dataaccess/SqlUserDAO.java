@@ -12,7 +12,7 @@ public class SqlUserDAO implements IntUserDAO {
     }
 
     public void createUser(UserData user) throws DataAccessException {
-        new SQLExecutor().updateQuery("INSERT INTO `chess`.`user` (`username`, `email`, `password`) VALUES (?, ?, ?)",
+        new SQLExecutor().updateQuery("INSERT INTO user (username, email, password) VALUES (?, ?, ?);",
                 user.username(),
                 user.email(),
                 BCrypt.hashpw(user.password(), BCrypt.gensalt()));
@@ -20,7 +20,7 @@ public class SqlUserDAO implements IntUserDAO {
 
     public UserData readUser(String username) throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()) {
-            String statement = "SELECT * FROM `chess`.`user` WHERE `username` = ?";
+            String statement = "SELECT * FROM user WHERE username=?;";
             try (PreparedStatement ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1, username);
                 try (ResultSet rs = ps.executeQuery()) {
@@ -39,7 +39,7 @@ public class SqlUserDAO implements IntUserDAO {
 
     public void clear() throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()) {
-            String statement = "TRUNCATE `chess`.`user`;";
+            String statement = "TRUNCATE user;";
             try (PreparedStatement ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
                 ps.executeUpdate();
             }
@@ -50,14 +50,14 @@ public class SqlUserDAO implements IntUserDAO {
 
     private final String[] createTable = {
             """
-            CREATE TABLE IF NOT EXISTS `user` (
-              `id` int NOT NULL AUTO_INCREMENT,
-              `username` varchar(45) NOT NULL,
-              `email` varchar(45) DEFAULT NULL,
-              `password` varchar(100) DEFAULT NULL,
-              PRIMARY KEY (`id`,`username`),
-              UNIQUE KEY `username_UNIQUE` (`username`),
-              UNIQUE KEY `id_UNIQUE` (`id`)
+            CREATE TABLE IF NOT EXISTS user (
+              id int NOT NULL AUTO_INCREMENT,
+              username varchar(45) NOT NULL,
+              email varchar(45) DEFAULT NULL,
+              password varchar(100) DEFAULT NULL,
+              PRIMARY KEY (id,username),
+              UNIQUE KEY username_UNIQUE (username),
+              UNIQUE KEY id_UNIQUE (id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
             """
     };

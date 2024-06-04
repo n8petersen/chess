@@ -15,17 +15,10 @@ public class SqlAuthDAO implements IntAuthDAO {
     public AuthData createAuth(String username) throws DataAccessException {
         String newAuthToken = UUID.randomUUID().toString();
         AuthData newAuth = new AuthData(newAuthToken, username);
-        try (var conn = DatabaseManager.getConnection()) {
-            String statement = "INSERT INTO `chess`.`auth` (`username`,`authtoken`) VALUES (?, ?)";
-            try (var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, username);
-                ps.setString(2, newAuthToken);
-                ps.executeUpdate();
-                return newAuth;
-            }
-        } catch (SQLException e) {
-            throw new DataAccessException(String.format("Unable to add user to database: %s", e.getMessage()));
-        }
+        new SQLExecutor().updateQuery("INSERT INTO `chess`.`auth` (`username`,`authtoken`) VALUES (?, ?)",
+                username,
+                newAuthToken);
+        return newAuth;
     }
 
     public AuthData readAuth(String authToken) throws DataAccessException {
@@ -47,15 +40,8 @@ public class SqlAuthDAO implements IntAuthDAO {
     }
 
     public void deleteAuth(String authToken) throws DataAccessException {
-        try (var conn = DatabaseManager.getConnection()) {
-            String statement = "DELETE FROM `chess`.`auth` WHERE `authtoken` = ?";
-            try (var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, authToken);
-                ps.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new DataAccessException(String.format("Unable to add user to database: %s", e.getMessage()));
-        }
+        new SQLExecutor().updateQuery("DELETE FROM `chess`.`auth` WHERE `authtoken` = ?",
+                authToken);
     }
 
     public void clear() throws DataAccessException {

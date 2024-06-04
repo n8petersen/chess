@@ -8,20 +8,20 @@ public class SQLExecutor {
 
     public int updateQuery(String statement, Object... params) throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()) {
-            try (PreparedStatement preparedStatement = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
                 for (int i = 0; i < params.length; i++) {
                     Object param = params[i];
                     switch (param) {
-                        case String p -> preparedStatement.setString(i + 1, p);
-                        case Integer p -> preparedStatement.setInt(i + 1, p);
-                        case null -> preparedStatement.setNull(i + 1, NULL);
+                        case String p -> ps.setString(i + 1, p);
+                        case Integer p -> ps.setInt(i + 1, p);
+                        case null -> ps.setNull(i + 1, NULL);
                         default -> {
                         }
                     }
                 }
-                preparedStatement.executeUpdate();
+                ps.executeUpdate();
 
-                ResultSet rs = preparedStatement.getGeneratedKeys();
+                ResultSet rs = ps.getGeneratedKeys();
                 if (rs.next()) {
                     return rs.getInt(1);
                 } else {

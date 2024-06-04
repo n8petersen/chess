@@ -31,7 +31,7 @@ public class SqlUserDAO implements IntUserDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataAccessException(String.format("Unable to modify database: %s", e.getMessage()));
         }
         return null;
     }

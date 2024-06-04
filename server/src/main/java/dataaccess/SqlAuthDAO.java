@@ -3,7 +3,6 @@ package dataaccess;
 import model.AuthData;
 
 import java.sql.*;
-import java.util.UUID;
 
 public class SqlAuthDAO implements IntAuthDAO {
 
@@ -12,11 +11,10 @@ public class SqlAuthDAO implements IntAuthDAO {
     }
 
     public AuthData createAuth(String username) throws DataAccessException {
-        String newAuthToken = UUID.randomUUID().toString();
-        AuthData newAuth = new AuthData(newAuthToken, username);
+        AuthData newAuth = new AuthData(AuthData.createToken(), username);
         new SQLExecutor().updateQuery("INSERT INTO `chess`.`auth` (`username`,`authtoken`) VALUES (?, ?)",
                 username,
-                newAuthToken);
+                newAuth.authToken());
         return newAuth;
     }
 
@@ -33,7 +31,7 @@ public class SqlAuthDAO implements IntAuthDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataAccessException(String.format("Unable to modify database: %s", e.getMessage()));
         }
         return null;
     }
@@ -50,7 +48,7 @@ public class SqlAuthDAO implements IntAuthDAO {
                 ps.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new DataAccessException(String.format("Unable to add user to database: %s", e.getMessage()));
+            throw new DataAccessException(String.format("Unable to modify database: %s", e.getMessage()));
         }
     }
 

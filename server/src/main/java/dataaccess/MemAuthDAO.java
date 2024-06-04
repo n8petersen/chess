@@ -4,7 +4,6 @@ import model.AuthData;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class MemAuthDAO implements IntAuthDAO {
 
@@ -13,18 +12,17 @@ public class MemAuthDAO implements IntAuthDAO {
     public MemAuthDAO() {
     }
 
-    public AuthData createAuth(String username) throws DataAccessException {
-        String newAuthToken = UUID.randomUUID().toString();
-        AuthData newAuth = new AuthData(newAuthToken, username);
-        auths.put(newAuthToken, newAuth);
+    public AuthData createAuth(String username) {
+        AuthData newAuth = new AuthData(AuthData.createToken(), username);
+        auths.put(newAuth.authToken(), newAuth);
         return newAuth;
     }
 
-    public AuthData readAuth(String authToken) throws DataAccessException {
+    public AuthData readAuth(String authToken) {
         return auths.get(authToken);
     }
 
-    public void deleteAuth(String authToken) throws DataAccessException {
+    public void deleteAuth(String authToken) {
         auths.remove(authToken);
     }
 

@@ -64,7 +64,7 @@ public class SqlGameDAO implements IntGameDAO {
                 ps.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new DataAccessException(String.format("Unable to add user to database: %s", e.getMessage()));
+            throw new DataAccessException(String.format("Unable to modify database: %s", e.getMessage()));
         }
     }
 

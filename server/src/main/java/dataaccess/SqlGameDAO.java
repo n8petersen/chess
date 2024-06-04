@@ -58,9 +58,9 @@ public class SqlGameDAO implements IntGameDAO {
     }
 
     public void clear() throws DataAccessException {
-        try (var conn = DatabaseManager.getConnection()) {
+        try (Connection conn = DatabaseManager.getConnection()) {
             String statement = "TRUNCATE `chess`.`game`;";
-            try (var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
                 ps.executeUpdate();
             }
         } catch (SQLException e) {

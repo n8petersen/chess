@@ -33,9 +33,9 @@ public class SqlUserDAO implements IntUserDAO {
                 try (var rs = ps.executeQuery()) {
                     if (rs.next()) {
                         String user = rs.getString("username");
-                        String email = rs.getString("email");
                         String password = rs.getString("password");
-                        return new UserData(user, email, password);
+                        String email = rs.getString("email");
+                        return new UserData(user, password, email);
                     }
                 }
             }

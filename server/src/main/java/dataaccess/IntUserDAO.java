@@ -8,9 +8,10 @@ public interface IntUserDAO {
      * Create a new user given UserData
      *
      * @param user UserData object (username, password, email)
+     * @return
      * @throws DataAccessException for DB access violations
      */
-    void createUser(UserData user) throws DataAccessException;
+    UserData createUser(UserData user) throws DataAccessException;
 
     /**
      * Read a user given its username

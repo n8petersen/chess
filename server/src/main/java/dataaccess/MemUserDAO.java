@@ -12,8 +12,9 @@ public class MemUserDAO implements IntUserDAO {
     public MemUserDAO() {
     }
 
-    public void createUser(UserData user) {
+    public UserData createUser(UserData user) {
         users.put(user.username(), user);
+        return user;
     }
 
     public UserData readUser(String username) {

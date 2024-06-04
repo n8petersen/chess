@@ -20,7 +20,7 @@ public class MemUserDAO implements IntUserDAO {
         return users.get(username);
     }
 
-    public void clear() throws DataAccessException {
+    public void clear() {
         users.clear();
     }
 }

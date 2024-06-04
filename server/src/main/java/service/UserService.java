@@ -2,8 +2,7 @@ package service;
 
 import dataaccess.*;
 import model.*;
-
-import java.util.Objects;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserService {
 
@@ -30,7 +29,7 @@ public class UserService {
 
     public AuthData loginUser(UserData user) throws DataAccessException, UnauthorizedException {
         UserData checkUser = getUser(user.username());
-        if (checkUser != null && Objects.equals(checkUser.password(), user.password())) {
+        if (checkUser != null && BCrypt.checkpw(user.password(), checkUser.password())) {
             return authDataAccess.createAuth(user.username());
         } else {
             throw new UnauthorizedException("unauthorized");

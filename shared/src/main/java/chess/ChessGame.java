@@ -94,7 +94,7 @@ public class ChessGame {
         //  2. given piece is the current team's color
         //  3. the provided rule is in the returned list from valid rules
         //  4. the move doesn't put team's king in check
-        ChessPosition startPosition = move.getStartPosition();
+        ChessPosition startPosition = move.startPosition();
         ChessPiece piece = board.getPiece(startPosition);
 
         if (piece != null && piece.getTeamColor() == turnColor) {
@@ -122,13 +122,13 @@ public class ChessGame {
      * @param move the move to make
      */
     private void movePiece(ChessBoard board, ChessMove move) {
-        ChessPosition startPosition = move.getStartPosition();
-        ChessPosition endPosition = move.getEndPosition();
+        ChessPosition startPosition = move.startPosition();
+        ChessPosition endPosition = move.endPosition();
         ChessPiece piece = board.getPiece(startPosition);
 
         // check for promotion, and change piece if promoting
-        if (move.getPromotionPiece() != null) {
-            piece.setPieceType(move.getPromotionPiece());
+        if (move.promotionPiece() != null) {
+            piece.setPieceType(move.promotionPiece());
         }
         board.removePiece(startPosition);
         board.addPiece(endPosition, piece);
@@ -142,7 +142,7 @@ public class ChessGame {
      * @return True if the team's king is NOT in check after the move
      */
     private boolean checkMove(ChessMove move) {
-        ChessPosition startPosition = move.getStartPosition();
+        ChessPosition startPosition = move.startPosition();
         ChessPiece movePiece = board.getPiece(startPosition);
         TeamColor teamColor = movePiece.getTeamColor();
 

@@ -2,8 +2,7 @@ package dataaccess;
 
 import model.UserData;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class SqlUserDAO implements IntUserDAO {
 
@@ -12,30 +11,22 @@ public class SqlUserDAO implements IntUserDAO {
     }
 
     public void createUser(UserData user) throws DataAccessException {
-        try (var conn = DatabaseManager.getConnection()) {
-            String statement = "INSERT INTO `chess`.`user` (`username`, `email`, `password`) VALUES (?, ?, ?)";
-            try (var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, user.username());
-                ps.setString(2, user.email());
-                ps.setString(3, user.password());
-                ps.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new DataAccessException(String.format("Unable to add user to database: %s", e.getMessage()));
-        }
+        new SQLExecutor().updateQuery("INSERT INTO `chess`.`user` (`username`, `email`, `password`) VALUES (?, ?, ?)",
+                user.username(),
+                user.email(),
+                user.password());
     }
 
     public UserData readUser(String username) throws DataAccessException {
-        try (var conn = DatabaseManager.getConnection()) {
+        try (Connection conn = DatabaseManager.getConnection()) {
             String statement = "SELECT * FROM `chess`.`user` WHERE `username` = ?";
-            try (var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1, username);
-                try (var rs = ps.executeQuery()) {
+                try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
-                        String user = rs.getString("username");
                         String password = rs.getString("password");
                         String email = rs.getString("email");
-                        return new UserData(user, password, email);
+                        return new UserData(username, password, email);
                     }
                 }
             }
@@ -46,9 +37,9 @@ public class SqlUserDAO implements IntUserDAO {
     }
 
     public void clear() throws DataAccessException {
-        try (var conn = DatabaseManager.getConnection()) {
+        try (Connection conn = DatabaseManager.getConnection()) {
             String statement = "TRUNCATE `chess`.`user`;";
-            try (var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
                 ps.executeUpdate();
             }
         } catch (SQLException e) {

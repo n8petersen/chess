@@ -16,19 +16,19 @@ class SqlUserDAOTest {
     }
 
     @Test
-    void createUserGood() {
+    void createNewUser() {
     }
 
     @Test
-    void createUserBad() {
+    void createUserTaken() {
     }
 
     @Test
-    void readUserGood() {
+    void readUser() {
     }
 
     @Test
-    void readUserBad() {
+    void readUserNullUsername() {
     }
 
     @Test

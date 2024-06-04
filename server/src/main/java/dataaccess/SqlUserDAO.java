@@ -16,7 +16,7 @@ public class SqlUserDAO implements IntUserDAO {
                 user.username(),
                 user.email(),
                 BCrypt.hashpw(user.password(), BCrypt.gensalt()));
-        return user;
+        return new UserData(user.username(), BCrypt.hashpw(user.password(), BCrypt.gensalt()), user.email());
     }
 
     public UserData readUser(String username) throws DataAccessException {

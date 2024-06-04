@@ -1,8 +1,9 @@
-package database;
+package dataaccess;
 
 import org.junit.jupiter.api.Test;
 
-class SqlUserTest {
+
+class SqlUserDAOTest {
 
     @Test
     void createUserGood() {

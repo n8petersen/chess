@@ -1,4 +1,4 @@
-package database;
+package dataaccess;
 
 import org.junit.jupiter.api.Test;
 

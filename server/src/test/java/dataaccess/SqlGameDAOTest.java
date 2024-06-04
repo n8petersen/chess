@@ -1,9 +1,8 @@
-package database;
+package dataaccess;
 
 import org.junit.jupiter.api.Test;
 
-
-class SqlGameTest {
+class SqlGameDAOTest {
 
     @Test
     void createGameGood() {

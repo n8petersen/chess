@@ -39,7 +39,7 @@ public class SqlGameDAO implements IntGameDAO {
                         String blackUsername = rs.getString("blackUsername");
                         String gameJson = rs.getString("GameData");
                         ChessGame game = serializer.fromJson(gameJson, ChessGame.class);
-                        return new GameData(gameId, gameName, whiteUsername, blackUsername, game);
+                        return new GameData(gameId, whiteUsername, blackUsername, gameName, game);
                     }
                 }
             }
@@ -53,8 +53,13 @@ public class SqlGameDAO implements IntGameDAO {
         return List.of();
     }
 
-    public void updateGame(GameData game) throws DataAccessException {
-
+    public void updateGame(GameData gameData) throws DataAccessException {
+        new SQLExecutor().updateQuery("UPDATE `chess`.`game` SET `gameName`=?, `whiteUsername`=?, `blackUsername`=?, `gameData`=? WHERE `id`=?;",
+                gameData.gameName(),
+                gameData.whiteUsername(),
+                gameData.blackUsername(),
+                serializer.toJson(gameData.game()),
+                gameData.gameID());
     }
 
     public void clear() throws DataAccessException {

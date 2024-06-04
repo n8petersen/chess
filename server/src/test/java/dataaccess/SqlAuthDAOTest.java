@@ -4,8 +4,6 @@ import model.AuthData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.crypto.Data;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class SqlAuthDAOTest {
@@ -58,7 +56,7 @@ class SqlAuthDAOTest {
     }
 
     @Test
-    void deleteAuthNullToken() throws DataAccessException {
+    void deleteAuthNullToken() {
         assertThrows(DataAccessException.class,
                 () -> {
                     authDao.createAuth("user");

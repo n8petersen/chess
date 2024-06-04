@@ -11,11 +11,12 @@ public class SqlUserDAO implements IntUserDAO {
         configureDb();
     }
 
-    public void createUser(UserData user) throws DataAccessException {
+    public UserData createUser(UserData user) throws DataAccessException {
         new SQLExecutor().updateQuery("INSERT INTO user (username, email, password) VALUES (?, ?, ?);",
                 user.username(),
                 user.email(),
                 BCrypt.hashpw(user.password(), BCrypt.gensalt()));
+        return new UserData(user.username(), BCrypt.hashpw(user.password(), BCrypt.gensalt()), user.email());
     }
 
     public UserData readUser(String username) throws DataAccessException {

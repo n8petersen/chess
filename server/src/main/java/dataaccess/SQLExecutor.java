@@ -12,7 +12,13 @@ public class SQLExecutor {
                 for (int i = 0; i < params.length; i++) {
                     Object param = params[i];
                     switch (param) {
-                        case String p -> ps.setString(i + 1, p);
+                        case String p -> {
+                            if (p.equals("null")) {
+                                ps.setNull(i + 1, NULL);
+                            } else {
+                                ps.setString(i + 1, p);
+                            }
+                        }
                         case Integer p -> ps.setInt(i + 1, p);
                         case null -> ps.setNull(i + 1, NULL);
                         default -> {

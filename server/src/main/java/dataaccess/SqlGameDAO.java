@@ -24,7 +24,7 @@ public class SqlGameDAO implements IntGameDAO {
                 null,
                 null,
                 gameJson);
-        return new GameData(id, gameName, null, null, game);
+        return new GameData(id, null, null, gameName, game);
     }
 
     public GameData readGame(int gameId) throws DataAccessException {
@@ -96,10 +96,10 @@ public class SqlGameDAO implements IntGameDAO {
             """
             CREATE TABLE IF NOT EXISTS game (
               id int NOT NULL AUTO_INCREMENT,
-              gameName varchar(45) DEFAULT NULL,
+              gameName varchar(45) NOT NULL,
               whiteUsername varchar(45) DEFAULT NULL,
               blackUsername varchar(45) DEFAULT NULL,
-              gameData json DEFAULT NULL,
+              gameData json NOT NULL,
               PRIMARY KEY (id),
               UNIQUE KEY id_UNIQUE (id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

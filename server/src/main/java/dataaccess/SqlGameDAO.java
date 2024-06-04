@@ -5,8 +5,8 @@ import model.GameData;
 import com.google.gson.Gson;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class SqlGameDAO implements IntGameDAO {
 
@@ -34,12 +34,7 @@ public class SqlGameDAO implements IntGameDAO {
                 ps.setInt(1, gameId);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
-                        String gameName = rs.getString("gameName");
-                        String whiteUsername = rs.getString("whiteUsername");
-                        String blackUsername = rs.getString("blackUsername");
-                        String gameJson = rs.getString("GameData");
-                        ChessGame game = serializer.fromJson(gameJson, ChessGame.class);
-                        return new GameData(gameId, whiteUsername, blackUsername, gameName, game);
+                        return convertGame(rs);
                     }
                 }
             }
@@ -51,6 +46,17 @@ public class SqlGameDAO implements IntGameDAO {
 
     public Collection<GameData> readAllGames() throws DataAccessException {
         return List.of();
+    }
+
+    private GameData convertGame(ResultSet rs) throws SQLException {
+        int gameId = rs.getInt("id");
+        String gameName = rs.getString("gameName");
+        String whiteUsername = rs.getString("whiteUsername");
+        String blackUsername = rs.getString("blackUsername");
+        String gameJson = rs.getString("GameData");
+        ChessGame game = serializer.fromJson(gameJson, ChessGame.class);
+
+        return new GameData(gameId, whiteUsername, blackUsername, gameName, game);
     }
 
     public void updateGame(GameData gameData) throws DataAccessException {

@@ -26,7 +26,7 @@ public class MemAuthDAO implements IntAuthDAO {
         auths.remove(authToken);
     }
 
-    public void clear() throws DataAccessException {
+    public void clear() {
         auths.clear();
     }
 }

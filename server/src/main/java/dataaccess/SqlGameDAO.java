@@ -19,7 +19,7 @@ public class SqlGameDAO implements IntGameDAO {
     public GameData createGame(String gameName) throws DataAccessException {
         ChessGame game = new ChessGame();
         String gameJson = serializer.toJson(game);
-        int id = new SQLExecutor().updateQuery("INSERT INTO `chess`.`game` (`gameName`, `whiteUsername`, `blackUsername`, `gameData`) VALUES (?, ?, ?, ?)",
+        int id = new SQLExecutor().updateQuery("INSERT INTO game (gameName, whiteUsername, blackUsername, gameData) VALUES (?, ?, ?, ?);",
                 gameName,
                 null,
                 null,
@@ -29,7 +29,7 @@ public class SqlGameDAO implements IntGameDAO {
 
     public GameData readGame(int gameId) throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()) {
-            String statement = "SELECT * FROM `chess`.`game` WHERE `id` = ?";
+            String statement = "SELECT * FROM game WHERE id=?;";
             try (PreparedStatement ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setInt(1, gameId);
                 try (ResultSet rs = ps.executeQuery()) {
@@ -47,7 +47,7 @@ public class SqlGameDAO implements IntGameDAO {
     public Collection<GameData> readAllGames() throws DataAccessException {
         Collection<GameData> gameList = new ArrayList<>();
         try (Connection conn = DatabaseManager.getConnection()) {
-            String statement = "SELECT * FROM `chess`.`game`";
+            String statement = "SELECT * FROM game;";
             try (PreparedStatement ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
@@ -73,7 +73,7 @@ public class SqlGameDAO implements IntGameDAO {
     }
 
     public void updateGame(GameData gameData) throws DataAccessException {
-        new SQLExecutor().updateQuery("UPDATE `chess`.`game` SET `gameName`=?, `whiteUsername`=?, `blackUsername`=?, `gameData`=? WHERE `id`=?;",
+        new SQLExecutor().updateQuery("UPDATE game SET gameName=?, whiteUsername=?, blackUsername=?, gameData=? WHERE id=?;",
                 gameData.gameName(),
                 gameData.whiteUsername(),
                 gameData.blackUsername(),
@@ -83,7 +83,7 @@ public class SqlGameDAO implements IntGameDAO {
 
     public void clear() throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()) {
-            String statement = "TRUNCATE `chess`.`game`;";
+            String statement = "TRUNCATE game;";
             try (PreparedStatement ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
                 ps.executeUpdate();
             }
@@ -94,14 +94,14 @@ public class SqlGameDAO implements IntGameDAO {
 
     private final String[] createTable = {
             """
-            CREATE TABLE IF NOT EXISTS `game` (
-              `id` int NOT NULL AUTO_INCREMENT,
-              `gameName` varchar(45) DEFAULT NULL,
-              `whiteUsername` varchar(45) DEFAULT NULL,
-              `blackUsername` varchar(45) DEFAULT NULL,
-              `gameData` json DEFAULT NULL,
-              PRIMARY KEY (`id`),
-              UNIQUE KEY `id_UNIQUE` (`id`)
+            CREATE TABLE IF NOT EXISTS game (
+              id int NOT NULL AUTO_INCREMENT,
+              gameName varchar(45) DEFAULT NULL,
+              whiteUsername varchar(45) DEFAULT NULL,
+              blackUsername varchar(45) DEFAULT NULL,
+              gameData json DEFAULT NULL,
+              PRIMARY KEY (id),
+              UNIQUE KEY id_UNIQUE (id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
             """
     };

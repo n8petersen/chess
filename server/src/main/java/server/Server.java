@@ -18,12 +18,6 @@ public class Server {
     private final UserService userService;
 
     public Server() {
-//        // Memory DAO's
-//        IntAuthDAO authDao = new MemAuthDAO();
-//        IntGameDAO gameDao = new MemGameDAO();
-//        IntUserDAO userDao = new MemUserDAO();
-
-        // SQL DAO's
         IntAuthDAO authDao = new SqlAuthDAO();
         IntGameDAO gameDao = new SqlGameDAO();
         IntUserDAO userDao = new SqlUserDAO();

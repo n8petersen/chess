@@ -45,7 +45,20 @@ public class SqlGameDAO implements IntGameDAO {
     }
 
     public Collection<GameData> readAllGames() throws DataAccessException {
-        return List.of();
+        Collection<GameData> gameList = new ArrayList<>();
+        try (Connection conn = DatabaseManager.getConnection()) {
+            String statement = "SELECT * FROM `chess`.`game`";
+            try (PreparedStatement ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        gameList.add(convertGame(rs));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return gameList;
     }
 
     private GameData convertGame(ResultSet rs) throws SQLException {

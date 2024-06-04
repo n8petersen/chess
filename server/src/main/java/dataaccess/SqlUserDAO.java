@@ -1,6 +1,7 @@
 package dataaccess;
 
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
 
@@ -14,7 +15,7 @@ public class SqlUserDAO implements IntUserDAO {
         new SQLExecutor().updateQuery("INSERT INTO `chess`.`user` (`username`, `email`, `password`) VALUES (?, ?, ?)",
                 user.username(),
                 user.email(),
-                user.password());
+                BCrypt.hashpw(user.password(), BCrypt.gensalt()));
     }
 
     public UserData readUser(String username) throws DataAccessException {

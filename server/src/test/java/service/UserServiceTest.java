@@ -6,6 +6,7 @@ import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Collection;
 
@@ -60,7 +61,7 @@ class UserServiceTest {
 
     @Test
     void loginUser() throws DataAccessException, UnauthorizedException {
-        UserData userData1 = new UserData("user1", "password", "email");
+        UserData userData1 = new UserData("user1", BCrypt.hashpw("password", BCrypt.gensalt()), "email");
         userDAO.createUser(userData1);
         UserData checkUser = new UserData("user1", "password", null);
         AuthData authData = userService.loginUser(checkUser);

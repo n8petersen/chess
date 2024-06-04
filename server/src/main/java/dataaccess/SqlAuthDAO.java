@@ -2,8 +2,7 @@ package dataaccess;
 
 import model.AuthData;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.UUID;
 
 public class SqlAuthDAO implements IntAuthDAO {
@@ -22,11 +21,11 @@ public class SqlAuthDAO implements IntAuthDAO {
     }
 
     public AuthData readAuth(String authToken) throws DataAccessException {
-        try (var conn = DatabaseManager.getConnection()) {
+        try (Connection conn = DatabaseManager.getConnection()) {
             String statement = "SELECT * FROM `chess`.`auth` WHERE `authtoken` = ?";
-            try (var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1, authToken);
-                try (var rs = ps.executeQuery()) {
+                try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         String user = rs.getString("username");
                         return new AuthData(authToken, user);
@@ -45,9 +44,9 @@ public class SqlAuthDAO implements IntAuthDAO {
     }
 
     public void clear() throws DataAccessException {
-        try (var conn = DatabaseManager.getConnection()) {
+        try (Connection conn = DatabaseManager.getConnection()) {
             String statement = "TRUNCATE `chess`.`auth`;";
-            try (var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
                 ps.executeUpdate();
             }
         } catch (SQLException e) {

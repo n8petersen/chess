@@ -60,6 +60,17 @@ class SqlGameDAOTest {
     }
 
     @Test
+    void readAllGamesAfterBadInsert() throws DataAccessException {
+        GameData insertGame1 = gameDao.createGame("one");
+        GameData insertGame2 = gameDao.createGame("two");
+        GameData insertGame3 = null;
+        Collection<GameData> readGames = gameDao.readAllGames();
+        assertTrue(readGames.contains(insertGame1));
+        assertTrue(readGames.contains(insertGame2));
+        assertFalse(readGames.contains(insertGame3));
+    }
+
+    @Test
     void readAllGamesEmpty() throws DataAccessException {
         Collection<GameData> readGames = gameDao.readAllGames();
         assertTrue(readGames.isEmpty());

@@ -95,35 +95,18 @@ public class SqlGameDAO implements IntGameDAO {
     private final String[] createTable = {
             """
             CREATE TABLE IF NOT EXISTS `game` (
-            `id` int NOT NULL AUTO_INCREMENT,
-            `gameName` varchar(45) DEFAULT NULL,
-            `whiteUsername` varchar(45) DEFAULT NULL,
-            `blackUsername` varchar(45) DEFAULT NULL,
-            `gameData` json DEFAULT NULL,
-            PRIMARY KEY (`id`),
-            UNIQUE KEY `id_UNIQUE` (`id`)
+              `id` int NOT NULL AUTO_INCREMENT,
+              `gameName` varchar(45) DEFAULT NULL,
+              `whiteUsername` varchar(45) DEFAULT NULL,
+              `blackUsername` varchar(45) DEFAULT NULL,
+              `gameData` json DEFAULT NULL,
+              PRIMARY KEY (`id`),
+              UNIQUE KEY `id_UNIQUE` (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
             """
     };
 
     private void configureDb() {
-        try {
-            DatabaseManager.createDatabase();
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
-        try (java.sql.Connection conn = DatabaseManager.getConnection()) {
-            for (String statement : createTable) {
-                try (java.sql.PreparedStatement preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
-                }
-            }
-        } catch (SQLException | DataAccessException e) {
-            try {
-                throw new BadRequestException(String.format("Unable to configure database: %s", e.getMessage()));
-            } catch (BadRequestException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
+        new SQLExecutor().configureDb(createTable);
     }
 }

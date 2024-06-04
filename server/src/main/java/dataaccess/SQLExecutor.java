@@ -32,4 +32,25 @@ public class SQLExecutor {
             throw new DataAccessException(String.format("Unable to update database: %s", e.getMessage()));
         }
     }
+
+    public void configureDb(String[] createStatement) {
+        try {
+            DatabaseManager.createDatabase();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+        try (java.sql.Connection conn = DatabaseManager.getConnection()) {
+            for (String statement : createStatement) {
+                try (java.sql.PreparedStatement preparedStatement = conn.prepareStatement(statement)) {
+                    preparedStatement.executeUpdate();
+                }
+            }
+        } catch (SQLException | DataAccessException e) {
+            try {
+                throw new BadRequestException(String.format("Unable to configure database: %s", e.getMessage()));
+            } catch (BadRequestException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
 }

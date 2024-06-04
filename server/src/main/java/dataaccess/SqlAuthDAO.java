@@ -13,16 +13,49 @@ public class SqlAuthDAO implements IntAuthDAO {
     }
 
     public AuthData createAuth(String username) throws DataAccessException {
-        AuthData newAuth = new AuthData(null, null);
-        return newAuth;
+        String newAuthToken = UUID.randomUUID().toString();
+        AuthData newAuth = new AuthData(newAuthToken, username);
+        try (var conn = DatabaseManager.getConnection()) {
+            String statement = "INSERT INTO `chess`.`auth` (`username`,`authtoken`) VALUES (?, ?)";
+            try (var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setString(1, username);
+                ps.setString(2, newAuthToken);
+                ps.executeUpdate();
+                return newAuth;
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(String.format("Unable to add user to database: %s", e.getMessage()));
+        }
     }
 
     public AuthData readAuth(String authToken) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {
+            String statement = "SELECT * FROM `chess`.`auth` WHERE `authtoken` = ?";
+            try (var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setString(1, authToken);
+                try (var rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        String user = rs.getString("username");
+                        return new AuthData(authToken, user);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return null;
     }
 
     public void deleteAuth(String authToken) throws DataAccessException {
-
+        try (var conn = DatabaseManager.getConnection()) {
+            String statement = "DELETE FROM `chess`.`auth` WHERE `authtoken` = ?";
+            try (var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setString(1, authToken);
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(String.format("Unable to add user to database: %s", e.getMessage()));
+        }
     }
 
     public void clear() throws DataAccessException {

@@ -17,10 +17,10 @@ public class ChessClient {
     }
 
     public void writePrompt() {
-        if (state == LOGGED_IN) {
-            System.out.print("[" + username + "] >> ");
-        } else {
+        if (state == LOGGED_OUT) {
             System.out.print("[LOGGED OUT] >> ");
+        } else {
+            System.out.print("[" + username + "] >> ");
         }
     }
 

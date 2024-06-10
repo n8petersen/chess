@@ -1,16 +1,12 @@
 package ui;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
+import chess.ChessGame;
 
 import static ui.EscapeSequences.*;
 import static ui.State.*;
 
 public class ChessClient {
 
-    private static final Logger log = LoggerFactory.getLogger(ChessClient.class);
     final ServerFacade server;
     private State state = State.LOGGED_OUT;
     private String authToken;
@@ -24,14 +20,26 @@ public class ChessClient {
         input = input.toLowerCase();
         var input_array = input.split(" ");
 
-        return switch (input_array[0]) {
-            case "help" -> help();
-            case "quit" -> quit();
-            case "register" -> register(input_array);
-            case "logout" -> logout();
-            case "login" -> login(input_array);
-            default -> result;
-        };
+        if (state != LOGGED_IN) {
+            return switch (input_array[0]) {
+                case "help" -> help();
+                case "quit" -> quit();
+                case "register" -> register(input_array);
+                case "login" -> login(input_array);
+                default -> result;
+            };
+        } else {
+            return switch (input_array[0]) {
+                case "help" -> help();
+                case "quit" -> quit();
+                case "logout" -> logout();
+                case "list" -> list();
+                case "join" -> join(input_array);
+                case "observe" -> observe(input_array);
+                case "create" -> create(input_array);
+                default -> result;
+            };
+        }
     }
 
     private String register(String[] param) throws Exception {
@@ -45,9 +53,52 @@ public class ChessClient {
         return result;
     }
 
+    private String list() throws Exception {
+        String result = "";
+        var resp = server.listGames(authToken);
+        result = resp.toString();
+        // TODO: FORMAT THIS ACCORDINGLY:
+        //  Lists all the games that currently exist on the server
+        //  Calls the server list API to get all the game data, and displays the games in a numbered list,
+        //  including the game name and players (not observers) in the game.
+        //  The numbering for the list should be independent of the game IDs.
+        return result;
+    }
+
+    private String join(String[] param) throws Exception {
+        String result = "Couldn't join game, check command and try again";
+        if (param.length == 3 && (param[2].equalsIgnoreCase("WHITE") || param[2].equalsIgnoreCase("BLACK"))) {
+            int gameId = Integer.parseInt(param[1]);
+            var color = ChessGame.TeamColor.valueOf(param[2].toUpperCase());
+            var resp = server.joinGame(authToken, gameId, color);
+            state = (color == ChessGame.TeamColor.WHITE ? WHITE : BLACK);
+            result = "Joined game " + gameId + " as " + color;
+        }
+        return result;
+    }
+
+    private String observe(String[] param) throws Exception {
+        String result = "";
+        if (param.length == 2) {
+            int gameId = Integer.parseInt(param[1]);
+            state = OBSERVER;
+            result = "Joined game " + gameId + " as OBSERVER";
+        }
+        return result;
+    }
+
+    private String create(String[] param) throws Exception {
+        String result = "";
+        if (param.length == 2) {
+            var resp = server.createGame(authToken, param[1]);
+            result = "Created game " + resp.gameID();
+        }
+        return result;
+    }
+
     private String login(String[] param) throws Exception {
         String result = "";
-        if (param.length == 3 && state == LOGGED_OUT) {
+        if (param.length == 3) {
             var resp = server.login(param[1], param[2]);
             authToken = resp.authToken();
             state = LOGGED_IN;
@@ -57,13 +108,9 @@ public class ChessClient {
     }
 
     private String logout() throws Exception {
-        String result = "Couldn't logout.";
-        if (state == LOGGED_IN) {
-            server.logout(authToken);
-            state = LOGGED_OUT;
-            result = "Logged out.";
-        }
-        return result;
+        server.logout(authToken);
+        state = LOGGED_OUT;
+        return "Logged out";
     }
 
     private String help() {
@@ -92,7 +139,8 @@ public class ChessClient {
         return result.toString();
     }
 
-    private String quit () {
+    private String quit () throws Exception {
+        logout();
         return "quit";
     }
 }

@@ -1,12 +1,14 @@
 package ui;
 
 import chess.ChessGame;
+import clientutil.ServerFacade;
+import clientutil.State;
 import model.GameData;
 
 import java.io.IOException;
 
 import static ui.EscapeSequences.*;
-import static ui.State.*;
+import static clientutil.State.*;
 
 public class ChessClient {
 

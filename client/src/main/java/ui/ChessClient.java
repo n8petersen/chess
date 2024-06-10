@@ -152,7 +152,7 @@ public class ChessClient {
     }
 
     private String create(String[] param) throws Exception {
-        String result = "Coudldn't create game";
+        String result = "Couldn't create game";
         try {
             if (param.length == 2) {
                 gameData = server.createGame(authToken, param[1]);

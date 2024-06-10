@@ -9,8 +9,4 @@ public class Draw {
 
         return null;
     }
-
-    private void drawBorder() {
-
-    }
 }

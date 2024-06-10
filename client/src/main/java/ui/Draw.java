@@ -19,7 +19,12 @@ public class Draw {
 
     public void drawBoard(GameData gameData) {
        ChessBoard board = gameData.game().getBoard();
+    }
 
+    /**
+     * drawBoard() will just draw the starter board
+     */
+    public void drawBoard() {
         drawStarter();
     }
 

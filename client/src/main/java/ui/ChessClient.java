@@ -72,12 +72,12 @@ public class ChessClient {
             var color = ChessGame.TeamColor.valueOf(param[2].toUpperCase());
             var resp = server.joinGame(authToken, gameId, color);
             state = (color == ChessGame.TeamColor.WHITE ? WHITE : BLACK);
-            result = "Joined game " + gameId + " as " + color;
+            result = "Joined game " + resp.gameID() + " as " + color;
         }
         return result;
     }
 
-    private String observe(String[] param) throws Exception {
+    private String observe(String[] param) {
         String result = "";
         if (param.length == 2) {
             int gameId = Integer.parseInt(param[1]);

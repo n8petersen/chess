@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import dataaccess.BadRequestException;
 import dataaccess.UserTakenException;
 import dataaccess.UnauthorizedException;
+import model.GameData;
 import service.GameService;
 import spark.Response;
 import spark.Request;
@@ -31,8 +32,8 @@ public class JoinGameHandler {
             } catch (Exception e) {
                 return errorHandler.handleError(e, res, 400);
             }
-            gameService.joinGame(authToken, gameId, playerColor);
-            return serializer.toJson(new Object());
+            GameData gameData = gameService.joinGame(authToken, gameId, playerColor);
+            return serializer.toJson(gameData);
         } catch (BadRequestException e) {
             return errorHandler.handleError(e, res, 400);
         } catch (UserTakenException e) {

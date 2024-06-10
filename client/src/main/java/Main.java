@@ -23,7 +23,5 @@ public class Main {
             result = chessClient.readInput(input);
             System.out.println(RESET_TEXT_COLOR + result);
         }
-        result = chessClient.readInput("logout");
-        System.out.println(RESET_TEXT_COLOR + result);
     }
 }

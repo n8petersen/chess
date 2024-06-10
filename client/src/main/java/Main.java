@@ -14,7 +14,7 @@ public class Main {
 
         ChessClient chessClient = new ChessClient(server, port);
         System.out.println("♕ CS240 Chess Client");
-        System.out.println("Type 'Help' for help");
+        System.out.println("Type 'Help' to get started");
         Scanner scanner = new Scanner(System.in);
 
         var result = "";

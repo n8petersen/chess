@@ -151,7 +151,9 @@ public class ChessClient {
     }
 
     private String quit () throws Exception {
-        logout();
+        if (state == LOGGED_IN) {
+            logout();
+        }
         return "quit";
     }
 }

@@ -1,6 +1,4 @@
-import chess.*;
 import ui.ChessClient;
-import ui.EscapeSequences;
 
 import java.util.Scanner;
 

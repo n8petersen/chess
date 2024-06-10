@@ -71,7 +71,7 @@ public class Draw {
     }
 
     private void drawStarter() {
-        String[] edgeRow = {EMPTY," h ","  g ", " f ", "  e ", " d ", "  c "," b  "," a ", EMPTY};
+        String[] edgeRow = {EMPTY," h "," g ", " f ", " e ", " d ", " c "," b "," a ", EMPTY};
         String[] whiteRow1 = {" 1 ",WHITE_ROOK,WHITE_KNIGHT,WHITE_BISHOP,WHITE_KING,WHITE_QUEEN,WHITE_BISHOP,WHITE_KNIGHT,WHITE_ROOK," 1 "};
         String[] whiteRow2 = {" 2 ",WHITE_PAWN,WHITE_PAWN,WHITE_PAWN,WHITE_PAWN,WHITE_PAWN,WHITE_PAWN,WHITE_PAWN,WHITE_PAWN," 2 "};
         String[] rowMid1 = {" 3 ",EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY," 3 "};

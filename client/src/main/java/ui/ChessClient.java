@@ -1,6 +1,7 @@
 package ui;
 
 import chess.ChessGame;
+import model.GameData;
 
 import static ui.EscapeSequences.*;
 import static ui.State.*;
@@ -11,6 +12,7 @@ public class ChessClient {
     private State state = State.LOGGED_OUT;
     private String username;
     private String authToken;
+    private GameData[] gameList;
 
     public ChessClient(String host, int port) {
         server = new ServerFacade(host, port);
@@ -84,21 +86,21 @@ public class ChessClient {
     }
 
     private String list() throws Exception {
-        String result = "";
-        var resp = server.listGames(authToken);
-        result = resp.toString();
-        // TODO: FORMAT THIS ACCORDINGLY:
-        //  Lists all the games that currently exist on the server
-        //  Calls the server list API to get all the game data, and displays the games in a numbered list,
-        //  including the game name and players (not observers) in the game.
-        //  The numbering for the list should be independent of the game IDs.
-        return result;
+        StringBuilder result = new StringBuilder();
+        var games = server.listGames(authToken);
+        gameList = games.games();
+        for (int i = 0; i < gameList.length; i++) {
+            var game = gameList[i];
+            result.append(String.format("%d - %s - W:%s B:%s\n",i+1,game.gameName(),game.whiteUsername(), game.blackUsername()));
+        }
+        return result.toString();
     }
 
     private String join(String[] param) throws Exception {
         String result = "Couldn't join game, check command and try again";
         if (param.length == 3 && (param[2].equalsIgnoreCase("WHITE") || param[2].equalsIgnoreCase("BLACK"))) {
             int gameId = Integer.parseInt(param[1]);
+            gameId = gameList[gameId - 1].gameID();
             var color = ChessGame.TeamColor.valueOf(param[2].toUpperCase());
             var resp = server.joinGame(authToken, gameId, color);
             state = (color == ChessGame.TeamColor.WHITE ? WHITE : BLACK);
@@ -111,6 +113,7 @@ public class ChessClient {
         String result = "";
         if (param.length == 2) {
             int gameId = Integer.parseInt(param[1]);
+            gameId = gameList[gameId - 1].gameID();
             state = OBSERVER;
             result = "Joined game " + gameId + " as OBSERVER";
         }

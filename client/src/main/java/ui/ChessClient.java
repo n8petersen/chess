@@ -12,7 +12,9 @@ public class ChessClient {
     private State state = State.LOGGED_OUT;
     private String username;
     private String authToken;
+    private GameData gameData;
     private GameData[] gameList;
+    private final Draw draw = new Draw();
 
     public ChessClient(String host, int port) {
         server = new ServerFacade(host, port);
@@ -102,9 +104,10 @@ public class ChessClient {
             int gameId = Integer.parseInt(param[1]);
             gameId = gameList[gameId - 1].gameID();
             var color = ChessGame.TeamColor.valueOf(param[2].toUpperCase());
-            var resp = server.joinGame(authToken, gameId, color);
+            gameData = server.joinGame(authToken, gameId, color);
             state = (color == ChessGame.TeamColor.WHITE ? WHITE : BLACK);
-            result = "Joined game " + resp.gameID() + " as " + color;
+            result = "Joined game " + gameData.gameID() + " as " + color;
+            draw.drawBoard();
         }
         return result;
     }
@@ -116,6 +119,7 @@ public class ChessClient {
             gameId = gameList[gameId - 1].gameID();
             state = OBSERVER;
             result = "Joined game " + gameId + " as OBSERVER";
+            draw.drawBoard();
         }
         return result;
     }
@@ -123,8 +127,8 @@ public class ChessClient {
     private String create(String[] param) throws Exception {
         String result = "";
         if (param.length == 2) {
-            var resp = server.createGame(authToken, param[1]);
-            result = "Created game " + resp.gameID();
+            gameData = server.createGame(authToken, param[1]);
+            result = "Created game " + gameData.gameID();
         }
         return result;
     }

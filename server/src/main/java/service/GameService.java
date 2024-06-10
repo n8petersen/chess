@@ -41,7 +41,7 @@ public class GameService {
         }
     }
 
-    public void joinGame(String authToken, int gameId, String chosenColor) throws DataAccessException, UnauthorizedException, UserTakenException, BadRequestException {
+    public GameData joinGame(String authToken, int gameId, String chosenColor) throws DataAccessException, UnauthorizedException, UserTakenException, BadRequestException {
         AuthData auth = authDataAccess.readAuth(authToken);
         GameData game = getGame(gameId);
         if (auth == null) {
@@ -57,6 +57,7 @@ public class GameService {
         } else {
             throw new BadRequestException("bad request");
         }
+        return getGame(gameId);
     }
 
     /* Helper Functions */

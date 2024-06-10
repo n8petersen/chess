@@ -124,7 +124,7 @@ public class ChessClient {
                     gameData = server.joinGame(authToken, gameId, color);
                     state = (color == ChessGame.TeamColor.WHITE ? WHITE : BLACK);
                     result = "Joined game " + gameData.gameID() + " as " + color;
-                    draw.drawBoard(gameData);
+                    draw.drawBoard();
                 }
             }
         } catch (IOException e) {
@@ -145,7 +145,7 @@ public class ChessClient {
                     gameId = gameList[gameId - 1].gameID();
                     state = OBSERVER;
                     result = "Joined game " + gameId + " as OBSERVER";
-                    // draw.drawBoard(gameData);
+                    draw.drawBoard();
                 }
             }
         } catch (IOException e) {
@@ -202,7 +202,7 @@ public class ChessClient {
             list();
             if (gameList.length > 0) {
                 gameData = gameList[0];
-                draw.drawBoard(gameData);
+                draw.drawBoard();
                 result = "";
             }
         } catch (IOException e) {

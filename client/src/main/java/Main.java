@@ -7,7 +7,7 @@ import java.util.Scanner;
 import static ui.EscapeSequences.*;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         var server = "localhost";
         int port = 8080;
@@ -20,12 +20,10 @@ public class Main {
         var result = "";
         while (!result.equals("quit")) {
             String input = scanner.nextLine();
-            try {
-                result = chessClient.readInput(input);
-                System.out.println(RESET_TEXT_COLOR + result);
-            } catch (Throwable e) {
-                System.err.println(e.getMessage());
-            }
+            result = chessClient.readInput(input);
+            System.out.println(RESET_TEXT_COLOR + result);
         }
+        result = chessClient.readInput("logout");
+        System.out.println(RESET_TEXT_COLOR + result);
     }
 }

@@ -48,6 +48,10 @@ public class ServerFacade {
         return sendRequest("PUT", "/game", body, authToken, GameData.class);
     }
 
+    public void clear() throws Exception {
+        sendRequest("DELETE", "/db", null, null, null);
+    }
+
     private <T> T sendRequest(String httpMethod, String endpoint, Object body, String authToken, Class<T> classType) throws Exception {
         URL url = (new URI(hostname + endpoint)).toURL();
         HttpURLConnection http = (HttpURLConnection) url.openConnection();

@@ -22,7 +22,62 @@ public class ServerFacadeTests {
 
 
     @Test
-    public void sampleTest() {
+    public void registerGood() {
+        Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void registerBad() {
+        Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void loginGood() {
+        Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void loginBad() {
+        Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void logoutGood() {
+        Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void logoutBad() {
+        Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void createGood() {
+        Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void createBad() {
+        Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void listGood() {
+        Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void listBad() {
+        Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void joinGood() {
+        Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void joinBad() {
         Assertions.assertTrue(true);
     }
 

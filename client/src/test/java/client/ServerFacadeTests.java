@@ -1,7 +1,6 @@
 package client;
 
 import chess.ChessGame;
-import dataaccess.BadRequestException;
 import model.AuthData;
 import model.GameData;
 import org.junit.jupiter.api.*;
@@ -23,7 +22,7 @@ public class ServerFacadeTests {
     String authToken;
 
     @BeforeAll
-    public static void init() throws Exception {
+    public static void init() {
         server = new Server();
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
@@ -55,9 +54,7 @@ public class ServerFacadeTests {
     @Test
     public void registerMissingEmail() {
         assertThrows(NullPointerException.class,
-            () -> {
-                AuthData authData = serverFacade.register(username, pass, null);
-            }
+            () -> serverFacade.register(username, pass, null)
         );
     }
 
@@ -85,10 +82,8 @@ public class ServerFacadeTests {
     @Test
     public void logoutBadAuthToken() {
         assertThrows(IOException.class,
-                () -> {
-                    serverFacade.logout("garbage");
-                }
-            );
+            () -> serverFacade.logout("garbage")
+        );
     }
 
     @Test
@@ -104,9 +99,7 @@ public class ServerFacadeTests {
     @Test
     public void createMissingName() {
         assertThrows(NullPointerException.class,
-            () -> {
-                serverFacade.createGame(authToken, null);
-            }
+            () -> serverFacade.createGame(authToken, null)
         );
     }
 
@@ -146,9 +139,7 @@ public class ServerFacadeTests {
         gameData = serverFacade.joinGame(newUser.authToken(), gameData.gameID(), ChessGame.TeamColor.WHITE);
         GameData finalGameData = gameData;
         assertThrows(IOException.class,
-            () -> {
-                serverFacade.joinGame(authToken, finalGameData.gameID(), ChessGame.TeamColor.WHITE);
-            }
+            () -> serverFacade.joinGame(authToken, finalGameData.gameID(), ChessGame.TeamColor.WHITE)
         );
     }
 

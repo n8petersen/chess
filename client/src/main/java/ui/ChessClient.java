@@ -8,7 +8,7 @@ import static ui.State.*;
 
 public class ChessClient {
 
-    final ServerFacade server;
+    private final ServerFacade server;
     private State state = State.LOGGED_OUT;
     private String username;
     private String authToken;

@@ -9,10 +9,19 @@ public class ChessClient {
 
     final ServerFacade server;
     private State state = State.LOGGED_OUT;
+    private String username;
     private String authToken;
 
     public ChessClient(String host, int port) {
         server = new ServerFacade(host, port);
+    }
+
+    public void writePrompt() {
+        if (state == LOGGED_IN) {
+            System.out.print("[" + username + "] >> ");
+        } else {
+            System.out.print("[LOGGED OUT] >> ");
+        }
     }
 
     public String readInput(String input) throws Exception {
@@ -46,11 +55,30 @@ public class ChessClient {
         String result = "Couldn't register. Try again";
         if (param.length == 4 && state == LOGGED_OUT) {
             var resp = server.register(param[1], param[2], param[3]);
+            username = param[1];
             authToken = resp.authToken();
             state = LOGGED_IN;
             result = "Created and logged in as " + param[1];
         }
         return result;
+    }
+
+    private String login(String[] param) throws Exception {
+        String result = "";
+        if (param.length == 3) {
+            var resp = server.login(param[1], param[2]);
+            username = param[1];
+            authToken = resp.authToken();
+            state = LOGGED_IN;
+            result = "Logged in as " + param[1];
+        }
+        return result;
+    }
+
+    private String logout() throws Exception {
+        server.logout(authToken);
+        state = LOGGED_OUT;
+        return "Logged out";
     }
 
     private String list() throws Exception {
@@ -96,30 +124,13 @@ public class ChessClient {
         return result;
     }
 
-    private String login(String[] param) throws Exception {
-        String result = "";
-        if (param.length == 3) {
-            var resp = server.login(param[1], param[2]);
-            authToken = resp.authToken();
-            state = LOGGED_IN;
-            result = "Logged in as " + param[1];
-        }
-        return result;
-    }
-
-    private String logout() throws Exception {
-        server.logout(authToken);
-        state = LOGGED_OUT;
-        return "Logged out";
-    }
-
     private String help() {
         StringBuilder result = new StringBuilder();
         switch (state) {
             case LOGGED_IN:
                 result.append(SET_TEXT_COLOR_BLUE + "list" + RESET_TEXT_COLOR + " - get existing games" + "\n");
                 result.append(SET_TEXT_COLOR_BLUE + "join <ID> [WHITE|BLACK]" + RESET_TEXT_COLOR + " - join a game (as color)" + "\n");
-                result.append(SET_TEXT_COLOR_BLUE + "observe <ID>" + RESET_TEXT_COLOR + " - observe specific game" + "\n");
+                result.append(SET_TEXT_COLOR_BLUE + "observe <ID>" + RESET_TEXT_COLOR + " - observe a game" + "\n");
                 result.append(SET_TEXT_COLOR_BLUE + "create <NAME>" + RESET_TEXT_COLOR + " - create new game" + "\n");
                 result.append(SET_TEXT_COLOR_BLUE + "logout" + RESET_TEXT_COLOR + " - logout of account" + "\n");
                 result.append(SET_TEXT_COLOR_BLUE + "quit" + RESET_TEXT_COLOR + " - close program" + "\n");

@@ -19,6 +19,7 @@ public class Main {
 
         var result = "";
         while (!result.equals("quit")) {
+            chessClient.writePrompt();
             String input = scanner.nextLine();
             result = chessClient.readInput(input);
             System.out.println(RESET_TEXT_COLOR + result);

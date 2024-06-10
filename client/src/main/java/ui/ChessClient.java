@@ -129,6 +129,8 @@ public class ChessClient {
             }
         } catch (IOException e) {
             result = "Couldn't join game, try different color or game";
+        } catch (NumberFormatException e) {
+            result = "Please provide a valid game ID";
         }
         return result;
     }

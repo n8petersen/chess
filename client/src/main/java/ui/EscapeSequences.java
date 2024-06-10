@@ -47,19 +47,34 @@ public class EscapeSequences {
     public static final String SET_BG_COLOR_WHITE = SET_BG_COLOR + "15m";
     public static final String RESET_BG_COLOR = UNICODE_ESCAPE + "[49m";
 
-    public static final String WHITE_KING = " ♔ ";
-    public static final String WHITE_QUEEN = " ♕ ";
-    public static final String WHITE_BISHOP = " ♗ ";
-    public static final String WHITE_KNIGHT = " ♘ ";
-    public static final String WHITE_ROOK = " ♖ ";
-    public static final String WHITE_PAWN = " ♙ ";
-    public static final String BLACK_KING = " ♚ ";
-    public static final String BLACK_QUEEN = " ♛ ";
-    public static final String BLACK_BISHOP = " ♝ ";
-    public static final String BLACK_KNIGHT = " ♞ ";
-    public static final String BLACK_ROOK = " ♜ ";
-    public static final String BLACK_PAWN = " ♟ ";
-    public static final String EMPTY = " \u2003 ";
+//    public static final String WHITE_KING = " ♔ ";
+//    public static final String WHITE_QUEEN = " ♕ ";
+//    public static final String WHITE_BISHOP = " ♗ ";
+//    public static final String WHITE_KNIGHT = " ♘ ";
+//    public static final String WHITE_ROOK = " ♖ ";
+//    public static final String WHITE_PAWN = " ♙ ";
+//    public static final String BLACK_KING = " ♚ ";
+//    public static final String BLACK_QUEEN = " ♛ ";
+//    public static final String BLACK_BISHOP = " ♝ ";
+//    public static final String BLACK_KNIGHT = " ♞ ";
+//    public static final String BLACK_ROOK = " ♜ ";
+//    public static final String BLACK_PAWN = " ♟ ";
+//    public static final String EMPTY = " \u2003 ";
+
+    // ASCII Replacements
+    public static final String WHITE_KING = " " + SET_TEXT_COLOR_RED + "K" + RESET_TEXT_COLOR + " ";
+    public static final String WHITE_QUEEN = " " + SET_TEXT_COLOR_RED + "Q" + RESET_TEXT_COLOR + " ";
+    public static final String WHITE_BISHOP = " " + SET_TEXT_COLOR_RED + "B" + RESET_TEXT_COLOR + " ";
+    public static final String WHITE_KNIGHT = " " + SET_TEXT_COLOR_RED + "N" + RESET_TEXT_COLOR + " ";
+    public static final String WHITE_ROOK = " " + SET_TEXT_COLOR_RED + "R" + RESET_TEXT_COLOR + " ";
+    public static final String WHITE_PAWN = " " + SET_TEXT_COLOR_RED + "P" + RESET_TEXT_COLOR + " ";
+    public static final String BLACK_KING = " " + SET_TEXT_COLOR_BLUE + "K" + RESET_TEXT_COLOR + " ";
+    public static final String BLACK_QUEEN = " " + SET_TEXT_COLOR_BLUE + "Q" + RESET_TEXT_COLOR + " ";
+    public static final String BLACK_BISHOP = " " + SET_TEXT_COLOR_BLUE + "B" + RESET_TEXT_COLOR + " ";
+    public static final String BLACK_KNIGHT = " " + SET_TEXT_COLOR_BLUE + "N" + RESET_TEXT_COLOR + " ";
+    public static final String BLACK_ROOK = " " + SET_TEXT_COLOR_BLUE + "R" + RESET_TEXT_COLOR + " ";
+    public static final String BLACK_PAWN = " " + SET_TEXT_COLOR_BLUE + "P" + RESET_TEXT_COLOR + " ";
+    public static final String EMPTY = "   ";
 
     public static String moveCursorToLocation(int x, int y) { return UNICODE_ESCAPE + "[" + y + ";" + x + "H"; }
 }

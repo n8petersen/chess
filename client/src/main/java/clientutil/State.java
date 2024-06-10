@@ -1,4 +1,4 @@
-package ui;
+package clientutil;
 
 public enum State {
     LOGGED_OUT,

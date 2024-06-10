@@ -1,12 +1,14 @@
 package ui;
 
 import chess.ChessGame;
+import clientutil.ServerFacade;
+import clientutil.State;
 import model.GameData;
 
 import java.io.IOException;
 
 import static ui.EscapeSequences.*;
-import static ui.State.*;
+import static clientutil.State.*;
 
 public class ChessClient {
 
@@ -35,13 +37,12 @@ public class ChessClient {
         input = input.toLowerCase();
         var params = input.split(" ");
 
-        if (state != LOGGED_IN) {
+        if (state == LOGGED_OUT) {
             return switch (params[0]) {
                 case "help" -> help();
                 case "quit" -> quit();
                 case "register" -> register(params);
                 case "login" -> login(params);
-                case "draw" -> draw.drawBoard(gameData);
                 default -> result;
             };
         } else {
@@ -53,7 +54,7 @@ public class ChessClient {
                 case "join" -> join(params);
                 case "observe" -> observe(params);
                 case "create" -> create(params);
-                case "draw" -> draw.drawBoard(gameData);
+                case "draw" -> draw();
                 default -> result;
             };
         }
@@ -123,11 +124,13 @@ public class ChessClient {
                     gameData = server.joinGame(authToken, gameId, color);
                     state = (color == ChessGame.TeamColor.WHITE ? WHITE : BLACK);
                     result = "Joined game " + gameData.gameID() + " as " + color;
-                    draw.drawBoard(gameData);
+                    draw.drawBoard();
                 }
             }
         } catch (IOException e) {
             result = "Couldn't join game, try different color or game";
+        } catch (NumberFormatException e) {
+            result = "Please provide a valid game ID";
         }
         return result;
     }
@@ -142,7 +145,7 @@ public class ChessClient {
                     gameId = gameList[gameId - 1].gameID();
                     state = OBSERVER;
                     result = "Joined game " + gameId + " as OBSERVER";
-                    // draw.drawBoard(gameData);
+                    draw.drawBoard();
                 }
             }
         } catch (IOException e) {
@@ -167,7 +170,7 @@ public class ChessClient {
     private String help() {
         StringBuilder result = new StringBuilder();
         switch (state) {
-            case LOGGED_IN:
+            case LOGGED_IN, BLACK, WHITE, OBSERVER:
                 result.append(SET_TEXT_COLOR_BLUE + "list" + RESET_TEXT_COLOR + " - get existing games" + "\n");
                 result.append(SET_TEXT_COLOR_BLUE + "join <ID> [WHITE|BLACK]" + RESET_TEXT_COLOR + " - join a game (as color)" + "\n");
                 result.append(SET_TEXT_COLOR_BLUE + "observe <ID>" + RESET_TEXT_COLOR + " - observe a game" + "\n");
@@ -175,10 +178,6 @@ public class ChessClient {
                 result.append(SET_TEXT_COLOR_BLUE + "logout" + RESET_TEXT_COLOR + " - logout of account" + "\n");
                 result.append(SET_TEXT_COLOR_BLUE + "quit" + RESET_TEXT_COLOR + " - close program" + "\n");
                 result.append(SET_TEXT_COLOR_BLUE + "help" + RESET_TEXT_COLOR + " - get possible commands");
-                break;
-            case OBSERVER:
-                break;
-            case BLACK, WHITE:
                 break;
             default:
                 result.append(SET_TEXT_COLOR_BLUE + "register <USERNAME> <PASSWORD> <EMAIL>" + RESET_TEXT_COLOR + " - create new account" + "\n");
@@ -195,6 +194,21 @@ public class ChessClient {
             logout();
         }
         return "quit";
+    }
+
+    private String draw() throws Exception {
+        String result = "Couldn't draw game";
+        try {
+            list();
+            if (gameList.length > 0) {
+                gameData = gameList[0];
+                draw.drawBoard();
+                result = "";
+            }
+        } catch (IOException e) {
+            return result;
+        }
+        return result;
     }
 
 }

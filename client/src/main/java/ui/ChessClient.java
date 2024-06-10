@@ -27,25 +27,27 @@ public class ChessClient {
     public String readInput(String input) throws Exception {
         var result = "Couldn't process command: " + input + ". Try running 'Help'";
         input = input.toLowerCase();
-        var input_array = input.split(" ");
+        var params = input.split(" ");
 
         if (state != LOGGED_IN) {
-            return switch (input_array[0]) {
+            return switch (params[0]) {
                 case "help" -> help();
                 case "quit" -> quit();
-                case "register" -> register(input_array);
-                case "login" -> login(input_array);
+                case "register" -> register(params);
+                case "login" -> login(params);
+                case "draw" -> draw.drawBoard();
                 default -> result;
             };
         } else {
-            return switch (input_array[0]) {
+            return switch (params[0]) {
                 case "help" -> help();
                 case "quit" -> quit();
                 case "logout" -> logout();
                 case "list" -> list();
-                case "join" -> join(input_array);
-                case "observe" -> observe(input_array);
-                case "create" -> create(input_array);
+                case "join" -> join(params);
+                case "observe" -> observe(params);
+                case "create" -> create(params);
+                case "draw" -> draw.drawBoard();
                 default -> result;
             };
         }
@@ -150,10 +152,11 @@ public class ChessClient {
         return result.toString();
     }
 
-    private String quit () throws Exception {
+    private String quit() throws Exception {
         if (state == LOGGED_IN) {
             logout();
         }
         return "quit";
     }
+
 }

@@ -41,7 +41,6 @@ public class ChessClient {
                 case "quit" -> quit();
                 case "register" -> register(params);
                 case "login" -> login(params);
-                case "draw" -> draw.drawBoard(gameData);
                 default -> result;
             };
         } else {
@@ -53,7 +52,7 @@ public class ChessClient {
                 case "join" -> join(params);
                 case "observe" -> observe(params);
                 case "create" -> create(params);
-                case "draw" -> draw.drawBoard(gameData);
+                case "draw" -> draw();
                 default -> result;
             };
         }
@@ -195,6 +194,21 @@ public class ChessClient {
             logout();
         }
         return "quit";
+    }
+
+    private String draw() throws Exception {
+        String result = "Couldn't draw game";
+        try {
+            list();
+            if (gameList.length > 0) {
+                gameData = gameList[0];
+                draw.drawBoard(gameData);
+                result = "";
+            }
+        } catch (IOException e) {
+            return result;
+        }
+        return result;
     }
 
 }

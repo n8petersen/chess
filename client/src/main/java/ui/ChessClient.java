@@ -3,6 +3,8 @@ package ui;
 import chess.ChessGame;
 import model.GameData;
 
+import java.io.IOException;
+
 import static ui.EscapeSequences.*;
 import static ui.State.*;
 
@@ -59,24 +61,33 @@ public class ChessClient {
 
     private String register(String[] param) throws Exception {
         String result = "Couldn't register. Try again";
-        if (param.length == 4 && state == LOGGED_OUT) {
-            var resp = server.register(param[1], param[2], param[3]);
-            username = param[1];
-            authToken = resp.authToken();
-            state = LOGGED_IN;
-            result = "Created and logged in as " + param[1];
+        try {
+            if (param.length == 4 && state == LOGGED_OUT) {
+                var resp = server.register(param[1], param[2], param[3]);
+                username = param[1];
+                authToken = resp.authToken();
+                state = LOGGED_IN;
+                result = "Created and logged in as " + param[1];
+            }
+        } catch (IOException e) {
+            result = "Couldn't register. Try different username.";
         }
+
         return result;
     }
 
     private String login(String[] param) throws Exception {
-        String result = "";
-        if (param.length == 3) {
-            var resp = server.login(param[1], param[2]);
-            username = param[1];
-            authToken = resp.authToken();
-            state = LOGGED_IN;
-            result = "Logged in as " + param[1];
+        String result = "Couldn't login. Try again";
+        try {
+            if (param.length == 3) {
+                var resp = server.login(param[1], param[2]);
+                username = param[1];
+                authToken = resp.authToken();
+                state = LOGGED_IN;
+                result = "Logged in as " + param[1];
+            }
+        } catch (IOException e) {
+            result = "Couldn't login, check credentials or register new user";
         }
         return result;
     }
@@ -93,42 +104,62 @@ public class ChessClient {
         gameList = games.games();
         for (int i = 0; i < gameList.length; i++) {
             var game = gameList[i];
-            result.append(String.format("%d - %s - W:%s B:%s\n",i+1,game.gameName(),game.whiteUsername(), game.blackUsername()));
+            String whiteUser = (game.whiteUsername() == null ? "________" : game.whiteUsername());
+            String blackUser = (game.blackUsername() == null ? "________" : game.blackUsername());
+            result.append(String.format("%d - %s - W:%s B:%s\n", i + 1, game.gameName(), whiteUser, blackUser));
         }
         return result.toString();
     }
 
     private String join(String[] param) throws Exception {
-        String result = "Couldn't join game, check command and try again";
-        if (param.length == 3 && (param[2].equalsIgnoreCase("WHITE") || param[2].equalsIgnoreCase("BLACK"))) {
-            int gameId = Integer.parseInt(param[1]);
-            gameId = gameList[gameId - 1].gameID();
-            var color = ChessGame.TeamColor.valueOf(param[2].toUpperCase());
-            gameData = server.joinGame(authToken, gameId, color);
-            state = (color == ChessGame.TeamColor.WHITE ? WHITE : BLACK);
-            result = "Joined game " + gameData.gameID() + " as " + color;
-            draw.drawBoard(gameData);
+        String result = "Couldn't join game";
+        try {
+            if (param.length == 3 && (param[2].equalsIgnoreCase("WHITE") || param[2].equalsIgnoreCase("BLACK"))) {
+                int gameId = Integer.parseInt(param[1]);
+                list();
+                if (gameId <= gameList.length) {
+                    gameId = gameList[gameId - 1].gameID();
+                    var color = ChessGame.TeamColor.valueOf(param[2].toUpperCase());
+                    gameData = server.joinGame(authToken, gameId, color);
+                    state = (color == ChessGame.TeamColor.WHITE ? WHITE : BLACK);
+                    result = "Joined game " + gameData.gameID() + " as " + color;
+                    draw.drawBoard(gameData);
+                }
+            }
+        } catch (IOException e) {
+            result = "Couldn't join game, try different color or game";
         }
         return result;
     }
 
-    private String observe(String[] param) {
-        String result = "";
-        if (param.length == 2) {
-            int gameId = Integer.parseInt(param[1]);
-            gameId = gameList[gameId - 1].gameID();
-            state = OBSERVER;
-            result = "Joined game " + gameId + " as OBSERVER";
-            draw.drawBoard(gameData);
+    private String observe(String[] param) throws Exception {
+        String result = "Couldn't observe game";
+        try {
+            if (param.length == 2) {
+                list();
+                int gameId = Integer.parseInt(param[1]);
+                if (gameId <= gameList.length) {
+                    gameId = gameList[gameId - 1].gameID();
+                    state = OBSERVER;
+                    result = "Joined game " + gameId + " as OBSERVER";
+                    // draw.drawBoard(gameData);
+                }
+            }
+        } catch (IOException e) {
+            return result;
         }
         return result;
     }
 
     private String create(String[] param) throws Exception {
-        String result = "";
-        if (param.length == 2) {
-            gameData = server.createGame(authToken, param[1]);
-            result = "Created game " + gameData.gameID();
+        String result = "Coudldn't create game";
+        try {
+            if (param.length == 2) {
+                gameData = server.createGame(authToken, param[1]);
+                result = "Created game " + gameData.gameID();
+            }
+        } catch (IOException e) {
+            return result;
         }
         return result;
     }

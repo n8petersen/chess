@@ -1,6 +1,7 @@
 package ui;
 
 import chess.ChessBoard;
+import chess.ChessPosition;
 import model.GameData;
 
 import java.io.PrintStream;
@@ -17,8 +18,36 @@ public class Draw {
         out.print(SET_TEXT_BOLD);
     }
 
-    public void drawBoard(GameData gameData) {
+    public void drawBoard(GameData gameData, boolean whitePosition) {
        ChessBoard board = gameData.game().getBoard();
+
+        var stringBuilder = new StringBuilder();
+        try {
+            boolean currentSquareWhite = true;
+            int[] rowNums;
+            int[] colNums;
+            String colLetters;
+            if (whitePosition) {
+                rowNums = new int[] {7,6,5,4,3,2,1,0};
+                colNums = new int[] {0,1,2,3,4,5,6,7};
+                colLetters = "    a  b  c  d  e  f  g  h    ";
+            } else {
+                rowNums = new int[] {1,2,3,4,5,6,7};
+                colNums = new int[] {7,6,5,4,3,2,1,0};
+                colLetters = "    h  g  f  e  d  c  b  a    ";
+            }
+            stringBuilder.append(SET_BG_COLOR_DARK_GREY).append(colLetters).append(RESET_BG_COLOR).append('\n');
+            for (var row : rowNums) {
+                String printRow = " " + (row + 1) + " ";
+                stringBuilder.append(SET_BG_COLOR_DARK_GREY).append(printRow).append(RESET_BG_COLOR);
+                for (var col : colNums) {
+                    var piece = board.getPiece(new ChessPosition(row+1, col+1));
+                }
+            }
+        } catch (Exception ex) {
+            out.print("Error drawing board");
+        }
+        out.print(stringBuilder);
     }
 
     /**

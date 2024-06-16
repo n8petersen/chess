@@ -73,7 +73,6 @@ public class ChessClient {
         } catch (IOException e) {
             result = "Couldn't register. Try different username.";
         }
-
         return result;
     }
 
@@ -96,6 +95,8 @@ public class ChessClient {
     private String logout() throws Exception {
         server.logout(authToken);
         state = LOGGED_OUT;
+        username = null;
+        authToken = null;
         return "Logged out";
     }
 
@@ -150,6 +151,8 @@ public class ChessClient {
             }
         } catch (IOException e) {
             return result;
+        } catch (NumberFormatException e) {
+            result = "GameID expected number";
         }
         return result;
     }
@@ -157,7 +160,7 @@ public class ChessClient {
     private String create(String[] param) throws Exception {
         String result = "Couldn't create game";
         try {
-            if (param.length == 2) {
+            if (param.length == 2 && state == LOGGED_IN) {
                 gameData = server.createGame(authToken, param[1]);
                 result = "Created game " + gameData.gameID();
             }

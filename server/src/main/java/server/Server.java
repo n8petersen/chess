@@ -2,6 +2,7 @@ package server;
 
 import dataaccess.*;
 import server.handlers.*;
+import server.handlers.websocket.WebSocketHandler;
 import service.GameService;
 import service.UserService;
 import spark.Spark;
@@ -21,7 +22,7 @@ public class Server {
         DataAccess dataAccess = new DataAccess(authDao, gameDao, userDao);
         this.gameService = new GameService(gameDao, authDao);
         this.userService = new UserService(userDao, authDao);
-        webSocketHandler = new WebSocketHandler();
+        webSocketHandler = new WebSocketHandler(dataAccess);
     }
 
     public int run(int desiredPort) {

@@ -4,6 +4,8 @@ import chess.*;
 import clientutil.ServerFacade;
 import clientutil.State;
 import model.GameData;
+import websocket.messages.ErrorMessage;
+import websocket.messages.NotificationMessage;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -361,4 +363,19 @@ public class ChessClient {
         return result;
     }
 
+    public void loadGame(GameData newGameData) {
+        gameData = newGameData;
+        draw.drawBoard(gameData, (state == WHITE));
+        writePrompt();
+    }
+
+    public void notification(NotificationMessage nm) {
+        System.out.println("\n" + SET_TEXT_COLOR_YELLOW + nm.message);
+        writePrompt();
+    }
+
+    public void error(ErrorMessage e) {
+        System.out.println("\n" + SET_TEXT_COLOR_RED + e.message);
+        writePrompt();
+    }
 }

@@ -1,6 +1,9 @@
 package server;
 
 import dataaccess.*;
+import dataaccess.dao.IntAuthDAO;
+import dataaccess.dao.IntGameDAO;
+import dataaccess.dao.IntUserDAO;
 import server.handlers.*;
 import server.handlers.websocket.WebSocketHandler;
 import service.GameService;

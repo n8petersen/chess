@@ -1,6 +1,7 @@
 package dataaccess;
 
 import chess.ChessGame;
+import dataaccess.dao.IntGameDAO;
 import model.GameData;
 import com.google.gson.Gson;
 

@@ -282,10 +282,10 @@ public class ChessClient {
         return result;
     }
 
-    private String leave() {
+    private String leave() throws IOException {
         state = LOGGED_IN;
+        webSocket.sendCommand(new UserGameCommand(authToken, UserGameCommand.CommandType.LEAVE, gameData.gameID()));
         gameData = null;
-        // TODO: Send leave to websocket
         return "Left game";
     }
 
@@ -313,7 +313,7 @@ public class ChessClient {
                 if (gameData.game().validMoves(startPos).contains(move)) {
                     try {
                         gameData.game().makeMove(move);
-                        // TODO: send new board to websocket
+                        webSocket.sendCommand(new UserGameCommand(authToken, UserGameCommand.CommandType.MAKE_MOVE, gameData.gameID(), move));
                     } catch (Exception e) {
                         return result;
                     }
@@ -327,11 +327,11 @@ public class ChessClient {
         return result;
     }
 
-    private String resign() {
+    private String resign() throws IOException {
         System.out.print("Are you sure you want to leave game? (y/N): ");
         var input = new Scanner(System.in).nextLine();
         if (input.equalsIgnoreCase("y")) {
-            // TODO: send resign to websocket
+            webSocket.sendCommand(new UserGameCommand(authToken, UserGameCommand.CommandType.RESIGN, gameData.gameID()));
             gameData = null;
             state = LOGGED_IN;
             return "Resigned game";

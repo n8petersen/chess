@@ -14,7 +14,7 @@ import static ui.EscapeSequences.*;
 public class Draw {
 
     private final PrintStream out;
-    private static final Map<String, String> pieceMap = Map.ofEntries(
+    private static final Map<String, String> PIECE_MAP = Map.ofEntries(
             Map.entry("WHITE_KING", WHITE_KING),
             Map.entry("WHITE_QUEEN", WHITE_QUEEN),
             Map.entry("WHITE_BISHOP", WHITE_BISHOP),
@@ -68,7 +68,7 @@ public class Draw {
                     if (piece != null) {
                         var pieceColor = piece.getTeamColor().toString().toUpperCase();
                         var pieceType = piece.getPieceType().toString().toUpperCase();
-                        var pieceText = pieceMap.get(pieceColor + "_" + pieceType);
+                        var pieceText = PIECE_MAP.get(pieceColor + "_" + pieceType);
                         stringBuilder.append(squareColor).append(pieceText).append(RESET_BG_COLOR).append(RESET_TEXT_COLOR);
                     } else {
                         stringBuilder.append(squareColor).append(EMPTY).append(RESET_BG_COLOR);

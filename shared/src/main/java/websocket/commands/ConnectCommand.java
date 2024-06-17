@@ -7,11 +7,18 @@ public class ConnectCommand extends UserGameCommand {
     private final ChessGame.TeamColor playerColor;
     private final boolean observer;
 
-    public ConnectCommand(String authToken, int gameId, ChessGame.TeamColor playerColor, boolean observer) {
+    public ConnectCommand(String authToken, int gameId, boolean observer) {
+        super(authToken);
+        this.gameId = gameId;
+        this.playerColor = null;
+        this.observer = observer;
+    }
+
+    public ConnectCommand(String authToken, int gameId, ChessGame.TeamColor playerColor) {
         super(authToken);
         this.gameId = gameId;
         this.playerColor = playerColor;
-        this.observer = observer;
+        this.observer = false;
     }
 
     public boolean isObserver() {

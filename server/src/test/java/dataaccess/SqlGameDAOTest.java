@@ -21,7 +21,7 @@ class SqlGameDAOTest {
 
     @Test
     void createGameGood() throws DataAccessException {
-        GameData testGame = new GameData(1, null, null, "testName", new ChessGame());
+        GameData testGame = new GameData(1, null, null, "testName", new ChessGame(), GameData.State.UNKNOWN);
         GameData insertGame = gameDao.createGame("testName");
         assertEquals(testGame, insertGame);
         assertNotEquals(2, testGame.gameID());
@@ -80,7 +80,7 @@ class SqlGameDAOTest {
     @Test
     void updateGameGood() throws DataAccessException {
         GameData insertNewGame = gameDao.createGame("testName");
-        GameData updateGameData = new GameData(1, "white", "black", "testName", new ChessGame());
+        GameData updateGameData = new GameData(1, "white", "black", "testName", new ChessGame(), GameData.State.UNKNOWN);
         gameDao.updateGame(updateGameData);
         GameData getGame = gameDao.readGame(1);
         assertNotEquals(updateGameData, insertNewGame);
@@ -92,7 +92,7 @@ class SqlGameDAOTest {
         assertThrows(DataAccessException.class,
                 () -> {
                     gameDao.createGame("testName");
-                    gameDao.updateGame(new GameData(1, "white", "black", "testName", null));
+                    gameDao.updateGame(new GameData(1, "white", "black", "testName", null, GameData.State.UNKNOWN));
                 }
         );
     }

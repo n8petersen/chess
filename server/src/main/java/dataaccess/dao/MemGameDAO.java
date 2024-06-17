@@ -17,7 +17,7 @@ public class MemGameDAO implements IntGameDAO {
 
     public GameData createGame(String gameName) {
         newGameID++;
-        GameData newGameData = new GameData(newGameID, null, null, gameName, new ChessGame());
+        GameData newGameData = new GameData(newGameID, null, null, gameName, new ChessGame(), GameData.State.UNKNOWN);
         games.put(newGameID, newGameData);
         return newGameData;
     }

@@ -22,8 +22,8 @@ public class WebSocketFacade extends Endpoint {
     public WebSocketFacade(String host, int port, ChessClient client) throws URISyntaxException, DeploymentException, IOException {
         this.client = client;
 
-        var url = String.format("ws://%s:%d", host, port);
-        URI socketURI = new URI(url + "ws");
+        var url = String.format("ws://%s:%d/ws", host, port);
+        URI socketURI = new URI(url);
 
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, socketURI);

@@ -56,12 +56,11 @@ public class Draw {
                 String printRow = " " + (row + 1) + " ";
                 stringBuilder.append(SET_BG_COLOR_DARK_GREY).append(printRow).append(RESET_BG_COLOR);
                 for (var col : colNums) {
-                    var piece = board.getPiece(new ChessPosition(row+1, col+1));
+                    var piece = board.getPiece(new ChessPosition(row + 1, col + 1));
                     var squareColor = (currentSquareWhite) ? SET_BG_COLOR_WHITE : SET_BG_COLOR_BLACK;
                     if (piece != null) {
                         var pieceColor = piece.getTeamColor().toString().toUpperCase();
                         var pieceType = piece.getPieceType().toString().toUpperCase();
-
                         var pieceText = pieceMap.get(pieceColor + "_" + pieceType);
                         stringBuilder.append(squareColor).append(pieceText).append(RESET_BG_COLOR).append(RESET_TEXT_COLOR);
                     } else {

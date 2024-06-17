@@ -278,12 +278,12 @@ public class ChessClient {
 
     private String leave() {
         state = LOGGED_IN;
-        // remove player from the game
+        gameData = null;
         // TODO: Send leave to websocket
         return "Left game";
     }
 
-    private String move(String[] param) throws InvalidMoveException {
+    private String move(String[] param) {
         String result = "Couldn't make move";
         if (param.length == 3 || param.length == 4) {
             var startInput = param[1].toLowerCase();
@@ -317,26 +317,21 @@ public class ChessClient {
                     result = "Invalid move. Try another move, or use 'highlight'";
                 }
             }
-            // check that move is valid
-            // if it is, then update the local game object and then send updated game
-            // if it is not, alert the user that it is invalid and to make another move
-            //   suggest 'highlight' command
         }
         return result;
     }
 
     private String resign() {
-        String result = "Couldn't resign from game";
         System.out.print("Are you sure you want to leave game? (y/N): ");
         var input = new Scanner(System.in).nextLine();
         if (input.equalsIgnoreCase("y")) {
-            result = "Resigned game";
-            // set opponent to winner, end game
             // TODO: send resign to websocket
+            gameData = null;
+            state = LOGGED_IN;
+            return "Resigned game";
         } else {
-            result = "Cancelled resign";
+            return "Cancelled resign";
         }
-        return result;
     }
 
     private String highlight(String[] param) {

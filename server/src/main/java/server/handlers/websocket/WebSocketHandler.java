@@ -3,10 +3,7 @@ package server.handlers.websocket;
 import com.google.gson.Gson;
 import dataaccess.*;
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.eclipse.jetty.websocket.api.annotations.*;
 import websocket.commands.UserGameCommand;
 
 @WebSocket
@@ -19,11 +16,11 @@ public class WebSocketHandler {
     }
 
     @OnWebSocketConnect
-    public void onConnect(Session session) {
+    public void onConnect(Session ignoredsession) {
     }
 
     @OnWebSocketClose
-    public void onClose(Session session) {
+    public void onClose(Session session, int ignoredStatusCode, String ignoredReason) {
         connectionManager.remove(session);
     }
 

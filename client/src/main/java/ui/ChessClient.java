@@ -54,7 +54,7 @@ public class ChessClient {
                 case "join" -> join(params);
                 case "observe" -> observe(params);
                 case "create" -> create(params);
-                case "draw" -> draw();
+                case "draw" -> draw(params);
                 default -> result;
             };
         }
@@ -125,7 +125,8 @@ public class ChessClient {
                     gameData = server.joinGame(authToken, gameId, color);
                     state = (color == ChessGame.TeamColor.WHITE ? WHITE : BLACK);
                     result = "Joined game " + gameData.gameID() + " as " + color;
-                    draw.drawBoard();
+                    var whitePosition = state == WHITE;
+                    draw.drawBoard(gameData, whitePosition);
                 }
             }
         } catch (IOException e) {
@@ -146,7 +147,8 @@ public class ChessClient {
                     gameId = gameList[gameId - 1].gameID();
                     state = OBSERVER;
                     result = "Joined game " + gameId + " as OBSERVER";
-                    draw.drawBoard();
+                    draw.drawBoard(gameData, true);
+                    draw.drawBoard(gameData, false);
                 }
             }
         } catch (IOException e) {
@@ -199,14 +201,17 @@ public class ChessClient {
         return "quit";
     }
 
-    private String draw() throws Exception {
+    private String draw(String[] param) throws Exception {
         String result = "Couldn't draw game";
         try {
-            list();
-            if (gameList.length > 0) {
-                gameData = gameList[0];
-                draw.drawBoard();
-                result = "";
+            if (param.length == 2) {
+                list();
+                var whitePosition = param[1].equalsIgnoreCase("white");
+                if (gameList.length > 0) {
+                    gameData = gameList[0];
+                    draw.drawBoard(gameData, whitePosition);
+                    result = "";
+                }
             }
         } catch (IOException e) {
             return result;

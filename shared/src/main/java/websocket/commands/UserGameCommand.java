@@ -1,6 +1,7 @@
 package websocket.commands;
 
 import chess.ChessGame;
+import chess.ChessMove;
 
 import java.util.Objects;
 
@@ -12,10 +13,6 @@ import java.util.Objects;
  */
 public class UserGameCommand {
 
-    public UserGameCommand(String authToken) {
-        this.authToken = authToken;
-    }
-
     public enum CommandType {
         CONNECT,
         MAKE_MOVE,
@@ -23,12 +20,28 @@ public class UserGameCommand {
         RESIGN
     }
 
-    private final String authToken;
-    protected String username;
     protected CommandType commandType;
-    protected boolean observer;
-    protected ChessGame.TeamColor playerColor;
-    protected int gameId;
+    private final String authToken;
+
+    private int gameId;
+    private ChessMove move;
+
+    public UserGameCommand(String authToken) {
+        this.authToken = authToken;
+    }
+
+    public UserGameCommand(String authToken, CommandType commandType, int gameId) {
+        this.authToken = authToken;
+        this.commandType = commandType;
+        this.gameId = gameId;
+    }
+
+    public UserGameCommand(String authToken, CommandType commandType, int gameId, ChessMove move) {
+        this.authToken = authToken;
+        this.commandType = commandType;
+        this.gameId = gameId;
+        this.move = move;
+    }
 
 
     public String getAuthString() {
@@ -39,20 +52,12 @@ public class UserGameCommand {
         return this.commandType;
     }
 
-    public boolean isObserver() {
-        return observer;
-    }
-
-    public ChessGame.TeamColor getPlayerColor() {
-        return playerColor;
-    }
-
     public int getGameId() {
         return gameId;
     }
 
-    public String getUsername() {
-        return username;
+    public ChessMove getMove() {
+        return move;
     }
 
     @Override

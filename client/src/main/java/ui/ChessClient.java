@@ -3,11 +3,14 @@ package ui;
 import chess.*;
 import clientutil.ServerFacade;
 import clientutil.State;
+import clientutil.WebSocketFacade;
 import model.GameData;
 import websocket.messages.ErrorMessage;
 import websocket.messages.NotificationMessage;
 
+import javax.websocket.DeploymentException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -17,7 +20,7 @@ import static clientutil.State.*;
 public class ChessClient {
 
     private final ServerFacade server;
-    // TODO: Add websocket
+    private final WebSocketFacade webSocket;
     private State state = LOGGED_OUT;
     private String username;
     private String authToken;
@@ -25,9 +28,9 @@ public class ChessClient {
     private GameData[] gameList;
     private final Draw draw = new Draw();
 
-    public ChessClient(String host, int port) {
+    public ChessClient(String host, int port) throws DeploymentException, URISyntaxException, IOException {
         server = new ServerFacade(host, port);
-        // TODO: add websocket
+        webSocket = new WebSocketFacade(host, port, this);
     }
 
     public void writePrompt() {

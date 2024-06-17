@@ -42,8 +42,8 @@ public class WebSocketHandler {
             switch (command.getCommandType()) {
                 case CONNECT -> connect(connection, gameData, userData);
                 case MAKE_MOVE -> move(command, connection, gameData, userData);
-                case LEAVE -> leave();
-                case RESIGN -> resign();
+                case LEAVE -> leave(connection, gameData, userData);
+                case RESIGN -> resign(connection, gameData, userData);
             }
 
         } catch (Exception e) {
@@ -75,35 +75,71 @@ public class WebSocketHandler {
 
     private void move(UserGameCommand command, Connection connection, GameData gameData, UserData userData) throws Exception {
         if (gameData != null) {
-            var turnColor = gameData.game().getTeamTurn();
-            var pieceColor = gameData.game().getBoard().getPiece(command.getMove().getStartPosition()).getTeamColor();
-            ChessGame.TeamColor playerColor = null;
-            if (userData.username().equalsIgnoreCase(gameData.whiteUsername())) {
-                playerColor = ChessGame.TeamColor.WHITE;
-            } else if (userData.username().equalsIgnoreCase(gameData.blackUsername())) {
-                playerColor = ChessGame.TeamColor.BLACK;
-            }
-            if (playerColor != null && playerColor.equals(pieceColor) && playerColor.equals(turnColor)) {
-                String notificationMessage = (new NotificationMessage(String.format("%s made move%s", userData.username(), command.getMove()))).toString();
-                gameData.game().makeMove(command.getMove());
-                connectionManager.broadcast(gameData.gameID(), connection.userData.username(), notificationMessage);
-                dataAccess.gameDAO().updateGame(gameData);
-                connection.gameData = gameData;
-
-                String loadMessage = new LoadMessage(gameData).toString();
-                connectionManager.broadcast(gameData.gameID(), "", loadMessage);
+            if (gameData.state() == GameData.State.UNKNOWN) {
+                var turnColor = gameData.game().getTeamTurn();
+                var pieceColor = gameData.game().getBoard().getPiece(command.getMove().getStartPosition()).getTeamColor();
+                ChessGame.TeamColor playerColor = null;
+                if (userData.username().equalsIgnoreCase(gameData.whiteUsername())) {
+                    playerColor = ChessGame.TeamColor.WHITE;
+                } else if (userData.username().equalsIgnoreCase(gameData.blackUsername())) {
+                    playerColor = ChessGame.TeamColor.BLACK;
+                }
+                if (playerColor != null && playerColor.equals(pieceColor) && playerColor.equals(turnColor)) {
+                    gameData.game().makeMove(command.getMove());
+                    String notificationMessage = (new NotificationMessage(String.format("%s made move%s", userData.username(), command.getMove()))).toString();
+                    connectionManager.broadcast(gameData.gameID(), connection.userData.username(), notificationMessage);
+                    dataAccess.gameDAO().updateGame(gameData);
+                    connection.gameData = gameData;
+                    connectionManager.broadcast(gameData.gameID(), "", new LoadMessage(gameData).toString());
+                } else {
+                    connection.sendError("invalid move");
+                }
             } else {
-                connection.sendError("invalid move");
+                connection.sendError("already resigned");
             }
         } else {
             connection.sendError("couldn't find game");
         }
     }
 
-    private void leave() {
+    private void leave(Connection connection, GameData gameData, UserData userData) throws Exception {
+        if (gameData != null) {
+            if (userData.username().equalsIgnoreCase(gameData.whiteUsername())) {
+                gameData = gameData.setWhite(null);
+            } else if (userData.username().equalsIgnoreCase(gameData.blackUsername())) {
+                gameData = gameData.setBlack(null);
+            }
+            dataAccess.gameDAO().updateGame(gameData);
+            connectionManager.remove(connection.session);
+            String notificationMessage = (new NotificationMessage(String.format("%s left the game", userData.username()))).toString();
+            connectionManager.broadcast(gameData.gameID(), "", notificationMessage);
+        } else {
+            connection.sendError("couldn't find game");
+        }
     }
 
-    private void resign() {
+    private void resign(Connection connection, GameData gameData, UserData userData) throws Exception {
+        if (gameData != null && gameData.state() == GameData.State.UNKNOWN) {
+            ChessGame.TeamColor playerColor = null;
+            if (userData.username().equalsIgnoreCase(gameData.whiteUsername())) {
+                playerColor = ChessGame.TeamColor.WHITE;
+            } else if (userData.username().equalsIgnoreCase(gameData.blackUsername())) {
+                playerColor = ChessGame.TeamColor.BLACK;
+            }
+            if (playerColor != null) {
+                var newState = (playerColor == ChessGame.TeamColor.WHITE ? GameData.State.BLACK : GameData.State.WHITE);
+                gameData = gameData.setState(newState);
+                dataAccess.gameDAO().updateGame(gameData);
+                connection.gameData = gameData;
+
+                String notificationMessage = (new NotificationMessage(String.format("%s resigned", userData.username()))).toString();
+                connectionManager.broadcast(gameData.gameID(), "", notificationMessage);
+            } else {
+                connection.sendError("only players can resign");
+            }
+        } else {
+            connection.sendError("couldn't find game");
+        }
     }
 
 

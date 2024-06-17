@@ -20,12 +20,14 @@ public class SqlGameDAO implements IntGameDAO {
     public GameData createGame(String gameName) throws DataAccessException {
         ChessGame game = new ChessGame();
         String gameJson = serializer.toJson(game);
-        int id = new SQLExecutor().updateQuery("INSERT INTO game (gameName, whiteUsername, blackUsername, gameData) VALUES (?, ?, ?, ?);",
+        var state = GameData.State.UNKNOWN;
+        int id = new SQLExecutor().updateQuery("INSERT INTO game (gameName, whiteUsername, blackUsername, gameData, state) VALUES (?, ?, ?, ?, ?);",
                 gameName,
                 null,
                 null,
-                gameJson);
-        return new GameData(id, null, null, gameName, game);
+                gameJson,
+                state.toString());
+        return new GameData(id, null, null, gameName, game, state);
     }
 
     public GameData readGame(int gameId) throws DataAccessException {
@@ -67,18 +69,20 @@ public class SqlGameDAO implements IntGameDAO {
         String gameName = rs.getString("gameName");
         String whiteUsername = rs.getString("whiteUsername");
         String blackUsername = rs.getString("blackUsername");
-        String gameJson = rs.getString("GameData");
+        String gameJson = rs.getString("gameData");
+        GameData.State state = GameData.State.valueOf(rs.getString("state"));
         ChessGame game = serializer.fromJson(gameJson, ChessGame.class);
 
-        return new GameData(gameId, whiteUsername, blackUsername, gameName, game);
+        return new GameData(gameId, whiteUsername, blackUsername, gameName, game, state);
     }
 
     public void updateGame(GameData gameData) throws DataAccessException {
-        new SQLExecutor().updateQuery("UPDATE game SET gameName=?, whiteUsername=?, blackUsername=?, gameData=? WHERE id=?;",
+        new SQLExecutor().updateQuery("UPDATE game SET gameName=?, whiteUsername=?, blackUsername=?, gameData=?, state=? WHERE id=?;",
                 gameData.gameName(),
                 gameData.whiteUsername(),
                 gameData.blackUsername(),
                 serializer.toJson(gameData.game()),
+                gameData.state().toString(),
                 gameData.gameID());
     }
 
@@ -101,6 +105,7 @@ public class SqlGameDAO implements IntGameDAO {
               whiteUsername varchar(45) DEFAULT NULL,
               blackUsername varchar(45) DEFAULT NULL,
               gameData json NOT NULL,
+              state varchar(45) DEFAULT NULL,
               PRIMARY KEY (id),
               UNIQUE KEY id_UNIQUE (id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

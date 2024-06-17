@@ -50,9 +50,9 @@ public class GameService {
             throw new UnauthorizedException("unauthorized");
         } else if (game != null) {
             if (Objects.equals(chosenColor, "WHITE") && (game.whiteUsername() == null || game.whiteUsername().isEmpty())) {
-                updateGame(new GameData(gameId, auth.username(), game.blackUsername(), game.gameName(), game.game()));
+                updateGame(new GameData(gameId, auth.username(), game.blackUsername(), game.gameName(), game.game(), GameData.State.UNKNOWN));
             } else if (Objects.equals(chosenColor, "BLACK") && (game.blackUsername() == null || game.blackUsername().isEmpty())) {
-                updateGame(new GameData(gameId, game.whiteUsername(), auth.username(), game.gameName(), game.game()));
+                updateGame(new GameData(gameId, game.whiteUsername(), auth.username(), game.gameName(), game.game(), GameData.State.UNKNOWN));
             } else {
                 throw new UserTakenException("already taken");
             }

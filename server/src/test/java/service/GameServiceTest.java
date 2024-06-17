@@ -33,7 +33,7 @@ class GameServiceTest {
     @Test
     @Order(1)
     void createNewGameWithGoodData() throws DataAccessException, UnauthorizedException, BadRequestException {
-        GameData testGame = new GameData(0, null, null, "gameTest", null);
+        GameData testGame = new GameData(0, null, null, "gameTest", null, GameData.State.UNKNOWN);
         testGame = gameService.createNewGame(testGame, authData.authToken());
         assertNotEquals(0, testGame.gameID());
         assertEquals(101, testGame.gameID());
@@ -45,7 +45,7 @@ class GameServiceTest {
         assertThrows(UnauthorizedException.class,
                 () -> {
                     GameService gameService = new GameService(gameDao, authDAO);
-                    GameData gameData = new GameData(0, null, null, "gameTest", null);
+                    GameData gameData = new GameData(0, null, null, "gameTest", null, GameData.State.UNKNOWN);
                     gameService.createNewGame(gameData, "garbage");
                 }
         );
@@ -71,7 +71,7 @@ class GameServiceTest {
 
     @Test
     void joinGameWithUserOnWhite() throws DataAccessException, UserTakenException, UnauthorizedException, BadRequestException {
-        GameData testGame = new GameData(0, null, null, "gameTest", null);
+        GameData testGame = new GameData(0, null, null, "gameTest", null, GameData.State.UNKNOWN);
         testGame = gameService.createNewGame(testGame, authData.authToken());
         gameService.joinGame(authData.authToken(), testGame.gameID(), "WHITE");
         GameData checkGame = gameDao.readGame(testGame.gameID());
@@ -82,7 +82,7 @@ class GameServiceTest {
     void joinGameBadAuthToken() {
         assertThrows(UnauthorizedException.class,
                 () -> {
-                    GameData testGame = new GameData(0, null, null, "gameTest", null);
+                    GameData testGame = new GameData(0, null, null, "gameTest", null, GameData.State.UNKNOWN);
                     testGame = gameService.createNewGame(testGame, authData.authToken());
                     gameService.joinGame("garbage", testGame.gameID(), "WHITE");
                 }

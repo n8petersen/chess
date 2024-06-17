@@ -159,7 +159,7 @@ public class ChessBoard {
             for (int j = 0; j < 8; j++) {
                 if (pieces[i][j] != null && pieces[i][j].getTeamColor() != targetColor) {
                     for (ChessMove move : pieces[i][j].pieceMoves(this, new ChessPosition(i+1,j+1))) {
-                        if (move.endPosition().equals(targetPosition)) {
+                        if (move.getEndPosition().equals(targetPosition)) {
                             attackingPieces.add(pieces[i][j]);
                             break;
                             // we can break here because this function is only used to check status, which only requires 1 attacker.

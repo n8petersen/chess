@@ -277,11 +277,9 @@ public class ChessClient {
     }
 
     private String leave() {
-        String result = "Couldn't leave game";
         state = LOGGED_IN;
-        result = "Left game";
         // remove player from the game
-        return result;
+        return "Left game";
     }
 
     private String move(String[] param) {

@@ -101,7 +101,6 @@ public class WebSocketHandler {
                     connection.gameData = gameData;
                     String notificationMessage = (new NotificationMessage("Black won the game!")).toString();
                     connectionManager.broadcast(gameData.gameID(), "", notificationMessage);
-//                    connectionManager.broadcast(gameData.gameID(), "", new LoadMessage(gameData).toString());
                 } else if (gameData.game().isInCheckmate(ChessGame.TeamColor.BLACK)) {
                     // set white to winner and announce
                     gameData = gameData.setState(GameData.State.WHITE);
@@ -109,7 +108,13 @@ public class WebSocketHandler {
                     connection.gameData = gameData;
                     String notificationMessage = (new NotificationMessage("White won the game!")).toString();
                     connectionManager.broadcast(gameData.gameID(), "", notificationMessage);
-//                    connectionManager.broadcast(gameData.gameID(), "", new LoadMessage(gameData).toString());
+                } else if (gameData.game().isInStalemate(ChessGame.TeamColor.WHITE) || gameData.game().isInStalemate(ChessGame.TeamColor.BLACK)) {
+                    // set to draw and announce
+                    gameData = gameData.setState(GameData.State.DRAW);
+                    dataAccess.gameDAO().updateGame(gameData);
+                    connection.gameData = gameData;
+                    String notificationMessage = (new NotificationMessage("Game ended in draw!")).toString();
+                    connectionManager.broadcast(gameData.gameID(), "", notificationMessage);
                 }
             } else {
                 connection.sendError("game is over");

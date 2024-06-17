@@ -28,19 +28,21 @@ public class WebSocketFacade extends Endpoint {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, socketURI);
 
-        this.session.addMessageHandler((MessageHandler.Whole<String>) s -> {
-            var serializer = new Gson();
+        this.session.addMessageHandler(new MessageHandler.Whole<String>() {
+            @Override
+            public void onMessage(String s) {
+                var serializer = new Gson();
+                try {
+                    ServerMessage serverMessage = serializer.fromJson(s, ServerMessage.class);
+                    switch (serverMessage.getServerMessageType()) {
+                        case LOAD_GAME -> loadGame(serializer.fromJson(s, LoadMessage.class).game);
+                        case NOTIFICATION -> notification(serializer.fromJson(s, NotificationMessage.class));
+                        case ERROR -> error(serializer.fromJson(s, ErrorMessage.class));
+                    }
 
-            try {
-                ServerMessage serverMessage = serializer.fromJson(s, ServerMessage.class);
-                switch (serverMessage.getServerMessageType()) {
-                    case LOAD_GAME -> loadGame(serializer.fromJson(s, LoadMessage.class).game);
-                    case NOTIFICATION -> notification(serializer.fromJson(s, NotificationMessage.class));
-                    case ERROR -> error(serializer.fromJson(s, ErrorMessage.class));
+                } catch (Exception e) {
+                    System.out.println("Error: " + e.getMessage());
                 }
-
-            } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
             }
         });
     }

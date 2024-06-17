@@ -8,8 +8,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ConnectionManager {
     public final ConcurrentHashMap<String, Connection> connections = new ConcurrentHashMap<>();
 
-    public void add(String username, Connection connection) {
+    public Connection add(String username, Connection connection) {
         connections.put(username, connection);
+        return connection;
     }
 
     public void remove(Session session) {

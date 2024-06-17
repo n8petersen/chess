@@ -18,6 +18,7 @@ public class Server {
         IntAuthDAO authDao = new SqlAuthDAO();
         IntGameDAO gameDao = new SqlGameDAO();
         IntUserDAO userDao = new SqlUserDAO();
+        DataAccess dataAccess = new DataAccess(authDao, gameDao, userDao);
         this.gameService = new GameService(gameDao, authDao);
         this.userService = new UserService(userDao, authDao);
         webSocketHandler = new WebSocketHandler();

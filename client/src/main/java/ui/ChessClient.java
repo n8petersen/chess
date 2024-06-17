@@ -278,14 +278,39 @@ public class ChessClient {
         return "Left game";
     }
 
-    private String move(String[] param) {
+    private String move(String[] param) throws InvalidMoveException {
         String result = "Couldn't make move";
-        if (param.length == 3) {
+        if (param.length == 3 || param.length == 4) {
             var startInput = param[1].toLowerCase();
             var endInput = param[2].toLowerCase();
             if (startInput.length() == 2 && endInput.length() == 2) {
                 var startPos = new ChessPosition(startInput);
                 var endPos = new ChessPosition(endInput);
+                ChessPiece.PieceType promPiece;
+                if (param.length == 4 && param[3].length() == 1) {
+                    promPiece = switch (param[3].toLowerCase().charAt(0)) {
+                        case 'q' -> ChessPiece.PieceType.QUEEN;
+                        case 'r' -> ChessPiece.PieceType.ROOK;
+                        case 'b' -> ChessPiece.PieceType.BISHOP;
+                        case 'n' -> ChessPiece.PieceType.KNIGHT;
+                        default -> null;
+                    };
+                } else {
+                    promPiece = null;
+                }
+                var move = new ChessMove(startPos, endPos, promPiece);
+                if (gameData.game().validMoves(startPos).contains(move)) {
+                    try {
+                        gameData.game().makeMove(move);
+                        // send new board through websocket
+                    } catch (Exception e) {
+                        return result;
+                    }
+                    draw.drawBoard(gameData, (state == WHITE));
+                    result = "";
+                } else {
+                    result = "Invalid move. Try another move, or use 'highlight'";
+                }
             }
             // check that move is valid
             // if it is, then update the local game object and then send updated game

@@ -42,7 +42,7 @@ public class WebSocketHandler {
             switch (command.getCommandType()) {
                 case CONNECT -> connect(connection, gameData, userData);
                 case MAKE_MOVE -> move(command, connection, gameData, userData);
-                case LEAVE -> leave();
+                case LEAVE -> leave(connection, gameData, userData);
                 case RESIGN -> resign();
             }
 
@@ -84,14 +84,12 @@ public class WebSocketHandler {
                 playerColor = ChessGame.TeamColor.BLACK;
             }
             if (playerColor != null && playerColor.equals(pieceColor) && playerColor.equals(turnColor)) {
-                String notificationMessage = (new NotificationMessage(String.format("%s made move%s", userData.username(), command.getMove()))).toString();
                 gameData.game().makeMove(command.getMove());
+                String notificationMessage = (new NotificationMessage(String.format("%s made move%s", userData.username(), command.getMove()))).toString();
                 connectionManager.broadcast(gameData.gameID(), connection.userData.username(), notificationMessage);
                 dataAccess.gameDAO().updateGame(gameData);
                 connection.gameData = gameData;
-
-                String loadMessage = new LoadMessage(gameData).toString();
-                connectionManager.broadcast(gameData.gameID(), "", loadMessage);
+                connectionManager.broadcast(gameData.gameID(), "", new LoadMessage(gameData).toString());
             } else {
                 connection.sendError("invalid move");
             }
@@ -100,7 +98,20 @@ public class WebSocketHandler {
         }
     }
 
-    private void leave() {
+    private void leave(Connection connection, GameData gameData, UserData userData) throws Exception {
+        if (gameData != null) {
+            if (userData.username().equalsIgnoreCase(gameData.whiteUsername())) {
+                gameData = gameData.setWhite(null);
+            } else if (userData.username().equalsIgnoreCase(gameData.blackUsername())) {
+                gameData = gameData.setBlack(null);
+            }
+            dataAccess.gameDAO().updateGame(gameData);
+            connectionManager.remove(connection.session);
+            String notificationMessage = (new NotificationMessage(String.format("%s left the game", userData.username()))).toString();
+            connectionManager.broadcast(gameData.gameID(), "", notificationMessage);
+        } else {
+            connection.sendError("couldn't find game");
+        }
     }
 
     private void resign() {

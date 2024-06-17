@@ -31,9 +31,16 @@ public class Connection {
 
     @Override
     public String toString() {
-        return "Connection{" +
-                "user=" + userData.username() +
-                ", game=" + gameData.gameID() +
-                '}';
+        if (gameData != null) {
+            return "Connection{" +
+                    "user=" + userData.username() +
+                    ", game=" + gameData.gameID() +
+                    '}';
+        } else {
+            return "Connection{" +
+                    "user=" + userData.username() +
+                    '}';
+        }
+
     }
 }

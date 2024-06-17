@@ -15,6 +15,7 @@ public class ConnectCommand extends UserGameCommand {
 
     public ConnectCommand(String authToken, String username, int gameId, ChessGame.TeamColor playerColor) {
         super(authToken);
+        super.commandType = CommandType.CONNECT;
         super.gameId = gameId;
         super.playerColor = playerColor;
         super.observer = false;

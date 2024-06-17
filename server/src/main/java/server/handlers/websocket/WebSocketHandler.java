@@ -56,10 +56,7 @@ public class WebSocketHandler {
             if (command.isObserver()) {
                 notificationMsg = (new NotificationMessage(String.format("%s is observing game '%s'", connection.userData.username(), gameData.gameName()))).toString();
             } else {
-                var checkUser = (command.getPlayerColor() == ChessGame.TeamColor.BLACK) ? gameData.blackUsername() : gameData.whiteUsername();
-                if (checkUser.equalsIgnoreCase(connection.userData.username())) {
-                    notificationMsg = (new NotificationMessage(String.format("%s joined %s as %s", connection.userData.username(), gameData.gameName(), command.getPlayerColor()))).toString().toUpperCase();
-                }
+                notificationMsg = (new NotificationMessage(String.format("%s joined game '%s' as %s", connection.userData.username(), gameData.gameName(), command.getPlayerColor().toString().toLowerCase()))).toString();
             }
             connectionManager.broadcast(gameData.gameID(), connection.userData.username(), notificationMsg);
         } else {

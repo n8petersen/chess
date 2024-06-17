@@ -310,26 +310,28 @@ public class ChessClient {
 
     private String highlight(String[] param) {
         String result = "Couldn't check moves";
-        if (param.length == 2) {
-            var input = param[1].toLowerCase();
-            if (input.length() == 2) {
-                int col = input.charAt(0) - 'a' + 1;
-                int row = input.charAt(1) - '1' + 1;
-                var currPos = new ChessPosition(row, col);
-                var highlights = new ArrayList<ChessPosition>();
-                highlights.add(currPos);
-                for (var move : gameData.game().validMoves(currPos)) {
-                    highlights.add(move.endPosition());
+        try {
+            if (param.length == 2) {
+                var input = param[1].toLowerCase();
+                if (input.length() == 2) {
+                    var currPos = new ChessPosition(input);
+                    var highlights = new ArrayList<ChessPosition>();
+                    highlights.add(currPos);
+                    for (var move : gameData.game().validMoves(currPos)) {
+                        highlights.add(move.getEndPosition());
+                    }
+                    if (state == OBSERVER) {
+                        draw.drawBoard(gameData, true, highlights, currPos);
+                        draw.drawBoard(gameData, false, highlights, currPos);
+                    } else {
+                        var whiteOrientation = state == WHITE;
+                        draw.drawBoard(gameData, whiteOrientation, highlights, currPos);
+                    }
+                    result = "";
                 }
-                if (state == OBSERVER) {
-                    draw.drawBoard(gameData, true, highlights, currPos);
-                    draw.drawBoard(gameData, false, highlights, currPos);
-                } else {
-                    var whiteOrientation = state == WHITE;
-                    draw.drawBoard(gameData, whiteOrientation, highlights, currPos);
-                }
-                result = "";
             }
+        } catch (Exception e) {
+            return result;
         }
         return result;
     }

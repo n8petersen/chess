@@ -380,7 +380,7 @@ public class ChessClient {
     }
 
     public void error(ErrorMessage e) {
-        System.out.println("\n" + SET_TEXT_COLOR_RED + e.message + RESET_TEXT_COLOR);
+        System.out.println("\n" + SET_TEXT_COLOR_RED + e.errorMessage + RESET_TEXT_COLOR);
         writePrompt();
     }
 }

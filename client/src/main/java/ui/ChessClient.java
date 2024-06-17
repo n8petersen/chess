@@ -15,6 +15,7 @@ import static clientutil.State.*;
 public class ChessClient {
 
     private final ServerFacade server;
+    // TODO: Add websocket
     private State state = LOGGED_OUT;
     private String username;
     private String authToken;
@@ -24,6 +25,7 @@ public class ChessClient {
 
     public ChessClient(String host, int port) {
         server = new ServerFacade(host, port);
+        // TODO: add websocket
     }
 
     public void writePrompt() {
@@ -181,6 +183,7 @@ public class ChessClient {
                     gameId = gameList[gameId - 1].gameID();
                     var color = ChessGame.TeamColor.valueOf(param[2].toUpperCase());
                     gameData = server.joinGame(authToken, gameId, color);
+                    // TODO: send join to websocket
                     state = (color == ChessGame.TeamColor.WHITE ? WHITE : BLACK);
                     result = "Joined game " + gameData.gameID() + " as " + color;
                     draw.drawBoard(gameData, state == WHITE);
@@ -206,6 +209,7 @@ public class ChessClient {
                     result = "Joined game " + gameId + " as OBSERVER";
                     draw.drawBoard(gameData, true);
                     draw.drawBoard(gameData, false);
+                    // TODO: send observer to websocket
                 }
             }
         } catch (IOException e) {
@@ -275,6 +279,7 @@ public class ChessClient {
     private String leave() {
         state = LOGGED_IN;
         // remove player from the game
+        // TODO: Send leave to websocket
         return "Left game";
     }
 
@@ -302,7 +307,7 @@ public class ChessClient {
                 if (gameData.game().validMoves(startPos).contains(move)) {
                     try {
                         gameData.game().makeMove(move);
-                        // send new board through websocket
+                        // TODO: send new board to websocket
                     } catch (Exception e) {
                         return result;
                     }
@@ -327,6 +332,7 @@ public class ChessClient {
         if (input.equalsIgnoreCase("y")) {
             result = "Resigned game";
             // set opponent to winner, end game
+            // TODO: send resign to websocket
         } else {
             result = "Cancelled resign";
         }

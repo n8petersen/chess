@@ -1,11 +1,13 @@
 package ui;
 
 import chess.ChessGame;
+import chess.ChessPosition;
 import clientutil.ServerFacade;
 import clientutil.State;
 import model.GameData;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
 import static clientutil.State.*;
@@ -45,7 +47,7 @@ public class ChessClient {
                 case "login" -> login(params);
                 default -> result;
             };
-        } else {
+        } else if (state == LOGGED_IN) {
             return switch (params[0]) {
                 case "help" -> help();
                 case "quit" -> quit();
@@ -57,13 +59,69 @@ public class ChessClient {
                 case "draw" -> draw(params);
                 default -> result;
             };
+        } else if (state == WHITE || state == BLACK) {
+            return switch (params[0]) {
+                case "help" -> help();
+                case "redraw" -> redraw();
+                case "leave" -> leave();
+                case "move" -> move(params);
+                case "resign" -> resign();
+                case "highlight" -> highlight(params);
+                default -> result;
+            };
+        } else if (state == OBSERVER) {
+            return switch (params[0]) {
+                case "help" -> help();
+                case "redraw" -> redraw();
+                case "leave" -> leave();
+                case "highlight" -> highlight(params);
+                default -> result;
+            };
         }
+        return result;
+    }
+
+    private String help() {
+        StringBuilder result = new StringBuilder();
+        switch (state) {
+            case LOGGED_IN:
+                result.append(SET_TEXT_COLOR_BLUE + "list" + RESET_TEXT_COLOR + " - get existing games" + "\n");
+                result.append(SET_TEXT_COLOR_BLUE + "join <ID> [WHITE|BLACK]" + RESET_TEXT_COLOR + " - join a game (as color)" + "\n");
+                result.append(SET_TEXT_COLOR_BLUE + "observe <ID>" + RESET_TEXT_COLOR + " - observe a game" + "\n");
+                result.append(SET_TEXT_COLOR_BLUE + "create <NAME>" + RESET_TEXT_COLOR + " - create new game" + "\n");
+                result.append(SET_TEXT_COLOR_BLUE + "logout" + RESET_TEXT_COLOR + " - logout of account" + "\n");
+                result.append(SET_TEXT_COLOR_BLUE + "quit" + RESET_TEXT_COLOR + " - close program" + "\n");
+                break;
+            case WHITE, BLACK:
+                result.append(SET_TEXT_COLOR_BLUE + "redraw" + RESET_TEXT_COLOR + " - redraw current board" + "\n");
+                result.append(SET_TEXT_COLOR_BLUE + "leave" + RESET_TEXT_COLOR + " - leave current game" + "\n");
+                result.append(SET_TEXT_COLOR_BLUE + "move <piece_start> <piece_end>" + RESET_TEXT_COLOR + " - make move in game" + "\n");
+                result.append(SET_TEXT_COLOR_BLUE + "resign" + RESET_TEXT_COLOR + " - resign from current game" + "\n");
+                result.append(SET_TEXT_COLOR_BLUE + "highlight <piece>" + RESET_TEXT_COLOR + " - highlight moves for given piece" + "\n");
+                break;
+            case OBSERVER:
+                result.append(SET_TEXT_COLOR_BLUE + "redraw" + RESET_TEXT_COLOR + " - redraw current board" + "\n");
+                result.append(SET_TEXT_COLOR_BLUE + "leave" + RESET_TEXT_COLOR + " - leave current game" + "\n");
+                result.append(SET_TEXT_COLOR_BLUE + "highlight <piece>" + RESET_TEXT_COLOR + " - highlight moves for given piece" + "\n");
+                break;
+            case LOGGED_OUT:
+                result.append(SET_TEXT_COLOR_BLUE + "register <USERNAME> <PASSWORD> <EMAIL>" + RESET_TEXT_COLOR + " - create new account" + "\n");
+                result.append(SET_TEXT_COLOR_BLUE + "login <USERNAME> <PASSWORD>" + RESET_TEXT_COLOR + " - login to existing account" + "\n");
+                result.append(SET_TEXT_COLOR_BLUE + "quit" + RESET_TEXT_COLOR + " - close program" + "\n");
+                break;
+            default:
+                result.append(SET_TEXT_COLOR_BLUE + "logout" + RESET_TEXT_COLOR + " - logout of account" + "\n");
+                result.append(SET_TEXT_COLOR_BLUE + "quit" + RESET_TEXT_COLOR + " - close program" + "\n");
+                break;
+        }
+        result.append(SET_TEXT_COLOR_BLUE + "help" + RESET_TEXT_COLOR + " - get possible commands");
+        return result.toString();
     }
 
     private String register(String[] param) throws Exception {
         String result = "Couldn't register. Try again";
         try {
-            if (param.length == 4 && state == LOGGED_OUT) {
+            if (param.length == 4) {
                 var resp = server.register(param[1], param[2], param[3]);
                 username = param[1];
                 authToken = resp.authToken();
@@ -144,7 +202,7 @@ public class ChessClient {
                 list();
                 int gameId = Integer.parseInt(param[1]);
                 if (gameId <= gameList.length) {
-                    gameId = gameList[gameId - 1].gameID();
+                    gameData = gameList[gameId - 1];
                     state = OBSERVER;
                     result = "Joined game " + gameId + " as OBSERVER";
                     draw.drawBoard(gameData, true);
@@ -162,7 +220,7 @@ public class ChessClient {
     private String create(String[] param) throws Exception {
         String result = "Couldn't create game";
         try {
-            if (param.length == 2 && state == LOGGED_IN) {
+            if (param.length == 2) {
                 gameData = server.createGame(authToken, param[1]);
                 result = "Created game " + gameData.gameID();
             }
@@ -172,30 +230,8 @@ public class ChessClient {
         return result;
     }
 
-    private String help() {
-        StringBuilder result = new StringBuilder();
-        switch (state) {
-            case LOGGED_IN, BLACK, WHITE, OBSERVER:
-                result.append(SET_TEXT_COLOR_BLUE + "list" + RESET_TEXT_COLOR + " - get existing games" + "\n");
-                result.append(SET_TEXT_COLOR_BLUE + "join <ID> [WHITE|BLACK]" + RESET_TEXT_COLOR + " - join a game (as color)" + "\n");
-                result.append(SET_TEXT_COLOR_BLUE + "observe <ID>" + RESET_TEXT_COLOR + " - observe a game" + "\n");
-                result.append(SET_TEXT_COLOR_BLUE + "create <NAME>" + RESET_TEXT_COLOR + " - create new game" + "\n");
-                result.append(SET_TEXT_COLOR_BLUE + "logout" + RESET_TEXT_COLOR + " - logout of account" + "\n");
-                result.append(SET_TEXT_COLOR_BLUE + "quit" + RESET_TEXT_COLOR + " - close program" + "\n");
-                result.append(SET_TEXT_COLOR_BLUE + "help" + RESET_TEXT_COLOR + " - get possible commands");
-                break;
-            default:
-                result.append(SET_TEXT_COLOR_BLUE + "register <USERNAME> <PASSWORD> <EMAIL>" + RESET_TEXT_COLOR + " - create new account" + "\n");
-                result.append(SET_TEXT_COLOR_BLUE + "login <USERNAME> <PASSWORD>" + RESET_TEXT_COLOR + " - login to existing account" + "\n");
-                result.append(SET_TEXT_COLOR_BLUE + "quit" + RESET_TEXT_COLOR + " - close program" + "\n");
-                result.append(SET_TEXT_COLOR_BLUE + "help" + RESET_TEXT_COLOR + " - get possible commands");
-                break;
-        }
-        return result.toString();
-    }
-
     private String quit() throws Exception {
-        if (state == LOGGED_IN) {
+        if (state != LOGGED_OUT) {
             logout();
         }
         return "quit";
@@ -215,6 +251,75 @@ public class ChessClient {
             }
         } catch (IOException e) {
             return result;
+        }
+        return result;
+    }
+
+    private String redraw() throws Exception {
+        String result = "Couldn't draw game";
+        try {
+            list();
+            if (gameData != null) {
+                var whitePosition = state == WHITE;
+                draw.drawBoard(gameData, whitePosition);
+                result = "";
+            }
+        } catch (IOException e) {
+            return result;
+        }
+        return result;
+    }
+
+    private String leave() throws Exception {
+        String result = "Couldn't leave game";
+        state = LOGGED_IN;
+        result = "Left game";
+        // remove player from the game
+        return result;
+    }
+
+    private String move(String[] param) throws Exception {
+        String result = "Couldn't make move";
+        if (param.length == 3) {
+            var startPosition = param[1];
+            var endPosition = param[2];
+            // check that move is valid
+            // if it is, then update the local game object and then send updated game
+            // if it is not, alert the user that it is invalid and to make another move
+            //   suggest 'highlight' command
+        }
+        return result;
+    }
+
+    private String resign() throws Exception {
+        String result = "Couldn't resign from game";
+        System.out.print("Are you sure you want to leave game? (y/N): ");
+        var input = new Scanner(System.in).nextLine();
+        if (input.equalsIgnoreCase("y")) {
+            result = "Resigned game";
+            // set opponent to winner, end game
+        } else {
+            result = "Cancelled resign";
+        }
+        return result;
+    }
+
+    private String highlight(String[] param) throws Exception {
+        String result = "Couldn't check moves";
+        if (param.length == 2) {
+            var input = param[1].toLowerCase();
+            if (input.length() == 2) {
+                int col = input.charAt(0) - 'a' + 1;
+                int row = input.charAt(1) - '1' + 1;
+                var validMoves = gameData.game().validMoves(new ChessPosition(row, col));
+                result = "";
+            }
+
+            // get piece at startPosition
+            // get all possible moves for piece on that position
+            // pass the possible moves to new version of draw command
+            // in new version, check if square is in the highlighted moves
+            // if it is, then change background to different color
         }
         return result;
     }

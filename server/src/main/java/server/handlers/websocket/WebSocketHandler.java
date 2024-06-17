@@ -1,6 +1,5 @@
 package server.handlers.websocket;
 
-import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.*;
 import org.eclipse.jetty.websocket.api.Session;
@@ -43,8 +42,9 @@ public class WebSocketHandler {
     }
 
     private void connect(UserGameCommand command, Session session) throws Exception {
-        var gameData = dataAccess.gameDAO().readGame(command.getGameId());
-        var userData = dataAccess.userDAO().readUser(command.getUsername());
+        var authData = dataAccess.authDAO().readAuth(command.getAuthString());
+        var userData = dataAccess.userDAO().readUser(authData.username());
+        var gameData = dataAccess.gameDAO().readGame(command.getGameID());
         var connection = new Connection(userData, session);
         connection = connectionManager.add(userData.username(), connection);
 
@@ -52,15 +52,20 @@ public class WebSocketHandler {
             connection.gameData = gameData;
             var loadMessage = new LoadMessage(gameData).toString();
             connection.send(loadMessage);
-            String notificationMsg = "";
-            if (command.isObserver()) {
-                notificationMsg = (new NotificationMessage(String.format("%s is observing game '%s'", connection.userData.username(), gameData.gameName()))).toString();
+            String notificationMsg;
+
+            String teamColor;
+            if (userData.username().equalsIgnoreCase(gameData.whiteUsername())) {
+                teamColor = "white";
+            } else if (userData.username().equalsIgnoreCase(gameData.blackUsername())) {
+                teamColor = "black";
             } else {
-                notificationMsg = (new NotificationMessage(String.format("%s joined game '%s' as %s", connection.userData.username(), gameData.gameName(), command.getPlayerColor().toString().toLowerCase()))).toString();
+                teamColor = "observer";
             }
+
+            notificationMsg = (new NotificationMessage(String.format("%s joined game '%s' as %s", connection.userData.username(), gameData.gameName(), teamColor))).toString();
             connectionManager.broadcast(gameData.gameID(), connection.userData.username(), notificationMsg);
         } else {
-            assert connection != null;
             connection.sendError("Couldn't find game");
         }
     }

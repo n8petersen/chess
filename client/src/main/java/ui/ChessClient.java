@@ -369,17 +369,18 @@ public class ChessClient {
 
     public void loadGame(GameData newGameData) {
         gameData = newGameData;
+        System.out.println("\n");
         draw.drawBoard(gameData, (state == WHITE));
         writePrompt();
     }
 
     public void notification(NotificationMessage nm) {
-        System.out.println("\n" + SET_TEXT_COLOR_YELLOW + nm.message);
+        System.out.println("\n" + SET_TEXT_COLOR_YELLOW + nm.message + RESET_TEXT_COLOR);
         writePrompt();
     }
 
     public void error(ErrorMessage e) {
-        System.out.println("\n" + SET_TEXT_COLOR_RED + e.message);
+        System.out.println("\n" + SET_TEXT_COLOR_RED + e.message + RESET_TEXT_COLOR);
         writePrompt();
     }
 }

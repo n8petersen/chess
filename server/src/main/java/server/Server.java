@@ -1,34 +1,33 @@
 package server;
 
 import dataaccess.*;
-import server.handlers.RegisterHandler;
-import server.handlers.LoginHandler;
-import server.handlers.LogoutHandler;
-import server.handlers.ListGamesHandler;
-import server.handlers.CreateGameHandler;
-import server.handlers.JoinGameHandler;
-import server.handlers.ClearHandler;
+import server.handlers.*;
 import service.GameService;
 import service.UserService;
 import spark.Spark;
+
+import static spark.Spark.webSocket;
 
 public class Server {
 
     private final GameService gameService;
     private final UserService userService;
+    private final WebSocketHandler webSocketHandler;
 
     public Server() {
         IntAuthDAO authDao = new SqlAuthDAO();
         IntGameDAO gameDao = new SqlGameDAO();
         IntUserDAO userDao = new SqlUserDAO();
-
         this.gameService = new GameService(gameDao, authDao);
         this.userService = new UserService(userDao, authDao);
+        webSocketHandler = new WebSocketHandler();
     }
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
         Spark.staticFiles.location("web");
+
+        webSocket("/ws", webSocketHandler);
 
         Spark.post("/user", (req, res) -> new RegisterHandler().register(req, res, userService));
         Spark.post("/session", (req, res) -> new LoginHandler().login(req, res, userService));

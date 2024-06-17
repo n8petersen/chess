@@ -1,6 +1,8 @@
 package service;
 
 import dataaccess.*;
+import dataaccess.dao.IntAuthDAO;
+import dataaccess.dao.IntGameDAO;
 import model.*;
 
 import java.util.Collection;

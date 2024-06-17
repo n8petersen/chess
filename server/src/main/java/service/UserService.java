@@ -1,6 +1,8 @@
 package service;
 
 import dataaccess.*;
+import dataaccess.dao.IntAuthDAO;
+import dataaccess.dao.IntUserDAO;
 import model.*;
 import org.mindrot.jbcrypt.BCrypt;
 

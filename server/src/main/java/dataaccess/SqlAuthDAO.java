@@ -1,5 +1,6 @@
 package dataaccess;
 
+import dataaccess.dao.IntAuthDAO;
 import model.AuthData;
 
 import java.sql.*;

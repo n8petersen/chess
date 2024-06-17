@@ -1,5 +1,7 @@
 package websocket.commands;
 
+import chess.ChessGame;
+
 import java.util.Objects;
 
 /**
@@ -21,9 +23,13 @@ public class UserGameCommand {
         RESIGN
     }
 
-    protected CommandType commandType;
-
     private final String authToken;
+    protected String username;
+    protected CommandType commandType;
+    protected boolean observer;
+    protected ChessGame.TeamColor playerColor;
+    protected int gameId;
+
 
     public String getAuthString() {
         return authToken;
@@ -31,6 +37,22 @@ public class UserGameCommand {
 
     public CommandType getCommandType() {
         return this.commandType;
+    }
+
+    public boolean isObserver() {
+        return observer;
+    }
+
+    public ChessGame.TeamColor getPlayerColor() {
+        return playerColor;
+    }
+
+    public int getGameId() {
+        return gameId;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     @Override

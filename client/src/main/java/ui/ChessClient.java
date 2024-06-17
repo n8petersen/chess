@@ -5,6 +5,7 @@ import clientutil.ServerFacade;
 import clientutil.State;
 import clientutil.WebSocketFacade;
 import model.GameData;
+import websocket.commands.ConnectCommand;
 import websocket.messages.ErrorMessage;
 import websocket.messages.NotificationMessage;
 
@@ -188,7 +189,7 @@ public class ChessClient {
                     gameId = gameList[gameId - 1].gameID();
                     var color = ChessGame.TeamColor.valueOf(param[2].toUpperCase());
                     gameData = server.joinGame(authToken, gameId, color);
-                    // TODO: send join to websocket
+                    webSocket.sendCommand(new ConnectCommand(authToken, gameId, color));
                     state = (color == ChessGame.TeamColor.WHITE ? WHITE : BLACK);
                     result = "Joined game " + gameData.gameID() + " as " + color;
                     draw.drawBoard(gameData, state == WHITE);
@@ -214,7 +215,7 @@ public class ChessClient {
                     result = "Joined game " + gameId + " as OBSERVER";
                     draw.drawBoard(gameData, true);
                     draw.drawBoard(gameData, false);
-                    // TODO: send observer to websocket
+                    webSocket.sendCommand(new ConnectCommand(authToken, gameId, true));
                 }
             }
         } catch (IOException e) {

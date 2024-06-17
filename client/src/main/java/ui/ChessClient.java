@@ -285,8 +285,12 @@ public class ChessClient {
     private String move(String[] param) {
         String result = "Couldn't make move";
         if (param.length == 3) {
-            var startPosition = param[1];
-            var endPosition = param[2];
+            var startInput = param[1].toLowerCase();
+            var endInput = param[2].toLowerCase();
+            if (startInput.length() == 2 && endInput.length() == 2) {
+                var startPos = new ChessPosition(startInput);
+                var endPos = new ChessPosition(endInput);
+            }
             // check that move is valid
             // if it is, then update the local game object and then send updated game
             // if it is not, alert the user that it is invalid and to make another move

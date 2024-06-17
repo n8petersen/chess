@@ -7,6 +7,7 @@ import clientutil.State;
 import model.GameData;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
@@ -183,8 +184,8 @@ public class ChessClient {
                     gameData = server.joinGame(authToken, gameId, color);
                     state = (color == ChessGame.TeamColor.WHITE ? WHITE : BLACK);
                     result = "Joined game " + gameData.gameID() + " as " + color;
-                    var whitePosition = state == WHITE;
-                    draw.drawBoard(gameData, whitePosition);
+                    var whiteOrientation = state == WHITE;
+                    draw.drawBoard(gameData, whiteOrientation);
                 }
             }
         } catch (IOException e) {
@@ -242,10 +243,10 @@ public class ChessClient {
         try {
             if (param.length == 2) {
                 list();
-                var whitePosition = param[1].equalsIgnoreCase("white");
+                var whiteOrientation = param[1].equalsIgnoreCase("white");
                 if (gameList.length > 0) {
                     gameData = gameList[0];
-                    draw.drawBoard(gameData, whitePosition);
+                    draw.drawBoard(gameData, whiteOrientation);
                     result = "";
                 }
             }
@@ -260,8 +261,8 @@ public class ChessClient {
         try {
             list();
             if (gameData != null) {
-                var whitePosition = state == WHITE;
-                draw.drawBoard(gameData, whitePosition);
+                var whiteOrientation = state == WHITE;
+                draw.drawBoard(gameData, whiteOrientation);
                 result = "";
             }
         } catch (IOException e) {
@@ -270,7 +271,7 @@ public class ChessClient {
         return result;
     }
 
-    private String leave() throws Exception {
+    private String leave() {
         String result = "Couldn't leave game";
         state = LOGGED_IN;
         result = "Left game";
@@ -278,7 +279,7 @@ public class ChessClient {
         return result;
     }
 
-    private String move(String[] param) throws Exception {
+    private String move(String[] param) {
         String result = "Couldn't make move";
         if (param.length == 3) {
             var startPosition = param[1];
@@ -291,7 +292,7 @@ public class ChessClient {
         return result;
     }
 
-    private String resign() throws Exception {
+    private String resign() {
         String result = "Couldn't resign from game";
         System.out.print("Are you sure you want to leave game? (y/N): ");
         var input = new Scanner(System.in).nextLine();
@@ -304,14 +305,26 @@ public class ChessClient {
         return result;
     }
 
-    private String highlight(String[] param) throws Exception {
+    private String highlight(String[] param) {
         String result = "Couldn't check moves";
         if (param.length == 2) {
             var input = param[1].toLowerCase();
             if (input.length() == 2) {
                 int col = input.charAt(0) - 'a' + 1;
                 int row = input.charAt(1) - '1' + 1;
-                var validMoves = gameData.game().validMoves(new ChessPosition(row, col));
+                var currPos = new ChessPosition(row, col);
+                var highlights = new ArrayList<ChessPosition>();
+                highlights.add(currPos);
+                for (var move : gameData.game().validMoves(currPos)) {
+                    highlights.add(move.endPosition());
+                }
+                if (state == OBSERVER) {
+                    draw.drawBoard(gameData, true, highlights, currPos);
+                    draw.drawBoard(gameData, false, highlights, currPos);
+                } else {
+                    var whiteOrientation = state == WHITE;
+                    draw.drawBoard(gameData, whiteOrientation, highlights, currPos);
+                }
                 result = "";
             }
 

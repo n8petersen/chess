@@ -94,8 +94,25 @@ public class WebSocketHandler {
                 } else {
                     connection.sendError("invalid move");
                 }
+                if (gameData.game().isInCheckmate(ChessGame.TeamColor.WHITE)) {
+                    // set black to winner and announce
+                    gameData = gameData.setState(GameData.State.BLACK);
+                    dataAccess.gameDAO().updateGame(gameData);
+                    connection.gameData = gameData;
+                    String notificationMessage = (new NotificationMessage("Black won the game!")).toString();
+                    connectionManager.broadcast(gameData.gameID(), "", notificationMessage);
+//                    connectionManager.broadcast(gameData.gameID(), "", new LoadMessage(gameData).toString());
+                } else if (gameData.game().isInCheckmate(ChessGame.TeamColor.BLACK)) {
+                    // set white to winner and announce
+                    gameData = gameData.setState(GameData.State.WHITE);
+                    dataAccess.gameDAO().updateGame(gameData);
+                    connection.gameData = gameData;
+                    String notificationMessage = (new NotificationMessage("White won the game!")).toString();
+                    connectionManager.broadcast(gameData.gameID(), "", notificationMessage);
+//                    connectionManager.broadcast(gameData.gameID(), "", new LoadMessage(gameData).toString());
+                }
             } else {
-                connection.sendError("already resigned");
+                connection.sendError("game is over");
             }
         } else {
             connection.sendError("couldn't find game");

@@ -9,6 +9,7 @@ public class ConnectCommand extends UserGameCommand {
 
     public ConnectCommand(String authToken, int gameId, boolean observer) {
         super(authToken);
+        super.commandType = CommandType.CONNECT;
         this.gameId = gameId;
         this.playerColor = null;
         this.observer = observer;

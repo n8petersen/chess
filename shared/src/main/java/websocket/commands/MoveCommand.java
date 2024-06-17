@@ -8,6 +8,7 @@ public class MoveCommand extends UserGameCommand {
 
     public MoveCommand(String authToken, int gameId, ChessMove move) {
         super(authToken);
+        super.commandType = CommandType.MAKE_MOVE;
         this.gameId = gameId;
         this.move = move;
     }

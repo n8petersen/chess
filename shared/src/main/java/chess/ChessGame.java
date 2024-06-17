@@ -94,7 +94,7 @@ public class ChessGame {
         //  2. given piece is the current team's color
         //  3. the provided rule is in the returned list from valid rules
         //  4. the move doesn't put team's king in check
-        ChessPosition startPosition = move.startPosition();
+        ChessPosition startPosition = move.getStartPosition();
         ChessPiece piece = board.getPiece(startPosition);
 
         if (piece != null && piece.getTeamColor() == turnColor) {
@@ -122,13 +122,13 @@ public class ChessGame {
      * @param move the move to make
      */
     private void movePiece(ChessBoard board, ChessMove move) {
-        ChessPosition startPosition = move.startPosition();
-        ChessPosition endPosition = move.endPosition();
+        ChessPosition startPosition = move.getStartPosition();
+        ChessPosition endPosition = move.getEndPosition();
         ChessPiece piece = board.getPiece(startPosition);
 
         // check for promotion, and change piece if promoting
-        if (move.promotionPiece() != null) {
-            piece.setPieceType(move.promotionPiece());
+        if (move.getPromotionPiece() != null) {
+            piece.setPieceType(move.getPromotionPiece());
         }
         board.removePiece(startPosition);
         board.addPiece(endPosition, piece);
@@ -142,7 +142,7 @@ public class ChessGame {
      * @return True if the team's king is NOT in check after the move
      */
     private boolean checkMove(ChessMove move) {
-        ChessPosition startPosition = move.startPosition();
+        ChessPosition startPosition = move.getStartPosition();
         ChessPiece movePiece = board.getPiece(startPosition);
         TeamColor teamColor = movePiece.getTeamColor();
 
@@ -310,8 +310,8 @@ public class ChessGame {
     //    This is represented in a ChessMove as the king moving 2 spaces to the side.
     //  En Passant
     //   This is a special move taken by a Pawn in response to your opponent double moving a Pawn.
-    //   If your opponent double moves a pawn so it ends next to yours (skipping the position where your pawn could have captured their pawn),
+    //   If your opponent double moves a pawn, so it ends next to yours (skipping the position where your pawn could have captured their pawn),
     //   then on your immediately following turn your pawn may capture their pawn as if their pawn had only moved 1 square.
-    //   This is as if your pawn is capturing their pawn mid motion, or In Passing.
+    //   This is as if your pawn is capturing their pawn mid-motion, or In Passing.
 }
 

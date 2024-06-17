@@ -18,6 +18,11 @@ public class ChessPosition {
         this.col = col;
     }
 
+    public ChessPosition(String input) {
+        this.col = input.charAt(0) - 'a' + 1;
+        this.row = input.charAt(1) - '1' + 1;
+    }
+
     /**
      * @return which row this position is in
      * 1 codes for the bottom row

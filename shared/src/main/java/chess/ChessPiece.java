@@ -70,10 +70,10 @@ public class ChessPiece {
 
     @Override
     public String toString() {
-        return "ChessPiece{" +
-                "color=" + color +
-                ", type=" + type +
-                '}';
+        if (color == null || type == null) {
+            return null;
+        }
+        return color.toString().toUpperCase() + "_" + type.toString().toUpperCase();
     }
 
     @Override

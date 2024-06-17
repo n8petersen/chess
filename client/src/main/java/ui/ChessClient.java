@@ -1,7 +1,6 @@
 package ui;
 
-import chess.ChessGame;
-import chess.ChessPosition;
+import chess.*;
 import clientutil.ServerFacade;
 import clientutil.State;
 import model.GameData;
@@ -16,7 +15,7 @@ import static clientutil.State.*;
 public class ChessClient {
 
     private final ServerFacade server;
-    private State state = State.LOGGED_OUT;
+    private State state = LOGGED_OUT;
     private String username;
     private String authToken;
     private GameData gameData;
@@ -184,8 +183,7 @@ public class ChessClient {
                     gameData = server.joinGame(authToken, gameId, color);
                     state = (color == ChessGame.TeamColor.WHITE ? WHITE : BLACK);
                     result = "Joined game " + gameData.gameID() + " as " + color;
-                    var whiteOrientation = state == WHITE;
-                    draw.drawBoard(gameData, whiteOrientation);
+                    draw.drawBoard(gameData, state == WHITE);
                 }
             }
         } catch (IOException e) {
@@ -243,10 +241,9 @@ public class ChessClient {
         try {
             if (param.length == 2) {
                 list();
-                var whiteOrientation = param[1].equalsIgnoreCase("white");
                 if (gameList.length > 0) {
                     gameData = gameList[0];
-                    draw.drawBoard(gameData, whiteOrientation);
+                    draw.drawBoard(gameData, param[1].equalsIgnoreCase("white"));
                     result = "";
                 }
             }
@@ -265,8 +262,7 @@ public class ChessClient {
                     draw.drawBoard(gameData, true);
                     draw.drawBoard(gameData, false);
                 } else {
-                    var whiteOrientation = state == WHITE;
-                    draw.drawBoard(gameData, whiteOrientation);
+                    draw.drawBoard(gameData, state == WHITE);
                 }
                 result = "";
             }
@@ -328,8 +324,7 @@ public class ChessClient {
                         draw.drawBoard(gameData, true, highlights, currPos);
                         draw.drawBoard(gameData, false, highlights, currPos);
                     } else {
-                        var whiteOrientation = state == WHITE;
-                        draw.drawBoard(gameData, whiteOrientation, highlights, currPos);
+                        draw.drawBoard(gameData, state == WHITE, highlights, currPos);
                     }
                     result = "";
                 }

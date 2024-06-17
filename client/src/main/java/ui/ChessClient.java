@@ -261,8 +261,13 @@ public class ChessClient {
         try {
             list();
             if (gameData != null) {
-                var whiteOrientation = state == WHITE;
-                draw.drawBoard(gameData, whiteOrientation);
+                if (state == OBSERVER) {
+                    draw.drawBoard(gameData, true);
+                    draw.drawBoard(gameData, false);
+                } else {
+                    var whiteOrientation = state == WHITE;
+                    draw.drawBoard(gameData, whiteOrientation);
+                }
                 result = "";
             }
         } catch (IOException e) {

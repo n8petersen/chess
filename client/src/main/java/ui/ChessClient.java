@@ -327,12 +327,6 @@ public class ChessClient {
                 }
                 result = "";
             }
-
-            // get piece at startPosition
-            // get all possible moves for piece on that position
-            // pass the possible moves to new version of draw command
-            // in new version, check if square is in the highlighted moves
-            // if it is, then change background to different color
         }
         return result;
     }

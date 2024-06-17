@@ -310,8 +310,8 @@ public class ChessGame {
     //    This is represented in a ChessMove as the king moving 2 spaces to the side.
     //  En Passant
     //   This is a special move taken by a Pawn in response to your opponent double moving a Pawn.
-    //   If your opponent double moves a pawn so it ends next to yours (skipping the position where your pawn could have captured their pawn),
+    //   If your opponent double moves a pawn, so it ends next to yours (skipping the position where your pawn could have captured their pawn),
     //   then on your immediately following turn your pawn may capture their pawn as if their pawn had only moved 1 square.
-    //   This is as if your pawn is capturing their pawn mid motion, or In Passing.
+    //   This is as if your pawn is capturing their pawn mid-motion, or In Passing.
 }
 

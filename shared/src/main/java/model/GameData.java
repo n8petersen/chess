@@ -7,6 +7,7 @@ public record GameData(int gameID, String whiteUsername, String blackUsername, S
     public enum State {
         WHITE,
         BLACK,
+        DRAW,
         UNKNOWN
     }
 

@@ -115,6 +115,14 @@ public class WebSocketHandler {
                     connection.gameData = gameData;
                     String notificationMessage = (new NotificationMessage("Game ended in draw!")).toString();
                     connectionManager.broadcast(gameData.gameID(), "", notificationMessage);
+                } else if (gameData.game().isInCheck(ChessGame.TeamColor.WHITE)) {
+                    // announce check for white
+                    String notificationMessage = (new NotificationMessage("White is in check")).toString();
+                    connectionManager.broadcast(gameData.gameID(), "", notificationMessage);
+                } else if (gameData.game().isInCheck(ChessGame.TeamColor.BLACK)) {
+                    // announce check for black
+                    String notificationMessage = (new NotificationMessage("Black is in check")).toString();
+                    connectionManager.broadcast(gameData.gameID(), "", notificationMessage);
                 }
             } else {
                 connection.sendError("game is over");
